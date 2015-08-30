@@ -5,7 +5,7 @@ using Mentula.Utilities;
 
 namespace Mentula.Utilities.MathExtensions
 {
-    public static class Math
+    public static class MathEX
     {
         public static float Lerp(float Min, float Max, float amount)
         {
@@ -54,17 +54,21 @@ namespace Mentula.Utilities.MathExtensions
             return (float)math.Atan2(v.Y, v.X) * (float)(180f / math.PI);
         }
 
-        public static int Round(double d)
-        {
-            int a = (int)d;
-            return a + ((d > 0) & (a < (int)(d + 0.5)) ? 1 : ((d < 0) & a > (int)(d - 0.5) ? -1 : 0));
-        }
-
         public static Vector2 Abs(Vector2 vec)
         {
             if (vec.X < 0) vec.X *= -1;
             if (vec.Y < 0) vec.Y *= -1;
             return vec;
+        }
+
+        public static int FloorAtBi(int N, int Base)
+        {
+            return (int)(math.Floor((float)N / Base) * Base);
+        }
+
+        public static int CeilAtBi(int N, int Base)
+        {
+            return (int)(math.Ceiling((float)N / Base) * Base);
         }
     }
 }

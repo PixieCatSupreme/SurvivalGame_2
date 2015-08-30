@@ -6,6 +6,7 @@
 
         public static int ChunkSize;
         public static int TileSize;
+        public static string s = "s";
 
         static Res()
         {
