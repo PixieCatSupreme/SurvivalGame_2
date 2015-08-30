@@ -127,6 +127,7 @@ namespace Mentula.Server
                                 break;
                             case(NetConnectionStatus.Disconnected):
                                 name = players_logic[id];
+                                players_logic.Remove(id);
                                 RemovePlayer(msg.SenderEndPoint.Address);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);
                                 break;

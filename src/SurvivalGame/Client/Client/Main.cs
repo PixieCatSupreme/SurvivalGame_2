@@ -3,22 +3,16 @@
 #define JOËLL
 #endif
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Lidgren.Network;
+using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Lidgren.Network;
-using NPConfig = Lidgren.Network.NetPeerConfiguration;
-using NIMT = Lidgren.Network.NetIncomingMessageType;
+using System;
 using NIM = Lidgren.Network.NetIncomingMessage;
+using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
-using Mentula.Utilities.Resources;
+using NPConfig = Lidgren.Network.NetPeerConfiguration;
 
 namespace Client
 {
@@ -64,6 +58,10 @@ namespace Client
 #if !LOCAL && !JOËLL
                 client.DiscoverKnownPeer(Ips.EndNico);
 #endif
+            }
+            if(state.IsKeyDown(Keys.D))
+            {
+                client.Disconnect("User Disconnect.");
             }
 
             base.Update(gameTime);
