@@ -30,7 +30,7 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\SurvivalGame\SurvivalGame\MentulaContent\MentulaContent.csproj">
+    <ProjectReference Include="..\..\..\..\Third-Party\MentulaContent\MentulaContent.csproj">
       <Project>{5f59fca6-3077-4019-b551-355c4dfc147b}</Project>
       <Name>MentulaContent</Name>
     </ProjectReference>
