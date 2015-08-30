@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client\Client.csproj", "{46770354-0F1F-4F69-8847-369BB6CEF719}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ClientContent", "Client\ClientContent\ClientContent.contentproj", "{AED9D7CB-18AE-438F-AD6E-4F90172ABB8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server\Server.csproj", "{6114C561-CCE4-4909-A527-A0A02A9D4585}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "ServerContent", "Server\ServerContent\ServerContent.contentproj", "{1E1D4224-E4FA-4944-8B66-9EEC7A50644C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentulaContent", "..\..\..\SurvivalGame\SurvivalGame\MentulaContent\MentulaContent.csproj", "{5F59FCA6-3077-4019-B551-355C4DFC147B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{7385FD78-BF9F-4741-80FF-3AAE53E5D28A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46770354-0F1F-4F69-8847-369BB6CEF719}.Debug|x86.ActiveCfg = Debug|x86
+		{46770354-0F1F-4F69-8847-369BB6CEF719}.Debug|x86.Build.0 = Debug|x86
+		{46770354-0F1F-4F69-8847-369BB6CEF719}.Release|x86.ActiveCfg = Release|x86
+		{46770354-0F1F-4F69-8847-369BB6CEF719}.Release|x86.Build.0 = Release|x86
+		{AED9D7CB-18AE-438F-AD6E-4F90172ABB8A}.Debug|x86.ActiveCfg = Debug|x86
+		{AED9D7CB-18AE-438F-AD6E-4F90172ABB8A}.Release|x86.ActiveCfg = Release|x86
+		{6114C561-CCE4-4909-A527-A0A02A9D4585}.Debug|x86.ActiveCfg = Debug|x86
+		{6114C561-CCE4-4909-A527-A0A02A9D4585}.Debug|x86.Build.0 = Debug|x86
+		{6114C561-CCE4-4909-A527-A0A02A9D4585}.Release|x86.ActiveCfg = Release|x86
+		{6114C561-CCE4-4909-A527-A0A02A9D4585}.Release|x86.Build.0 = Release|x86
+		{1E1D4224-E4FA-4944-8B66-9EEC7A50644C}.Debug|x86.ActiveCfg = Debug|x86
+		{1E1D4224-E4FA-4944-8B66-9EEC7A50644C}.Release|x86.ActiveCfg = Release|x86
+		{5F59FCA6-3077-4019-B551-355C4DFC147B}.Debug|x86.ActiveCfg = Debug|x86
+		{5F59FCA6-3077-4019-B551-355C4DFC147B}.Debug|x86.Build.0 = Debug|x86
+		{5F59FCA6-3077-4019-B551-355C4DFC147B}.Release|x86.ActiveCfg = Release|x86
+		{5F59FCA6-3077-4019-B551-355C4DFC147B}.Release|x86.Build.0 = Release|x86
+		{7385FD78-BF9F-4741-80FF-3AAE53E5D28A}.Debug|x86.ActiveCfg = Debug|x86
+		{7385FD78-BF9F-4741-80FF-3AAE53E5D28A}.Debug|x86.Build.0 = Debug|x86
+		{7385FD78-BF9F-4741-80FF-3AAE53E5D28A}.Release|x86.ActiveCfg = Release|x86
+		{7385FD78-BF9F-4741-80FF-3AAE53E5D28A}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
