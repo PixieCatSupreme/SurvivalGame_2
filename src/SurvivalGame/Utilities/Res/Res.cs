@@ -1,5 +1,7 @@
 ﻿namespace Mentula.Utilities.Resources
 {
+    using Mentula.Utilities.Res;
+
     public static class Res
     {
         public static string AppName;

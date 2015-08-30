@@ -1,28 +1,147 @@
-﻿using Mentula.Engine;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Net;
+﻿using Lidgren.Network;
+using Mentula.Engine;
+using Mentula.Engine.Core;
 using Mentula.Server.GUI;
-using NIMT = Lidgren.Network.NetIncomingMessageType;
+using Mentula.Utilities.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Color = System.Drawing.Color;
+using NIMT = Lidgren.Network.NetIncomingMessageType;
+using NPConf = Lidgren.Network.NetPeerConfiguration;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace Mentula.Server
 {
     public class Server : Game
     {
-        private Dictionary<IPAddress, int> players;
+        private Dictionary<IPAddress, int> players_UI;
+        private Dictionary<long, string> players_logic;
+        private Dictionary<string, IPAddress> players_Banned;
+        private Dictionary<long, string> players_Queue;
+
         private CPUUsage cpu;
+        private NetServer server;
 
         public Server()
         {
             InitializeComponent();
             WriteFirstLine("Console Created.");
             IsMouseVisible = true;
-            players = new Dictionary<IPAddress, int>();
-            cpu = new CPUUsage();
+
+            Load += Server_Load;
+            Initialize += Server_Initialize;
+            Update += Server_Update;
+            Draw += Server_Draw;
         }
+
+        void Server_Load()
+        {
+            WriteLine(NIMT.Data, "Loading Server.");
+            server.Start();
+        }
+
+        private void Server_Initialize()
+        {
+            WriteLine(NIMT.Data, "Initializing server.");
+            players_UI = new Dictionary<IPAddress, int>();
+            players_logic = new Dictionary<long, string>();
+            players_Banned = new Dictionary<string, IPAddress>();
+            players_Queue = new Dictionary<long, string>();
+            cpu = new CPUUsage();
+
+            NPConf config = new NPConf(Res.AppName) { Port = Ips.PORT, EnableUPnP = true };
+            config.EnableMessageType(NIMT.DiscoveryRequest);
+            config.EnableMessageType(NIMT.ConnectionApproval);
+            server = new NetServer(config);
+        }
+
+        private void Server_Update(GameTime time)
+        {
+            NetIncomingMessage msg;
+
+            while ((msg = server.ReadMessage()) != null)
+            {
+                switch (msg.MessageType)
+                {
+                    case (NIMT.VerboseDebugMessage):
+                    case (NIMT.DebugMessage):
+                    case (NIMT.WarningMessage):
+                    case (NIMT.ErrorMessage):
+                        WriteLine(msg.MessageType, msg.ReadString());
+                        break;
+                    case(NIMT.DiscoveryRequest):
+                        server.SendDiscoveryResponse(null, msg.SenderEndPoint);
+                        WriteLine(NIMT.DiscoveryRequest, "{0} discovered the service.", msg.SenderEndPoint.Address);
+                        break;
+                    case(NIMT.ConnectionApproval):
+                        long id = msg.SenderConnection.RemoteUniqueIdentifier;
+                        string name = msg.ReadString();
+
+                        if(string.IsNullOrWhiteSpace(name) || name.Length > 16)
+                        {
+                            msg.SenderConnection.Deny("Your name must be between 1 and 16 characters!");
+                            break;
+                        }
+                        else if(players_Banned.Values.Contains(msg.SenderEndPoint.Address))
+                        {
+                            msg.SenderConnection.Deny("You have been banned from this server!");
+                            break;
+                        }
+                        else if(players_logic.ContainsKey(id) || players_Queue.ContainsKey(id))
+                        {
+                            msg.SenderConnection.Deny("You are still connecte to the service!\nPlease wait some time before trying again.");
+                            break;
+                        }
+                        else if(players_logic.ContainsValue(name))
+                        {
+                            msg.SenderConnection.Deny(string.Format("The name: {0} is already in use!", name));
+                            break;
+                        }
+
+                        players_Queue.Add(id, name);
+                        msg.SenderConnection.Approve();
+                        break;
+                    case(NIMT.StatusChanged):
+                        id = msg.SenderConnection.RemoteUniqueIdentifier;
+                        NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+
+                        switch(status)
+                        {
+                            case(NetConnectionStatus.Connected):
+                                if (!players_Queue.ContainsKey(id))
+                                {
+                                    WriteLine(NIMT.WarningMessage, string.Format("Unknown acces by: {0}",  id));
+                                    break;
+                                }
+
+                                name = players_Queue[id];
+                                players_Queue.Remove(id);
+                                AddPlayer(msg.SenderEndPoint.Address, name);
+                                players_logic.Add(id, name);
+                                WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
+                                break;
+                            case(NetConnectionStatus.Disconnected):
+                                name = players_logic[id];
+                                RemovePlayer(msg.SenderEndPoint.Address);
+                                WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void Server_Draw(GameTime time)
+        {
+            UpdateStats();
+        }
+
+        #region User Interface
 
         public void SetState(string state)
         {
@@ -42,18 +161,19 @@ namespace Mentula.Server
 
         public void AddPlayer(IPAddress ip, string name)
         {
-            InvokeIfRequired(dGrid_Connections, () => players.Add(ip, dGrid_Connections.Rows.Add(name, ip)));
+            InvokeIfRequired(dGrid_Connections, () => players_UI.Add(ip, dGrid_Connections.Rows.Add(name, ip)));
         }
 
         public void RemovePlayer(IPAddress ip)
         {
-            InvokeIfRequired(dGrid_Connections, () => dGrid_Connections.Rows.RemoveAt(players[ip]));
-            players.Remove(ip);
+            InvokeIfRequired(dGrid_Connections, () => dGrid_Connections.Rows.RemoveAt(players_UI[ip]));
+            players_UI.Remove(ip);
         }
 
         public void ClearPlayers()
         {
             InvokeIfRequired(dGrid_Connections, () => dGrid_Connections.Rows.Clear());
+            players_UI.Clear();
         }
 
         public void WriteLine(NIMT nimt, string format, params object[] args)
@@ -73,6 +193,7 @@ namespace Mentula.Server
                     break;
                 case (NIMT.Data):
                 case (NIMT.UnconnectedData):
+                    color = Color.LightBlue;
                     mode = "Data";
                     break;
                 case (NIMT.DebugMessage):
@@ -117,7 +238,7 @@ namespace Mentula.Server
 
         private void WriteFirstLine(string format, params object[] args)
         {
-            string line = string.Format("[{0}][Info] {1}", string.Format("{0:H:mm:ss}", DateTime.Now), string.Format(format, args));
+            string line = string.Format("[{0}][Data] {1}", string.Format("{0:H:mm:ss}", DateTime.Now), string.Format(format, args));
 
             txt_Console.SelectionColor = Color.DodgerBlue;
             txt_Console.AppendText(line);
@@ -335,12 +456,18 @@ namespace Mentula.Server
 
         private void btn_Stop_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            players_Queue = new Dictionary<long, string>();
+            ClearPlayers();
+
+            server.Shutdown(string.Format("The {0} server has shut down.", Res.AppName));
+            WriteLine(NIMT.Data, "Server closing.");
         }
 
         private void txt_Console_MouseDown(object sender, MouseEventArgs e)
         {
             HideCaret(txt_Console.Handle);
         }
+
+        #endregion
     }
 }
