@@ -86,20 +86,20 @@ namespace Mentula.Server
 
             points = new perlinpoint[12];
 
-            points[0] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a0), MathEX.FloorAtBi(y, a0)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a0), Res.s, MathEX.FloorAtBi(y, a0)), 4);
-            points[1] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a0), MathEX.CeilAtBi(y, a0)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a0), Res.s, MathEX.CeilAtBi(y, a0)), 4);
-            points[2] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a0), MathEX.FloorAtBi(y, a0)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a0), Res.s, MathEX.FloorAtBi(y, a0)), 4);
-            points[3] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a0), MathEX.CeilAtBi(y, a0)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a0), Res.s, MathEX.CeilAtBi(y, a0)), 4);
+            points[0] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a0), MathEX.FloorAtBi(y, a0)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a0), Res.Seed, MathEX.FloorAtBi(y, a0)), 4);
+            points[1] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a0), MathEX.CeilAtBi(y, a0)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a0), Res.Seed, MathEX.CeilAtBi(y, a0)), 4);
+            points[2] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a0), MathEX.FloorAtBi(y, a0)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a0), Res.Seed, MathEX.FloorAtBi(y, a0)), 4);
+            points[3] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a0), MathEX.CeilAtBi(y, a0)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a0), Res.Seed, MathEX.CeilAtBi(y, a0)), 4);
 
-            points[4] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a1), MathEX.FloorAtBi(y, a1)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a1), Res.s, MathEX.FloorAtBi(y, a1)), 2);
-            points[5] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a1), MathEX.CeilAtBi(y, a1)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a1), Res.s, MathEX.CeilAtBi(y, a1)), 2);
-            points[6] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a1), MathEX.FloorAtBi(y, a1)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a1), Res.s, MathEX.FloorAtBi(y, a1)), 2);
-            points[7] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a1), MathEX.CeilAtBi(y, a1)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a1), Res.s, MathEX.CeilAtBi(y, a1)), 2);
+            points[4] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a1), MathEX.FloorAtBi(y, a1)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a1), Res.Seed, MathEX.FloorAtBi(y, a1)), 2);
+            points[5] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a1), MathEX.CeilAtBi(y, a1)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a1), Res.Seed, MathEX.CeilAtBi(y, a1)), 2);
+            points[6] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a1), MathEX.FloorAtBi(y, a1)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a1), Res.Seed, MathEX.FloorAtBi(y, a1)), 2);
+            points[7] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a1), MathEX.CeilAtBi(y, a1)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a1), Res.Seed, MathEX.CeilAtBi(y, a1)), 2);
 
-            points[8] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a2), MathEX.FloorAtBi(y, a2)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a2), Res.s, MathEX.FloorAtBi(y, a2)), 1);
-            points[9] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a2), MathEX.CeilAtBi(y, a2)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a2), Res.s, MathEX.CeilAtBi(y, a2)), 1);
-            points[10] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a2), MathEX.FloorAtBi(y, a2)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a2), Res.s, MathEX.FloorAtBi(y, a2)), 1);
-            points[11] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a2), MathEX.CeilAtBi(y, a2)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a2), Res.s, MathEX.CeilAtBi(y, a2)), 1);
+            points[8] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a2), MathEX.FloorAtBi(y, a2)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a2), Res.Seed, MathEX.FloorAtBi(y, a2)), 1);
+            points[9] = new perlinpoint(new Vector2(MathEX.FloorAtBi(x, a2), MathEX.CeilAtBi(y, a2)), RNG.RFloatFromString(MathEX.FloorAtBi(x, a2), Res.Seed, MathEX.CeilAtBi(y, a2)), 1);
+            points[10] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a2), MathEX.FloorAtBi(y, a2)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a2), Res.Seed, MathEX.FloorAtBi(y, a2)), 1);
+            points[11] = new perlinpoint(new Vector2(MathEX.CeilAtBi(x, a2), MathEX.CeilAtBi(y, a2)), RNG.RFloatFromString(MathEX.CeilAtBi(x, a2), Res.Seed, MathEX.CeilAtBi(y, a2)), 1);
 
         }
 
