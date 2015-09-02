@@ -79,6 +79,15 @@ namespace Mentula.Utilities.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 10.
+        /// </summary>
+        public static string MaxPlayers {
+            get {
+                return ResourceManager.GetString("MaxPlayers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 32.
         /// </summary>
         public static string TileSize {

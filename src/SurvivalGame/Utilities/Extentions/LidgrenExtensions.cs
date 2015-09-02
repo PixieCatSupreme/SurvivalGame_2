@@ -11,23 +11,6 @@ namespace Lidgren.Network.Xna
     public static class LidgrenExtensions
 	{
 		/// <summary>
-		/// Write a Point
-		/// </summary>
-		public static void Write(this NetBuffer message, Point value)
-		{
-			message.Write(value.X);
-			message.Write(value.Y);
-		}
-
-		/// <summary>
-		/// Read a Point
-		/// </summary>
-		public static Point ReadPoint(this NetBuffer message)
-		{
-			return new Point(message.ReadInt32(), message.ReadInt32());
-		}
-
-		/// <summary>
 		/// Write a Single with half precision (16 bits)
 		/// </summary>
 		public static void WriteHalfPrecision(this NetBuffer message, float value)
@@ -48,10 +31,10 @@ namespace Lidgren.Network.Xna
 		/// <summary>
 		/// Writes a Vector2
 		/// </summary>
-		public static void Write(this NetBuffer message, Vector2 vector)
+		public static unsafe void Write(this NetBuffer message, Vector2* vector)
 		{
-			message.Write(vector.X);
-			message.Write(vector.Y);
+			message.Write(vector->X);
+			message.Write(vector->Y);
 		}
 
 		/// <summary>

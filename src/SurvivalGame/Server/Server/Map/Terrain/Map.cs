@@ -16,6 +16,12 @@ namespace Mentula.Server
         public const int Range_S = 2;
         public const int Range_C = 1;
 
+        public Map()
+        {
+            LoadedChunks = new List<Chunk>();
+            ChunkList = new List<Chunk>();
+        }
+
         public bool Generate(IntVector2 pos)
         {
             bool gen = false;
