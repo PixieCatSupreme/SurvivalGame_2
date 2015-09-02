@@ -23,7 +23,7 @@ namespace Mentula.Server
         {
             for (int i = 0; i < Players.Length; i++)
             {
-                if (Players[i].Key == id || Players[i].Creature.Name == name) return true;
+                if (Players[i].Key == id || Players[i].Value.Name == name) return true;
             }
 
             return false;
@@ -36,14 +36,14 @@ namespace Mentula.Server
                 if (Players[i].Key == id) return Players[i].Value;
             }
 
-            return string.Empty;
+            return null;
         }
 
         public void AddPlayer(long id, string name)
         {
             if (index < Players.Length)
             {
-                Players[index] = new KeyValuePair<long, string>(id, new Creature(name, new Stats(), 100));
+                Players[index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Stats(), 100));
                 index++;
 
                 Map.Generate(IntVector2.Zero);
@@ -66,7 +66,7 @@ namespace Mentula.Server
             {
                 if (Players[i].Key == id)
                 {
-                    if (Players.Length == 1) Players[i] = new KeyValuePair<long,string>();
+                    if (Players.Length == 1) Players[i] = new KeyValuePair<long,Creature>();
                     else Players[i] = Players[index - 1];
                 }
             }

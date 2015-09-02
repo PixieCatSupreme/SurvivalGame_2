@@ -25,6 +25,7 @@ namespace Mentula.Server
 
         private CPUUsage cpu;
         private NetServer server;
+        private GameLogic logic;
 
         public Server()
         {
@@ -119,7 +120,7 @@ namespace Mentula.Server
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
                                 break;
                             case(NetConnectionStatus.Disconnected):
-                                name = logic.GetPlayer(id);
+                                name = logic.GetPlayer(id).Name;
                                 logic.RemovePlayer(id);
                                 RemovePlayer(msg.SenderEndPoint.Address);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);

@@ -84,6 +84,7 @@
     <Compile Include="AStar.cs" />
     <Compile Include="CPUUsage.cs" />
     <Compile Include="Creature.cs" />
+    <Compile Include="GameLogic.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Terrain\Chunk.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
