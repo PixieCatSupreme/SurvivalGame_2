@@ -1,6 +1,6 @@
 using System;
 
-namespace Client
+namespace Mentula.Client
 {
 #if WINDOWS || XBOX
     static class Program

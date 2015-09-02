@@ -14,7 +14,7 @@ using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConfig = Lidgren.Network.NetPeerConfiguration;
 
-namespace Client
+namespace Mentula.Client
 {
     public class Main : Game
     {

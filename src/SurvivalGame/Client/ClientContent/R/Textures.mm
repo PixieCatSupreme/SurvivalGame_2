@@ -12,16 +12,9 @@
 		[Floor: id=12 , name="Floor_Temp"]
 	}
 
-	[Container: "Actors"]
-	{
-		[Rabbit: id=6, name="Rabbit_Temp"]
-		[Deer: id=7, name="Deer_Temp"]
-		[Wolf: id=8, name="Wolf_Temp"]
-	}
-
 	[Container: "Utillities"]
 	{
-		[Crosshair: id=9, name="Crosshair"]
-		[DirectionArrow: id=10, name="DirectionArrow"]
+		[Crosshair: id=9998, name="Crosshair"]
+		[DirectionArrow: id=9999, name="DirectionArrow"]
 	}
 }

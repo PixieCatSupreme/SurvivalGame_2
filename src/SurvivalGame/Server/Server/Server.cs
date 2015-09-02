@@ -26,6 +26,7 @@ namespace Mentula.Server
 
         private CPUUsage cpu;
         private NetServer server;
+        private GameLogic logic;
 
         public Server()
         {
