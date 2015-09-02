@@ -12,12 +12,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Matrix3 = Mentula.Engine.Core.Matrix3;
 using NIM = Lidgren.Network.NetIncomingMessage;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConfig = Lidgren.Network.NetPeerConfiguration;
 
-namespace Client
+namespace Mentula.Client
 {
     public class Main : Game
     {
@@ -26,6 +27,7 @@ namespace Client
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private Camera cam;
 
         private IntVector2 currentChunk;
         private Vector2 possition;
@@ -43,6 +45,7 @@ namespace Client
         protected override void Initialize()
         {
             client.Start();
+            cam = new Camera();
 
             base.Initialize();
         }
@@ -112,6 +115,26 @@ namespace Client
 
         protected override void Draw(GameTime gameTime)
         {
+            cam.Update(Matrix3.Identity);
+
+            Vector2[] vertices = new Vector2[3]
+            {
+                new Vector2(0, 1),
+                new Vector2(.5f, 0),
+                new Vector2(1, 1)
+            };
+
+            cam.Transform(ref vertices, ref vertices);
+
+            Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData(new Color[1] { Color.White });
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(pixel, vertices[0], Color.Red);
+            spriteBatch.Draw(pixel, vertices[1], Color.Green);
+            spriteBatch.Draw(pixel, vertices[2], Color.Blue);
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
 

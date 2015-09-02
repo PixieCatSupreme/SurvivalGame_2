@@ -1,4 +1,5 @@
 using System;
+using Mentula.Client;
 
 namespace Client
 {

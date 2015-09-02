@@ -62,6 +62,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Engine">
+      <HintPath>..\..\..\..\Third-Party\Dll\Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\..\..\..\Third-Party\Dll\Lidgren.Network.dll</HintPath>
     </Reference>
@@ -77,6 +80,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="FPS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
