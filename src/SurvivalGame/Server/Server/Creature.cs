@@ -15,13 +15,13 @@ namespace Mentula.Server
 
         public Creature()
         {
-            Name = "The  Unnameable";
+            Name = "The Unnameable";
             Stats = new Stats();
             Health = new int[6] { 0, 0, 0, 0, 0, 0 };
             MaxHealth = new int[6] { 0, 0, 0, 0, 0, 0 };
         }
 
-        public Creature(string n,Stats s, int h)
+        public Creature(string n, Stats s, int h)
         {
             Name = n;
             Stats = s;

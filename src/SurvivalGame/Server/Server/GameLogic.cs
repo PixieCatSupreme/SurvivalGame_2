@@ -8,14 +8,14 @@ namespace Mentula.Server
     public class GameLogic
     {
         public Map Map { get; private set; }
-        public KeyValuePair<long, string>[] Players;
+        public KeyValuePair<long, Creature>[] Players;
 
         private int index;
 
         public GameLogic()
         {
             Map = new Map();
-            Players = new KeyValuePair<long, string>[Res.MaxPlayers];
+            Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             index = 0;
         }
 
@@ -23,13 +23,13 @@ namespace Mentula.Server
         {
             for (int i = 0; i < Players.Length; i++)
             {
-                if (Players[i].Key == id || Players[i].Value == name) return true;
+                if (Players[i].Key == id || Players[i].Creature.Name == name) return true;
             }
 
             return false;
         }
 
-        public string GetPlayer(long id)
+        public Creature GetPlayer(long id)
         {
             for (int i = 0; i < Players.Length; i++)
             {
@@ -43,7 +43,7 @@ namespace Mentula.Server
         {
             if (index < Players.Length)
             {
-                Players[index] = new KeyValuePair<long, string>(id, name);
+                Players[index] = new KeyValuePair<long, string>(id, new Creature(name, new Stats(), 100));
                 index++;
 
                 Map.Generate(IntVector2.Zero);
