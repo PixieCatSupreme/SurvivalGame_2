@@ -56,41 +56,42 @@ namespace Mentula.Client
 
         public void Update(Matrix3 lookAt)
         {
-            _view = lookAt;
-            _view *= Matrix3.ApplyScale(Res.ChunkSize);
+            _view = Matrix3.ApplyScale(Res.ChunkSize); ;
+            _view *= lookAt;
 
             _mv = _model * _view;
         }
 
-        public void Transform(ref IntVector2[] sourceArray, out IntVector2[] destinationArray)
+        public void Transform(ref Chunk[] sourceArray, out IntVector2[] destinationArray)
         {
-            destinationArray = new IntVector2[sourceArray.Length];
-            int last = 0 + sourceArray.Length;
-            int index = 0;
+            destinationArray = new IntVector2[sourceArray.Length * Res.ChunkTileLength];
 
-            for (int i = 0; i < last; i++)
+            for (int i = 0; i < sourceArray.Length; i++)
             {
-                IntVector2 curr = sourceArray[i];
+                Chunk cur = sourceArray[i];
 
-                float x = (curr.X * _mv.A) + (curr.Y * _mv.B);
-                float y = (curr.X * _mv.D) + (curr.Y * _mv.E);
+                for(int j = 0; j < cur.Tiles.Length; j++)
+                {
+                    Vect2 curr = Chunk.GetTotalPos(cur.ChunkPos, cur.Tiles[j].Pos.ToVector2());
+                    float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
+                    float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
-                destinationArray[0 + index] = new IntVector2(x, y);
-                index++;
+                    destinationArray[(i * Res.ChunkTileLength) + j] = new IntVector2(x, y);
+                }
             }
         }
 
         public void Transform(ref Vector2[] sourceArray, ref Vector2[] destinationArray)
         {
-            int last = 0 + sourceArray.Length;
+            int last = sourceArray.Length;
             int index = 0;
 
             for (int i = 0; i < last; i++)
             {
                 Vector2 curr = sourceArray[i];
 
-                float x = (curr.X * _mv.A) + (curr.Y * _mv.B);
-                float y = (curr.X * _mv.D) + (curr.Y * _mv.E);
+                float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
+                float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
                 destinationArray[index] = new Vector2(x, y);
                 index++;

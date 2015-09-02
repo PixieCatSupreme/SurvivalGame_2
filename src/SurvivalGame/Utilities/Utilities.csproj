@@ -45,6 +45,9 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Engine">
+      <HintPath>..\..\..\Third-Party\Dll\Engine.dll</HintPath>
+    </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\..\..\Third-Party\Dll\Lidgren.Network.dll</HintPath>
     </Reference>
@@ -65,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BytePoint.cs" />
+    <Compile Include="Chunk.cs" />
     <Compile Include="Extentions\LidgrenExtensions.cs" />
     <Compile Include="Extentions\MathExtensions.cs" />
     <Compile Include="Extentions\NetExtensions.cs" />

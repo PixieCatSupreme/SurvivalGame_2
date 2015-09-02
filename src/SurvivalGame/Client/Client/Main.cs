@@ -22,21 +22,27 @@ namespace Mentula.Client
 {
     public class Main : Game
     {
+        public const int HEIGHT = 600;
+        public const int WIDTH = 800;
+
         private NetClient client;
         private float timeDiff;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private TextureCollection textures;
         private Camera cam;
 
         private IntVector2 currentChunk;
         private Vector2 possition;
 
-        private Tile[] tiles;
+        private Chunk[] chunks;
+
+        FPS fps = new FPS();
+        SpriteFont font;
 
         public Main()
         {
-            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             NPConfig config = new NPConfig(Res.AppName);
@@ -48,7 +54,8 @@ namespace Mentula.Client
         {
             client.Start();
             cam = new Camera();
-            tiles = new Tile[0];
+            chunks = new Chunk[0];
+            textures = new TextureCollection(Content);
 
             base.Initialize();
         }
@@ -56,6 +63,8 @@ namespace Mentula.Client
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            textures.LoadFromConfig("R/Textures");
+            font = Content.Load<SpriteFont>("Fonts/ConsoleFont");
         }
 
         protected unsafe override void Update(GameTime gameTime)
@@ -79,6 +88,11 @@ namespace Mentula.Client
                 client.Disconnect("User Disconnect.");
             }
 
+            if (state.IsKeyDown(Keys.W)) possition.Y += 1;
+            if (state.IsKeyDown(Keys.A)) possition.X += 1;
+            if (state.IsKeyDown(Keys.S)) possition.Y -= 1;
+            if (state.IsKeyDown(Keys.D)) possition.X -= 1;
+
             NIM msg = null;
             while ((msg = client.ReadMessage()) != null)
             {
@@ -98,7 +112,7 @@ namespace Mentula.Client
                                 possition = msg.ReadVector2();
                                 break;
                             case (NDT.InitialChunkRequest):
-                                tiles = msg.ReadTileArr();
+                                chunks = msg.ReadChunks();
                                 break;
                         }
                         break;
@@ -121,24 +135,25 @@ namespace Mentula.Client
 
         protected override void Draw(GameTime gameTime)
         {
-            cam.Update(Matrix3.Identity);
-
-            Vector2[] vertices = new Vector2[3]
-            {
-                new Vector2(0, 1),
-                new Vector2(.5f, 0),
-                new Vector2(1, 1)
-            };
-
-            cam.Transform(ref vertices, ref vertices);
-
-            Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[1] { Color.White });
+            fps.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            cam.Update(Matrix3.ApplyTranslation(new Engine.Core.Vect2(possition.X, possition.Y)));
+            IntVector2[] vertices;
+            cam.Transform(ref chunks, out vertices);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(pixel, vertices[0], Color.Red);
-            spriteBatch.Draw(pixel, vertices[1], Color.Green);
-            spriteBatch.Draw(pixel, vertices[2], Color.Blue);
+            int index = 0;
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                Chunk chunk = chunks[i];
+                for(int j = 0; j < chunk.Tiles.Length; j++)
+                {
+                    Vector2 pos = vertices[index].ToVector2();
+                    spriteBatch.Draw(textures[chunk.Tiles[j].Tex], pos, Color.White);
+                    index++;
+                }
+            }
+
+            spriteBatch.DrawString(font, fps.Avarage.ToString(), Vector2.Zero, Color.Red);
             spriteBatch.End();
 
             base.Draw(gameTime);

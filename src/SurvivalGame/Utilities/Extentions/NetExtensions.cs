@@ -20,32 +20,61 @@ namespace Mentula.Utilities.Net
             msg.Write(point->Y);
         }
 
-        public static Tile[] ReadTileArr(this NetBuffer msg)
+        public static Chunk ReadChunk(this NetBuffer msg)
         {
+            IntVector2 chunkPos = msg.ReadPoint();
+            Chunk result = new Chunk(chunkPos);
+
             ushort length = msg.ReadUInt16();
-            Tile[] result = new Tile[length];
+            result.Tiles = new Tile[length];
 
             for (int i = 0; i < length; i++)
             {
                 int texture = msg.ReadInt32();
                 IntVector2 pos = msg.ReadPoint();
-                result[i] = new Tile(texture, pos);
+                result.Tiles[i] = new Tile(texture, pos);
             }
 
             return result;
         }
 
-        public static void Write(this NetBuffer msg, Tile[] value)
+        public static void Write(this NetBuffer msg, Chunk value)
         {
-            msg.Write((ushort)value.Length);
+            msg.Write(value.ChunkPos.X);
+            msg.Write(value.ChunkPos.Y);
 
-            for(int i = 0; i < value.Length; i++)
+            msg.Write((ushort)value.Tiles.Length);
+
+            for(int i = 0; i < value.Tiles.Length; i++)
             {
-                Tile cur = value[i];
+                Tile cur = value.Tiles[i];
 
                 msg.Write(cur.Tex);
                 msg.Write(cur.Pos.X);
                 msg.Write(cur.Pos.Y);
+            }
+        }
+
+        public static Chunk[] ReadChunks(this NetBuffer msg)
+        {
+            ushort length = msg.ReadUInt16();
+            Chunk[] result = new Chunk[length];
+
+            for(int i = 0; i < length; i++)
+            {
+                result[i] = msg.ReadChunk();
+            }
+
+            return result;
+        }
+
+        public static void Write(this NetBuffer msg, Chunk[] value)
+        {
+            msg.Write((ushort)value.Length);
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                msg.Write(value[i]);
             }
         }
     }

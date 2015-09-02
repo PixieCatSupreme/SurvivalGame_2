@@ -1,7 +1,9 @@
 ﻿using Mentula.Utilities;
+using System.Diagnostics;
 
 namespace Mentula.Utilities
 {
+    [DebuggerDisplay("{Pos}")]
     public class Tile
     {
         public int Tex;

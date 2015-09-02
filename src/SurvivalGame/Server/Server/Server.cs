@@ -131,7 +131,7 @@ namespace Mentula.Server
 
                                 nom = server.CreateMessage();
                                 nom.Write((byte)NDT.InitialChunkRequest);
-                                nom.Write(chunks.SelectMany(c => c.Tiles).ToArray());
+                                nom.Write(chunks);
                                 server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                 break;
                             case (NetConnectionStatus.Disconnected):
