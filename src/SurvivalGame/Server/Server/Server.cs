@@ -129,6 +129,8 @@ namespace Mentula.Server
                         break;
                 }
             }
+
+            logic.Update(time.DeltaTime);
         }
 
         private void Server_Draw(GameTime time)
