@@ -71,6 +71,8 @@ namespace Mentula.Server
 
             while ((msg = server.ReadMessage()) != null)
             {
+                NOM nom;
+
                 switch (msg.MessageType)
                 {
                     case (NIMT.VerboseDebugMessage):
@@ -124,6 +126,13 @@ namespace Mentula.Server
                                 AddPlayer(msg.SenderEndPoint.Address, name);
                                 logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
+
+                                Chunk[] chunks = logic.Map.GetChunks(logic.GetPlayer(id).ChunkPos);
+
+                                nom = server.CreateMessage();
+                                nom.Write((byte)NDT.InitialChunkRequest);
+                                nom.Write(chunks.SelectMany(c => c.Tiles).ToArray());
+                                server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                 break;
                             case (NetConnectionStatus.Disconnected):
                                 name = logic.GetPlayer(id).Name;
@@ -144,7 +153,7 @@ namespace Mentula.Server
 
                                 if(!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
                                 {
-                                    NOM nom = server.CreateMessage();
+                                    nom = server.CreateMessage();
                                     nom.Write((byte)NDT.PlayerUpdate);
                                     nom.Write(&chunk);
                                     nom.Write(&tile);

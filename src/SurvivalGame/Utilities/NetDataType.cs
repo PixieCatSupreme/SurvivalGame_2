@@ -3,5 +3,7 @@
     public enum NDT
     {
         PlayerUpdate,
+        InitialChunkRequest,
+        ChunkRequest
     }
 }

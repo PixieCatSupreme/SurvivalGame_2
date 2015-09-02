@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mentula.Utilities;
+﻿using Mentula.Utilities;
 
 namespace Mentula.Server
 {
@@ -13,7 +8,7 @@ namespace Mentula.Server
         public IntVector2 ChunkPos;
         public float Rain;
 
-        public Chunk( IntVector2 pos)
+        public Chunk(IntVector2 pos)
         {
             ChunkPos = pos;
         }

@@ -48,7 +48,7 @@ namespace Mentula.Server
                 }
                 rain /= w;
                 chunkR += rain;
-                chunk.Tiles[i] = new Tile(ChT(rain), new IntVector2(i % cSize, i / cSize), 0);
+                chunk.Tiles[i] = new Tile(ChT(rain), new IntVector2(i % cSize, i / cSize));
             }
 
             chunk.Rain = (float)chunkR / (cSize * cSize);

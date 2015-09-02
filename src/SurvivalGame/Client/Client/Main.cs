@@ -32,6 +32,8 @@ namespace Mentula.Client
         private IntVector2 currentChunk;
         private Vector2 possition;
 
+        private Tile[] tiles;
+
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -46,6 +48,7 @@ namespace Mentula.Client
         {
             client.Start();
             cam = new Camera();
+            tiles = new Tile[0];
 
             base.Initialize();
         }
@@ -93,6 +96,9 @@ namespace Mentula.Client
                             case (NDT.PlayerUpdate):
                                 currentChunk = msg.ReadPoint();
                                 possition = msg.ReadVector2();
+                                break;
+                            case (NDT.InitialChunkRequest):
+                                tiles = msg.ReadTileArr();
                                 break;
                         }
                         break;

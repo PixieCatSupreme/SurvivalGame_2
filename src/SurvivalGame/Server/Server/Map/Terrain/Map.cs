@@ -100,9 +100,10 @@ namespace Mentula.Server
             return result;
         }
 
-        public List<Chunk> GetChunks(IntVector2 oldPos, IntVector2 newPos)
+        public Chunk[] GetChunks(IntVector2 oldPos, IntVector2 newPos)
         {
             List<Chunk> r = new List<Chunk>();
+
             for (int x = -Range_C; x <= Range_C; x++)
             {
                 for (int y = -Range_C; y <= Range_C; y++)
@@ -126,7 +127,8 @@ namespace Mentula.Server
                     }
                 }
             }
-            return r;
+
+            return r.ToArray();
         }
 
         public void UnloadChunks(IntVector2 pos)
