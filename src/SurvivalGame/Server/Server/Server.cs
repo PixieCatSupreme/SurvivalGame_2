@@ -20,7 +20,6 @@ namespace Mentula.Server
     public class Server : Game
     {
         private Dictionary<IPAddress, int> players_UI;
-        private Dictionary<long, string> players_logic;
         private Dictionary<string, IPAddress> players_Banned;
         private Dictionary<long, string> players_Queue;
 
@@ -49,7 +48,6 @@ namespace Mentula.Server
         {
             WriteLine(NIMT.Data, "Initializing server.");
             players_UI = new Dictionary<IPAddress, int>();
-            players_logic = new Dictionary<long, string>();
             players_Banned = new Dictionary<string, IPAddress>();
             players_Queue = new Dictionary<long, string>();
             cpu = new CPUUsage();
@@ -92,14 +90,9 @@ namespace Mentula.Server
                             msg.SenderConnection.Deny("You have been banned from this server!");
                             break;
                         }
-                        else if(players_logic.ContainsKey(id) || players_Queue.ContainsKey(id))
+                        else if(logic.PlayerExists(id, name) || players_Queue.ContainsKey(id))
                         {
-                            msg.SenderConnection.Deny("You are still connecte to the service!\nPlease wait some time before trying again.");
-                            break;
-                        }
-                        else if(players_logic.ContainsValue(name))
-                        {
-                            msg.SenderConnection.Deny(string.Format("The name: {0} is already in use!", name));
+                            msg.SenderConnection.Deny(string.Format("The name \"{0}\" is already in use!", name));
                             break;
                         }
 
@@ -122,12 +115,12 @@ namespace Mentula.Server
                                 name = players_Queue[id];
                                 players_Queue.Remove(id);
                                 AddPlayer(msg.SenderEndPoint.Address, name);
-                                players_logic.Add(id, name);
+                                logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
                                 break;
                             case(NetConnectionStatus.Disconnected):
-                                name = players_logic[id];
-                                players_logic.Remove(id);
+                                name = logic.GetPlayer(id);
+                                logic.RemovePlayer(id);
                                 RemovePlayer(msg.SenderEndPoint.Address);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);
                                 break;
