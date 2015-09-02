@@ -2,15 +2,20 @@
 using Mentula.Engine;
 using Mentula.Engine.Core;
 using Mentula.Server.GUI;
+using Mentula.Utilities;
+using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Lidgren.Network.Xna;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
+using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConf = Lidgren.Network.NetPeerConfiguration;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -30,6 +35,7 @@ namespace Mentula.Server
         public Server()
         {
             InitializeComponent();
+            logic = new GameLogic();
             WriteFirstLine("Console Created.");
             IsMouseVisible = true;
 
@@ -59,7 +65,7 @@ namespace Mentula.Server
             server = new NetServer(config);
         }
 
-        private void Server_Update(GameTime time)
+        private unsafe void Server_Update(GameTime time)
         {
             NetIncomingMessage msg;
 
@@ -73,25 +79,25 @@ namespace Mentula.Server
                     case (NIMT.ErrorMessage):
                         WriteLine(msg.MessageType, msg.ReadString());
                         break;
-                    case(NIMT.DiscoveryRequest):
+                    case (NIMT.DiscoveryRequest):
                         server.SendDiscoveryResponse(null, msg.SenderEndPoint);
                         WriteLine(NIMT.DiscoveryRequest, "{0} discovered the service.", msg.SenderEndPoint.Address);
                         break;
-                    case(NIMT.ConnectionApproval):
+                    case (NIMT.ConnectionApproval):
                         long id = msg.SenderConnection.RemoteUniqueIdentifier;
                         string name = msg.ReadString();
 
-                        if(string.IsNullOrWhiteSpace(name) || name.Length > 16)
+                        if (string.IsNullOrWhiteSpace(name) || name.Length > 16)
                         {
                             msg.SenderConnection.Deny("Your name must be between 1 and 16 characters!");
                             break;
                         }
-                        else if(players_Banned.Values.Contains(msg.SenderEndPoint.Address))
+                        else if (players_Banned.Values.Contains(msg.SenderEndPoint.Address))
                         {
                             msg.SenderConnection.Deny("You have been banned from this server!");
                             break;
                         }
-                        else if(logic.PlayerExists(id, name) || players_Queue.ContainsKey(id))
+                        else if (logic.PlayerExists(id, name) || players_Queue.ContainsKey(id))
                         {
                             msg.SenderConnection.Deny(string.Format("The name \"{0}\" is already in use!", name));
                             break;
@@ -100,16 +106,16 @@ namespace Mentula.Server
                         players_Queue.Add(id, name);
                         msg.SenderConnection.Approve();
                         break;
-                    case(NIMT.StatusChanged):
+                    case (NIMT.StatusChanged):
                         id = msg.SenderConnection.RemoteUniqueIdentifier;
                         NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
 
-                        switch(status)
+                        switch (status)
                         {
-                            case(NetConnectionStatus.Connected):
+                            case (NetConnectionStatus.Connected):
                                 if (!players_Queue.ContainsKey(id))
                                 {
-                                    WriteLine(NIMT.WarningMessage, string.Format("Unknown acces by: {0}",  id));
+                                    WriteLine(NIMT.WarningMessage, string.Format("Unknown acces by: {0}", id));
                                     break;
                                 }
 
@@ -119,11 +125,31 @@ namespace Mentula.Server
                                 logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
                                 break;
-                            case(NetConnectionStatus.Disconnected):
+                            case (NetConnectionStatus.Disconnected):
                                 name = logic.GetPlayer(id).Name;
                                 logic.RemovePlayer(id);
                                 RemovePlayer(msg.SenderEndPoint.Address);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);
+                                break;
+                        }
+                        break;
+                    case (NIMT.Data):
+                        NDT type = (NDT)msg.ReadByte();
+
+                        switch (type)
+                        {
+                            case (NDT.PlayerUpdate):
+                                IntVector2 chunk = msg.ReadPoint();
+                                Vector2 tile = msg.ReadVector2();
+
+                                if(!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
+                                {
+                                    NOM nom = server.CreateMessage();
+                                    nom.Write((byte)NDT.PlayerUpdate);
+                                    nom.Write(&chunk);
+                                    nom.Write(&tile);
+                                    server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                                }
                                 break;
                         }
                         break;
@@ -250,7 +276,7 @@ namespace Mentula.Server
                 if (control.InvokeRequired && !control.IsDisposed) control.Invoke(action);
                 else action();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (!control.IsDisposed) WriteLine(NIMT.Error, "Cannot perform action on '{0}'. \nInnterException: {1}", control.Name, e);
             }
@@ -260,20 +286,20 @@ namespace Mentula.Server
 
         private void InitializeComponent()
         {
-            this.statusStrip =          new StatusStrip();
-            this.lbl_Status =           new ToolStripStatusLabel();
-            this.lbl_LastMessage =      new ToolStripStatusLabel();
-            this.gBox_Info =            new GroupBox();
-            this.lbl_CPU =              new Label();
-            this.proBarCPU =            new ProgressBar();
-            this.btn_Stop =             new Button();
-            this.btn_Restart =          new Button();
-            this.btn_Kill =             new Button();
-            this.dGrid_Connections =    new DataGridView();
-            this.coll_Name =            new DataGridViewTextBoxColumn();
-            this.coll_Ip =              new DataGridViewTextBoxColumn();
-            this.txt_Console =          new RichTextBox();
-            this.splitContainer1 =      new SplitContainer();
+            this.statusStrip = new StatusStrip();
+            this.lbl_Status = new ToolStripStatusLabel();
+            this.lbl_LastMessage = new ToolStripStatusLabel();
+            this.gBox_Info = new GroupBox();
+            this.lbl_CPU = new Label();
+            this.proBarCPU = new ProgressBar();
+            this.btn_Stop = new Button();
+            this.btn_Restart = new Button();
+            this.btn_Kill = new Button();
+            this.dGrid_Connections = new DataGridView();
+            this.coll_Name = new DataGridViewTextBoxColumn();
+            this.coll_Ip = new DataGridViewTextBoxColumn();
+            this.txt_Console = new RichTextBox();
+            this.splitContainer1 = new SplitContainer();
             this.statusStrip.SuspendLayout();
             this.gBox_Info.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGrid_Connections)).BeginInit();

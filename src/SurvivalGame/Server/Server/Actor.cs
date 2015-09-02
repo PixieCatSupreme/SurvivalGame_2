@@ -25,5 +25,10 @@ namespace Mentula.Server
             ChunkPos = chunkpos;
         }
 
+        public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)
+        {
+            ChunkPos = *chunk;
+            Pos = *tile;
+        }
     }
 }

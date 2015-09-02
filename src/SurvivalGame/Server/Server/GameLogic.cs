@@ -2,6 +2,7 @@
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mentula.Server
 {
@@ -21,7 +22,7 @@ namespace Mentula.Server
 
         public bool PlayerExists(long id, string name)
         {
-            for (int i = 0; i < Players.Length; i++)
+            for (int i = 0; i < index; i++)
             {
                 if (Players[i].Key == id || Players[i].Value.Name == name) return true;
             }
@@ -31,7 +32,7 @@ namespace Mentula.Server
 
         public Creature GetPlayer(long id)
         {
-            for (int i = 0; i < Players.Length; i++)
+            for (int i = 0; i < index; i++)
             {
                 if (Players[i].Key == id) return Players[i].Value;
             }
@@ -43,19 +44,22 @@ namespace Mentula.Server
         {
             if (index < Players.Length)
             {
-                Players[index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Stats(), 100));
-                index++;
+                Players[index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Vector2(), new IntVector2()));
 
-                Map.Generate(IntVector2.Zero);
+                Map.Generate(Players[index].Value.ChunkPos);
+                index++;
             }
         }
 
-        public bool UpdatePlayer(long id, ref IntVector2 chunk, ref Vector2 tile)
+        public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile)
         {
             bool legal = true;
 
             // Check if move possible.
-            // Update player pos.
+            for (int i = 0; i < Players.Length; i++)
+            {
+                if (Players[i].Key == id) Players[i].Value.UpdatePos(chunk, tile);
+            }
 
             return legal;
         }
@@ -66,7 +70,7 @@ namespace Mentula.Server
             {
                 if (Players[i].Key == id)
                 {
-                    if (Players.Length == 1) Players[i] = new KeyValuePair<long,Creature>();
+                    if (Players.Length == 1) Players[i] = new KeyValuePair<long, Creature>();
                     else Players[i] = Players[index - 1];
                 }
             }
@@ -74,6 +78,15 @@ namespace Mentula.Server
 
         public void Update(float delta)
         {
+            IntVector2[] posses = new IntVector2[Players.Length];
+
+            for (int i = 0; i < index; i++)
+            {
+                posses[i] = Players[i].Value.ChunkPos;
+                Map.LoadChunks(posses[i]);
+            }
+
+            Map.UnloadChunks(posses);
         }
     }
 }

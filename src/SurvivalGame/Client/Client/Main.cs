@@ -4,6 +4,9 @@
 #endif
 
 using Lidgren.Network;
+using Lidgren.Network.Xna;
+using Mentula.Utilities;
+using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,8 +22,13 @@ namespace Client
     public class Main : Game
     {
         private NetClient client;
+        private float timeDiff;
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+
+        private IntVector2 currentChunk;
+        private Vector2 possition;
 
         public Main()
         {
@@ -35,6 +43,7 @@ namespace Client
         protected override void Initialize()
         {
             client.Start();
+
             base.Initialize();
         }
 
@@ -43,11 +52,11 @@ namespace Client
             spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override void Update(GameTime gameTime)
+        protected unsafe override void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
 
-            if(state.IsKeyDown(Keys.C))
+            if (state.IsKeyDown(Keys.C))
             {
 #if LOCAL
                 client.DiscoverKnownPeer("localhost", Ips.PORT);
@@ -59,24 +68,46 @@ namespace Client
                 client.DiscoverKnownPeer(Ips.EndNico);
 #endif
             }
-            if(state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown(Keys.D))
             {
                 client.Disconnect("User Disconnect.");
             }
 
-            base.Update(gameTime);
-
             NIM msg = null;
-            while((msg = client.ReadMessage()) != null)
+            while ((msg = client.ReadMessage()) != null)
             {
-                switch(msg.MessageType)
+                switch (msg.MessageType)
                 {
-                    case(NIMT.DiscoveryResponse):
+                    case (NIMT.DiscoveryResponse):
                         NOM nom = client.CreateMessage(Environment.UserName);
                         client.Connect(msg.SenderEndPoint, nom);
                         break;
+                    case (NIMT.Data):
+                        NDT type = (NDT)msg.ReadByte();
+
+                        switch (type)
+                        {
+                            case (NDT.PlayerUpdate):
+                                currentChunk = msg.ReadPoint();
+                                possition = msg.ReadVector2();
+                                break;
+                        }
+                        break;
                 }
             }
+
+            if (client.ConnectionStatus == NetConnectionStatus.Connected && timeDiff >= 1f / 30)
+            {
+                NOM nom = client.CreateMessage();
+                nom.Write((byte)NDT.PlayerUpdate);
+                fixed (IntVector2* cP = &currentChunk) nom.Write(cP);
+                fixed (Vector2* tP = &possition) nom.Write(tP);
+                client.SendMessage(nom, NetDeliveryMethod.ReliableOrdered);
+                timeDiff = 0;
+            }
+
+            timeDiff += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
