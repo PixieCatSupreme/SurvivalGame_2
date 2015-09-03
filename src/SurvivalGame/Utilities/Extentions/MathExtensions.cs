@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using math = System.Math;
 using Mentula.Utilities;
+using Mentula.Engine.Core.ExtendedMath;
 
 namespace Mentula.Utilities.MathExtensions
 {
@@ -46,6 +47,16 @@ namespace Mentula.Utilities.MathExtensions
             if (c < 180) return c;
 
             return 360 - c;
+        }
+
+        public static float DifferenceBetweenRadians(float a, float b)
+        {
+            float x = math.Max(a, b);
+            float y = math.Min(a, b);
+            float c = math.Abs(x - y);
+            if (c < MathF.PI) return c;
+
+            return (float)(MathF.Tau) - c;
         }
 
         public static float VectorToDegrees(Vector2 v)

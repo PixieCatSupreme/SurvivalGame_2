@@ -11,17 +11,21 @@ namespace Mentula.Server
     public static class Combat
     {
 
-        public static void OnAttack(ref Creature[] creatures, ref Creature attacker)
+        public static bool OnAttack(ref Creature[] creatures, ref Creature attacker, float arc, float range)
         {
+            bool hitSomeone = false;
             Vector2 angle = MathEX.RadiansToVector(attacker.Rotation);
             for (int i = 0; i < creatures.Length; i++)
             {
-                if (true)
+                float dgr = MathEX.VectorToRadians(new Vector2(creatures[i].Pos.X - attacker.Pos.X, creatures[i].Pos.Y - attacker.Pos.Y));
+                float dist = Vector2.Distance(creatures[i].Pos, attacker.Pos);
+                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc & dist < range)
                 {
                     DoDamage(ref creatures[i], ref attacker);
-                    break;
+                    hitSomeone = true;
                 }
             }
+            return hitSomeone;
         }
 
         private static void DoDamage(ref Creature defender, ref Creature attacker)
@@ -29,9 +33,10 @@ namespace Mentula.Server
             Random r = new Random();
             while (true)
             {
-
-                if (defender.Health[defender.Health.Length] > 0)
+                int n = (int)(r.NextDouble() * defender.Health.Length);
+                if (defender.Health[n] > 0)
                 {
+                    defender.Health[n] = Math.Max(defender.Health[n] - attacker.Stats.Strength, 0);
                     break;
                 }
             }
