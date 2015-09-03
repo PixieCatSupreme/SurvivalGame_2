@@ -30,13 +30,6 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tiles\Wall_Temp.png">
-      <Name>Wall_Temp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="R\Textures.mm">
       <Name>Textures</Name>
       <Importer>MMImporter</Importer>
@@ -93,18 +86,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-=======
-    <Compile Include="Tiles\Desert_Temp.png">
-      <Name>Desert_Temp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Tiles\Floor_Temp.png">
-      <Name>Floor_Temp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Tiles\Floor_Tiles1.png">
       <Name>Floor_Tiles1</Name>
       <Importer>TextureImporter</Importer>
@@ -120,41 +101,21 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Tiles\Grassland_Temp.png">
-      <Name>Grassland_Temp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
->>>>>>> origin/master
     <Compile Include="Tiles\Grass_Forest.png">
       <Name>Grass_Forest</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-=======
->>>>>>> origin/master
     <Compile Include="Tiles\Grass_GrassLand.png">
       <Name>Grass_GrassLand</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-=======
->>>>>>> origin/master
     <Compile Include="Tiles\Grass_Savanna.png">
       <Name>Grass_Savanna</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-=======
     <Compile Include="Tiles\Road.png">
       <Name>Road</Name>
       <Importer>TextureImporter</Importer>
@@ -180,49 +141,26 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
->>>>>>> origin/master
     <Compile Include="Tiles\Tree.png">
       <Name>Tree</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-=======
     <Compile Include="Tiles\Tree_Stump.png">
       <Name>Tree_Stump</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
->>>>>>> origin/master
     <Compile Include="Tiles\Wall_Brick1.png">
       <Name>Wall_Brick1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-=======
->>>>>>> origin/master
     <Compile Include="Tiles\Wall_Brick2.png">
       <Name>Wall_Brick2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-<<<<<<< HEAD
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Tiles\Tree_Stump.png">
-      <Name>Tree_Stump</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-=======
->>>>>>> origin/master
     <Compile Include="Tiles\Water.png">
       <Name>Water</Name>
       <Importer>TextureImporter</Importer>

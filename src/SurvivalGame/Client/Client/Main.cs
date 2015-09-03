@@ -38,12 +38,17 @@ namespace Mentula.Client
 
         private Chunk[] chunks;
 
-        FPS fps = new FPS();
-        SpriteFont font;
-
         public Main()
         {
             Content.RootDirectory = "Content";
+            IsFixedTimeStep = false;
+
+            graphics = new GraphicsDeviceManager(this)
+                {
+                    PreferredBackBufferHeight = HEIGHT,
+                    PreferredBackBufferWidth = WIDTH,
+                    SynchronizeWithVerticalRetrace = false
+                };
 
             NPConfig config = new NPConfig(Res.AppName);
             config.EnableMessageType(NIMT.DiscoveryResponse);
@@ -64,7 +69,8 @@ namespace Mentula.Client
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textures.LoadFromConfig("R/Textures");
-            font = Content.Load<SpriteFont>("Fonts/ConsoleFont");
+
+            base.LoadContent();
         }
 
         protected unsafe override void Update(GameTime gameTime)
@@ -135,7 +141,6 @@ namespace Mentula.Client
 
         protected override void Draw(GameTime gameTime)
         {
-            fps.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             cam.Update(Matrix3.ApplyTranslation(new Engine.Core.Vect2(possition.X, possition.Y)));
             IntVector2[] vertices;
             cam.Transform(ref chunks, out vertices);
@@ -153,7 +158,6 @@ namespace Mentula.Client
                 }
             }
 
-            spriteBatch.DrawString(font, fps.Avarage.ToString(), Vector2.Zero, Color.Red);
             spriteBatch.End();
 
             base.Draw(gameTime);
