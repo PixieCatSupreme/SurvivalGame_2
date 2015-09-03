@@ -86,6 +86,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="TextureCollection.cs" />
+    <Compile Include="VertexGraphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\Game.ico" />

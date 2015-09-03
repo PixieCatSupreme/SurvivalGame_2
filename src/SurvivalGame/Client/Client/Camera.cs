@@ -11,7 +11,6 @@ namespace Mentula.Client
         public float Rotation { get; private set; }
         public Vect2 Offset { get; private set; }
 
-        private const float DEG2RAD = 0.017453f;
         private Matrix3 _model;
         private Matrix3 _view;
         private Matrix3 _mv;
@@ -62,21 +61,19 @@ namespace Mentula.Client
             _mv = _model * _view;
         }
 
-        public void Transform(ref Chunk[] sourceArray, out IntVector2[] destinationArray)
+        public void Transform(ref Chunk[] sourceArray, ref Vector2[] destinationArray)
         {
-            destinationArray = new IntVector2[sourceArray.Length * Res.ChunkTileLength];
-
             for (int i = 0; i < sourceArray.Length; i++)
             {
                 Chunk cur = sourceArray[i];
 
                 for(int j = 0; j < cur.Tiles.Length; j++)
                 {
-                    Vect2 curr = Chunk.GetTotalPos(cur.ChunkPos, cur.Tiles[j].Pos.ToVector2());
+                    Vector2 curr = Chunk.GetTotalPos(cur.ChunkPos, cur.Tiles[j].Pos.ToVector2());
                     float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
                     float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
-                    destinationArray[(i * Res.ChunkTileLength) + j] = new IntVector2(x, y);
+                    destinationArray[(i * Res.ChunkTileLength) + j] = new Vector2(x, y);
                 }
             }
         }
@@ -102,7 +99,7 @@ namespace Mentula.Client
         {
             _model = Matrix3.ApplyScale(Scale);
             _model *= Matrix3.ApplyTranslation(Offset);
-            _model *= Matrix3.ApplyRotation(Rotation * DEG2RAD);
+            _model *= Matrix3.ApplyRotation(Rotation * Res.DEG2RAD);
         }
     }
 }

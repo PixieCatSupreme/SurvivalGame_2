@@ -24,13 +24,7 @@ namespace Mentula.Client
 
         private NetClient client;
         private float timeDiff;
-        private FPS fpsCounter;
-
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private TextureCollection textures;
-        private SpriteFont debugFont;
-        private Camera cam;
+        private VertexGraphics vGraphics;
 
         private IntVector2 currentChunk;
         private Vector2 possition;
@@ -42,7 +36,7 @@ namespace Mentula.Client
             Content.RootDirectory = "Content";
             IsFixedTimeStep = false;
 
-            graphics = new GraphicsDeviceManager(this)
+            vGraphics = new VertexGraphics(this)
                 {
                     PreferredBackBufferHeight = HEIGHT,
                     PreferredBackBufferWidth = WIDTH,
@@ -57,25 +51,19 @@ namespace Mentula.Client
         protected override void Initialize()
         {
             client.Start();
-            cam = new Camera();
-            fpsCounter = new FPS();
             chunks = new Chunk[0];
-            textures = new TextureCollection(Content);
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            textures.LoadFromConfig("R/Textures");
-            debugFont = Content.Load<SpriteFont>("Fonts/ConsoleFont");
-
+            vGraphics.Load(Content);
             base.LoadContent();
         }
 
         protected unsafe override void Update(GameTime gameTime)
         {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState state = Keyboard.GetState();
 
             if (state.IsKeyDown(Keys.OemPlus))
@@ -130,6 +118,7 @@ namespace Mentula.Client
                                 break;
                             case (NDT.InitialChunkRequest):
                                 chunks = msg.ReadChunks();
+                                vGraphics.UpdateChunks(ref chunks);
                                 break;
                             case (NDT.ChunkRequest):
                                 UpdateChunks(msg.ReadChunks());
@@ -152,35 +141,13 @@ namespace Mentula.Client
             }
 
             timeDiff += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            vGraphics.Update(currentChunk, possition, delta);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            fpsCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            Vect2 pp = Chunk.GetTotalPos(currentChunk, possition);
-            cam.Update(Matrix3.ApplyScale(2f) * Matrix3.ApplyTranslation(pp));
-            IntVector2[] vertices;
-            cam.Transform(ref chunks, out vertices);
-
-            GraphicsDevice.Clear(Color.LimeGreen);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-            spriteBatch.DrawString(debugFont, fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red,0,Vector2.Zero, 1, 0, 0);
-
-            int index = 0;
-            for (int i = 0; i < chunks.Length; i++)
-            {
-                Chunk chunk = chunks[i];
-                for (int j = 0; j < chunk.Tiles.Length; j++)
-                {
-                    Vector2 pos = vertices[index].ToVector2();
-                    spriteBatch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, 0, Vector2.Zero, 2f, 0, 1);
-                    index++;
-                }
-            }
-
-            spriteBatch.End();
-
+            vGraphics.Draw((float)gameTime.ElapsedGameTime.TotalSeconds);
             base.Draw(gameTime);
         }
 
@@ -206,6 +173,8 @@ namespace Mentula.Client
                     index++;
                 }
             }
+
+            vGraphics.UpdateChunks(ref chunks);
         }
     }
 }

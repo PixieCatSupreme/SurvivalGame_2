@@ -1,6 +1,4 @@
-﻿using Mentula.Engine.Core;
-using Mentula.Utilities.Resources;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
 using Resc = Mentula.Utilities.Resources.Res;
 
@@ -18,9 +16,9 @@ namespace Mentula.Utilities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vect2 GetTotalPos(IntVector2 chunk, Vector2 tile)
+        public static Vector2 GetTotalPos(IntVector2 chunk, Vector2 tile)
         {
-            return new Vect2(tile.X + chunk.X * Resc.ChunkSize, tile.Y + chunk.Y * Resc.ChunkSize);
+            return new Vector2(tile.X + chunk.X * Resc.ChunkSize, tile.Y + chunk.Y * Resc.ChunkSize);
         }
 
         public static unsafe void FormatPos(IntVector2* chunk, Vector2* tile)

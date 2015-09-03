@@ -11,7 +11,6 @@ namespace Mentula.Client
         private ContentManager content;
 
         public TextureCollection(ContentManager content)
-            : base()
         {
             this.content = content;
         }
@@ -36,6 +35,30 @@ namespace Mentula.Client
         public void Add(int id, string name)
         {
             Add(id, content.Load<Texture2D>(name));
+        }
+    }
+
+    public class FontCollection : Dictionary<string, SpriteFont>
+    {
+        private ContentManager content;
+
+        public FontCollection(ContentManager content)
+        {
+            this.content = content;
+        }
+
+        public FontCollection(ContentManager content, int size)
+            : base(size)
+        {
+            this.content = content;
+        }
+
+        public void Load(string mapName = "", params string[] files)
+        {
+            for (int i = 0; i < files.Length; i++)
+            {
+                Add(files[i], content.Load<SpriteFont>(mapName + files[i]));
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
     {
         public static string AppName;
         public const int Range_C = 1;
+        public const float DEG2RAD = 0.017453f;
 
         public static int ChunkSize;
         public static int ChunkTileLength;
