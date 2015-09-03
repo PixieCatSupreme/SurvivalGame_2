@@ -20,7 +20,7 @@ namespace Mentula.Client
     {
         public const int HEIGHT = 1080;
         public const int WIDTH = 1920;
-        public const int HOST = 4;
+        public const int HOST = 0;
 
         private NetClient client;
         private float timeDiff;

@@ -47,22 +47,11 @@ namespace Mentula.Utilities.MathExtensions
              
             return 360 - c;
         }
-        
+
         public static float VectorToDegrees(Vector2 v)
         {
             v.Normalize();
             return (float)math.Atan2(v.Y, v.X) * (float)(180f / math.PI);
-        }
-
-        public static float VectorToRadians(Vector2 v)
-        {
-            v.Normalize();
-            return (float)math.Atan2(v.Y, v.X);
-        }
-
-        public static Vector2 RadiansToVector(float rad)
-        {
-            return new Vector2((float)math.Cos(rad), (float)math.Sin(rad));
         }
 
         public static Vector2 Abs(Vector2 vec)
