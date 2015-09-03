@@ -1,17 +1,12 @@
 ﻿//#define DRUNK
 
-using Matrix3 = Mentula.Engine.Core.Matrix3;
-using Vect2 = Mentula.Engine.Core.Vect2;
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Matrix3 = Mentula.Engine.Core.Matrix3;
+using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
 {

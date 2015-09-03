@@ -18,8 +18,6 @@ namespace Mentula.Client
 {
     public class Main : Game
     {
-        public const int HEIGHT = 1080;
-        public const int WIDTH = 1920;
         public const int HOST = 0;
 
         private NetClient client;
@@ -38,8 +36,8 @@ namespace Mentula.Client
 
             vGraphics = new VertexGraphics(this)
                 {
-                    PreferredBackBufferHeight = HEIGHT,
-                    PreferredBackBufferWidth = WIDTH,
+                    PreferredBackBufferHeight = 900,
+                    PreferredBackBufferWidth = 1200,
                     SynchronizeWithVerticalRetrace = false
                 };
 
@@ -73,10 +71,7 @@ namespace Mentula.Client
                 else if (HOST == 2) client.DiscoverKnownPeer(Ips.EndNico);
                 else if (HOST == 4) client.DiscoverKnownPeer(Ips.EndFrank);
             }
-            if (state.IsKeyDown(Keys.OemMinus))
-            {
-                client.Disconnect("User Disconnect.");
-            }
+            if (state.IsKeyDown(Keys.OemMinus)) client.Disconnect("User Disconnect.");
 
             Vector2 move = new Vector2();
             if (state.IsKeyDown(Keys.W)) move.Y += .1f;
