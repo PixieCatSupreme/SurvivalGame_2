@@ -2,6 +2,7 @@
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
+using Resc = Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Utilities
 {
@@ -19,7 +20,22 @@ namespace Mentula.Utilities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vect2 GetTotalPos(IntVector2 chunk, Vector2 tile)
         {
-            return new Vect2(tile.X + chunk.X * global::Mentula.Utilities.Resources.Res.ChunkSize, tile.Y + chunk.Y * global::Mentula.Utilities.Resources.Res.ChunkSize);
+            return new Vect2(tile.X + chunk.X * Resc.ChunkSize, tile.Y + chunk.Y * Resc.ChunkSize);
+        }
+
+        public static unsafe void FormatPos(IntVector2* chunk, Vector2* tile)
+        {
+            int x = (int)(tile->X / Resc.ChunkSize);
+            int y = (int)(tile->Y / Resc.ChunkSize);
+
+            if (x != 0 || y != 0)
+            {
+                tile->X -= x * Resc.ChunkSize;
+                tile->Y -= y * Resc.ChunkSize;
+
+                chunk->X += x;
+                chunk->Y += y;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mentula.Server;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
+using Mentula.Utilities.Resources;
 
 namespace Mentula.Server
 {
@@ -13,8 +14,7 @@ namespace Mentula.Server
     {
         public List<Chunk> LoadedChunks;
         public List<Chunk> ChunkList;
-        public const int Range_S = 2;
-        public const int Range_C = 1;
+        public const int Range_S = Res.Range_C + 1;
 
         public Map()
         {
@@ -80,11 +80,11 @@ namespace Mentula.Server
         public Chunk[] GetChunks(IntVector2 pos)
         {
             int c = 0;
-            Chunk[] result = new Chunk[(Range_C * 2 + 1) * (Range_C * 2 + 1)];
+            Chunk[] result = new Chunk[(Res.Range_C * 2 + 1) * (Res.Range_C * 2 + 1)];
 
-            for (int y = -Range_C; y <= Range_C; y++)
+            for (int y = -Res.Range_C; y <= Res.Range_C; y++)
             {
-                for (int x = -Range_C; x <= Range_C; x++)
+                for (int x = -Res.Range_C; x <= Res.Range_C; x++)
                 {
                     for (int i = 0; i < LoadedChunks.Count; i++)
                     {
@@ -104,9 +104,9 @@ namespace Mentula.Server
         {
             List<Chunk> r = new List<Chunk>();
 
-            for (int x = -Range_C; x <= Range_C; x++)
+            for (int x = -Res.Range_C; x <= Res.Range_C; x++)
             {
-                for (int y = -Range_C; y <= Range_C; y++)
+                for (int y = -Res.Range_C; y <= Res.Range_C; y++)
                 {
                     for (int i = 0; i < ChunkList.Count; i++)
                     {
@@ -118,8 +118,8 @@ namespace Mentula.Server
                         //if its not next to the old tilePos
                         //and it is next to the new tilePos
                         //and it is not already loaded
-                        if ((Math.Abs(ChunkList[i].ChunkPos.X - oldPos.X) > Range_C | Math.Abs(ChunkList[i].ChunkPos.Y - oldPos.Y) > Range_C) &
-                            (Math.Abs(ChunkList[i].ChunkPos.X - newPos.X) <= Range_C & Math.Abs(ChunkList[i].ChunkPos.Y - newPos.Y) <= Range_C) &
+                        if ((Math.Abs(ChunkList[i].ChunkPos.X - oldPos.X) > Res.Range_C | Math.Abs(ChunkList[i].ChunkPos.Y - oldPos.Y) > Res.Range_C) &
+                            (Math.Abs(ChunkList[i].ChunkPos.X - newPos.X) <= Res.Range_C & Math.Abs(ChunkList[i].ChunkPos.Y - newPos.Y) <= Res.Range_C) &
                             !isloaded)
                         {
                             r.Add(ChunkList[i]);

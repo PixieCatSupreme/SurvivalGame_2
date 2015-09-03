@@ -83,6 +83,7 @@ namespace Mentula.Server
             for (int i = 0; i < index; i++)
             {
                 posses[i] = Players[i].Value.ChunkPos;
+                Map.Generate(posses[i]);
                 Map.LoadChunks(posses[i]);
             }
 

@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using Matrix3 = Mentula.Engine.Core.Matrix3;
+using Vect2 = Mentula.Engine.Core.Vect2;
 using NIM = Lidgren.Network.NetIncomingMessage;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
@@ -22,15 +23,17 @@ namespace Mentula.Client
 {
     public class Main : Game
     {
-        public const int HEIGHT = 600;
-        public const int WIDTH = 800;
+        public const int HEIGHT = 1080;
+        public const int WIDTH = 1920;
 
         private NetClient client;
         private float timeDiff;
+        private FPS fpsCounter;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private TextureCollection textures;
+        private SpriteFont debugFont;
         private Camera cam;
 
         private IntVector2 currentChunk;
@@ -59,6 +62,7 @@ namespace Mentula.Client
         {
             client.Start();
             cam = new Camera();
+            fpsCounter = new FPS();
             chunks = new Chunk[0];
             textures = new TextureCollection(Content);
 
@@ -69,6 +73,7 @@ namespace Mentula.Client
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textures.LoadFromConfig("R/Textures");
+            debugFont = Content.Load<SpriteFont>("Fonts/ConsoleFont");
 
             base.LoadContent();
         }
@@ -77,7 +82,7 @@ namespace Mentula.Client
         {
             KeyboardState state = Keyboard.GetState();
 
-            if (state.IsKeyDown(Keys.C))
+            if (state.IsKeyDown(Keys.OemPlus))
             {
 #if LOCAL
                 client.DiscoverKnownPeer("localhost", Ips.PORT);
@@ -89,15 +94,29 @@ namespace Mentula.Client
                 client.DiscoverKnownPeer(Ips.EndNico);
 #endif
             }
-            if (state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown(Keys.OemMinus))
             {
                 client.Disconnect("User Disconnect.");
             }
 
-            if (state.IsKeyDown(Keys.W)) possition.Y += 1;
-            if (state.IsKeyDown(Keys.A)) possition.X += 1;
-            if (state.IsKeyDown(Keys.S)) possition.Y -= 1;
-            if (state.IsKeyDown(Keys.D)) possition.X -= 1;
+            Vector2 move = new Vector2();
+            if (state.IsKeyDown(Keys.W)) move.Y += .1f;
+            if (state.IsKeyDown(Keys.A)) move.X += .1f;
+            if (state.IsKeyDown(Keys.S)) move.Y -= .1f;
+            if (state.IsKeyDown(Keys.D)) move.X -= .1f;
+
+            if (move != Vector2.Zero)
+            {
+                possition += move;
+
+                fixed (IntVector2* cP = &currentChunk)
+                {
+                    fixed (Vector2* tP = &possition)
+                    {
+                        Chunk.FormatPos(cP, tP);
+                    }
+                }
+            }
 
             NIM msg = null;
             while ((msg = client.ReadMessage()) != null)
@@ -120,6 +139,9 @@ namespace Mentula.Client
                             case (NDT.InitialChunkRequest):
                                 chunks = msg.ReadChunks();
                                 break;
+                            case (NDT.ChunkRequest):
+                                UpdateChunks(msg.ReadChunks());
+                                break;
                         }
                         break;
                 }
@@ -129,9 +151,11 @@ namespace Mentula.Client
             {
                 NOM nom = client.CreateMessage();
                 nom.Write((byte)NDT.PlayerUpdate);
-                fixed (IntVector2* cP = &currentChunk) nom.Write(cP);
-                fixed (Vector2* tP = &possition) nom.Write(tP);
-                client.SendMessage(nom, NetDeliveryMethod.ReliableOrdered);
+                nom.Write(-currentChunk.X);
+                nom.Write(-currentChunk.Y);
+                nom.Write(-possition.X);
+                nom.Write(-possition.Y);
+                client.SendMessage(nom, NetDeliveryMethod.UnreliableSequenced);
                 timeDiff = 0;
             }
 
@@ -141,7 +165,9 @@ namespace Mentula.Client
 
         protected override void Draw(GameTime gameTime)
         {
-            cam.Update(Matrix3.ApplyTranslation(new Engine.Core.Vect2(possition.X, possition.Y)));
+            fpsCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            Vect2 pp = Chunk.GetTotalPos(currentChunk, possition);
+            cam.Update(Matrix3.ApplyTranslation(pp));
             IntVector2[] vertices;
             cam.Transform(ref chunks, out vertices);
 
@@ -150,13 +176,15 @@ namespace Mentula.Client
             for (int i = 0; i < chunks.Length; i++)
             {
                 Chunk chunk = chunks[i];
-                for(int j = 0; j < chunk.Tiles.Length; j++)
+                for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
                     Vector2 pos = vertices[index].ToVector2();
                     spriteBatch.Draw(textures[chunk.Tiles[j].Tex], pos, Color.White);
                     index++;
                 }
             }
+
+            spriteBatch.DrawString(debugFont, fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
 
             spriteBatch.End();
 
@@ -168,6 +196,23 @@ namespace Mentula.Client
             client.Disconnect("Forced Disconnect");
             client.Shutdown("Bye");
             base.OnExiting(sender, args);
+        }
+
+        private void UpdateChunks(Chunk[] newChunks)
+        {
+            int index = 0;
+
+            for (int i = 0; i < chunks.Length && index < newChunks.Length; i++)
+            {
+                Chunk cur = chunks[i];
+
+                if (Math.Abs(cur.ChunkPos.X + currentChunk.X) > Res.Range_C ||
+                    Math.Abs(cur.ChunkPos.Y + currentChunk.Y) > Res.Range_C)
+                {
+                    chunks[i] = newChunks[index];
+                    index++;
+                }
+            }
         }
     }
 }

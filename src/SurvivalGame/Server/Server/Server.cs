@@ -72,6 +72,7 @@ namespace Mentula.Server
             while ((msg = server.ReadMessage()) != null)
             {
                 NOM nom;
+                long id = msg.SenderConnection != null ? msg.SenderConnection.RemoteUniqueIdentifier : -1;
 
                 switch (msg.MessageType)
                 {
@@ -86,7 +87,6 @@ namespace Mentula.Server
                         WriteLine(NIMT.DiscoveryRequest, "{0} discovered the service.", msg.SenderEndPoint.Address);
                         break;
                     case (NIMT.ConnectionApproval):
-                        long id = msg.SenderConnection.RemoteUniqueIdentifier;
                         string name = msg.ReadString();
 
                         if (string.IsNullOrWhiteSpace(name) || name.Length > 16)
@@ -149,9 +149,19 @@ namespace Mentula.Server
                         {
                             case (NDT.PlayerUpdate):
                                 IntVector2 chunk = msg.ReadPoint();
+                                IntVector2 oldChunk = logic.GetPlayer(id).ChunkPos;
                                 Vector2 tile = msg.ReadVector2();
 
-                                if(!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
+                                if (chunk != oldChunk)
+                                {
+                                    nom = server.CreateMessage();
+                                    nom.Write((byte)NDT.ChunkRequest);
+                                    Chunk[] chunkArr = logic.Map.GetChunks(oldChunk, chunk);
+                                    nom.Write(chunkArr);
+                                    server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
+                                }
+
+                                if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
                                 {
                                     nom = server.CreateMessage();
                                     nom.Write((byte)NDT.PlayerUpdate);

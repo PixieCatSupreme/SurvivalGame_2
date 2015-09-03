@@ -5,6 +5,7 @@
     public static class Res
     {
         public static string AppName;
+        public const int Range_C = 2;
 
         public static int ChunkSize;
         public static int ChunkTileLength;
