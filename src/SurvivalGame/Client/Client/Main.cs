@@ -1,8 +1,3 @@
-#define LOCAL
-#if !LOCAL
-#define JOËLL
-#endif
-
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Mentula.Utilities;
@@ -25,6 +20,7 @@ namespace Mentula.Client
     {
         public const int HEIGHT = 1080;
         public const int WIDTH = 1920;
+        public const int HOST = 0;
 
         private NetClient client;
         private float timeDiff;
@@ -84,15 +80,10 @@ namespace Mentula.Client
 
             if (state.IsKeyDown(Keys.OemPlus))
             {
-#if LOCAL
-                client.DiscoverKnownPeer("localhost", Ips.PORT);
-#endif
-#if JOËLL
-                client.DiscoverKnownPeer(Ips.EndJoëll);
-#endif
-#if !LOCAL && !JOËLL
-                client.DiscoverKnownPeer(Ips.EndNico);
-#endif
+                if (HOST == 0) client.DiscoverKnownPeer("localhost", Ips.PORT);
+                else if (HOST == 1) client.DiscoverKnownPeer(Ips.EndJoëll);
+                else if (HOST == 2) client.DiscoverKnownPeer(Ips.EndNico);
+                else if (HOST == 4) client.DiscoverKnownPeer(Ips.EndFrank);
             }
             if (state.IsKeyDown(Keys.OemMinus))
             {
@@ -104,6 +95,7 @@ namespace Mentula.Client
             if (state.IsKeyDown(Keys.A)) move.X += .1f;
             if (state.IsKeyDown(Keys.S)) move.Y -= .1f;
             if (state.IsKeyDown(Keys.D)) move.X -= .1f;
+            if (state.IsKeyDown(Keys.Escape)) Exit();
 
             if (move != Vector2.Zero)
             {
@@ -167,11 +159,14 @@ namespace Mentula.Client
         {
             fpsCounter.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             Vect2 pp = Chunk.GetTotalPos(currentChunk, possition);
-            cam.Update(Matrix3.ApplyTranslation(pp));
+            cam.Update(Matrix3.ApplyScale(2f) * Matrix3.ApplyTranslation(pp));
             IntVector2[] vertices;
             cam.Transform(ref chunks, out vertices);
 
-            spriteBatch.Begin();
+            GraphicsDevice.Clear(Color.LimeGreen);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+            spriteBatch.DrawString(debugFont, fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red,0,Vector2.Zero, 1, 0, 0);
+
             int index = 0;
             for (int i = 0; i < chunks.Length; i++)
             {
@@ -179,12 +174,10 @@ namespace Mentula.Client
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
                     Vector2 pos = vertices[index].ToVector2();
-                    spriteBatch.Draw(textures[chunk.Tiles[j].Tex], pos, Color.White);
+                    spriteBatch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, 0, Vector2.Zero, 2f, 0, 1);
                     index++;
                 }
             }
-
-            spriteBatch.DrawString(debugFont, fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
 
             spriteBatch.End();
 

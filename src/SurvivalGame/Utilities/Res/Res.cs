@@ -5,7 +5,7 @@
     public static class Res
     {
         public static string AppName;
-        public const int Range_C = 2;
+        public const int Range_C = 1;
 
         public static int ChunkSize;
         public static int ChunkTileLength;
@@ -20,7 +20,7 @@
             ChunkTileLength = ChunkSize * ChunkSize;
             TileSize = int.Parse(Resources.TileSize);
             MaxPlayers = int.Parse(Resources.MaxPlayers);
-            Seed = "s";
+            Seed = "DesertPlz";
         }
     }
 }
