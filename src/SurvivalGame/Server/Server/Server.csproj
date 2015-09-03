@@ -82,7 +82,6 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
     <Compile Include="AStar.cs" />
     <Compile Include="CPUUsage.cs" />
     <Compile Include="Creature.cs" />

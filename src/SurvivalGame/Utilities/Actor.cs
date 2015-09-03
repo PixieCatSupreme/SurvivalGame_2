@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace Mentula.Server
+namespace Mentula.Utilities
 {
     public class Actor
     {
         public Vector2 Pos;
         public IntVector2 ChunkPos;
         public float Rotation;
-
 
         public Actor()
         {

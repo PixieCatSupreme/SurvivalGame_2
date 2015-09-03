@@ -73,10 +73,7 @@ namespace Mentula.Client
                 else if (HOST == 2) client.DiscoverKnownPeer(Ips.EndNico);
                 else if (HOST == 4) client.DiscoverKnownPeer(Ips.EndFrank);
             }
-            if (state.IsKeyDown(Keys.OemMinus))
-            {
-                client.Disconnect("User Disconnect.");
-            }
+            if (state.IsKeyDown(Keys.OemMinus)) client.Disconnect("User Disconnect.");
 
             Vector2 move = new Vector2();
             if (state.IsKeyDown(Keys.W)) move.Y += .1f;

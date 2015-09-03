@@ -67,6 +67,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actor.cs" />
     <Compile Include="BytePoint.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="Extentions\LidgrenExtensions.cs" />
