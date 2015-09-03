@@ -11,6 +11,8 @@
 	[Container: "Creatures"]
 	{
 		[Person: id=9997, name="Cool_Dude"]
+		[Wolf1: id=9996, name="Wolf1"]
+		[Wolf2: id=9995, name="Wolf2"]
 	}
 
 	[Container: "Utilities"]
