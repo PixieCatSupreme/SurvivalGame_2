@@ -89,6 +89,7 @@
     <Compile Include="GameLogic.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
+    <Compile Include="Map\Terrain\Generation\PerlinNoise.cs" />
     <Compile Include="Map\Terrain\Map.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
