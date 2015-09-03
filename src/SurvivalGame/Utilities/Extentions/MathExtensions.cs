@@ -44,7 +44,7 @@ namespace Mentula.Utilities.MathExtensions
             float c = math.Abs(x - y);
 
             if (c < 180) return c;
-             
+
             return 360 - c;
         }
 
@@ -52,6 +52,17 @@ namespace Mentula.Utilities.MathExtensions
         {
             v.Normalize();
             return (float)math.Atan2(v.Y, v.X) * (float)(180f / math.PI);
+        }
+
+        public static float VectorToRadians(Vector2 v)
+        {
+            v.Normalize();
+            return (float)math.Atan2(v.Y, v.X);
+        }
+
+        public static Vector2 RadiansToVector(float rad)
+        {
+            return new Vector2((float)math.Cos(rad), (float)math.Sin(rad));
         }
 
         public static Vector2 Abs(Vector2 vec)

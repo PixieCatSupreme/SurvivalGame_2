@@ -12,6 +12,8 @@ namespace Mentula.Server
     {
         public Vector2 Pos;
         public IntVector2 ChunkPos;
+        public float Rotation;
+
 
         public Actor()
         {
