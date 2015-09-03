@@ -29,10 +29,13 @@ namespace Mentula.Server
             Random r = new Random();
             while (true)
             {
-                r.Next(6);
 
-
+                if (defender.Health[defender.Health.Length] > 0)
+                {
+                    break;
+                }
             }
         }
+
     }
 }
