@@ -26,8 +26,7 @@ namespace Mentula.Client
         private float timeDiff;
         private VertexGraphics vGraphics;
 
-        private IntVector2 currentChunk;
-        private Vector2 possition;
+        private Actor player;
 
         private Chunk[] chunks;
 
@@ -51,6 +50,7 @@ namespace Mentula.Client
         protected override void Initialize()
         {
             client.Start();
+            player = new Actor();
             chunks = new Chunk[0];
             base.Initialize();
         }
@@ -84,11 +84,11 @@ namespace Mentula.Client
 
             if (move != Vector2.Zero)
             {
-                possition += move;
+                player.Pos += move;
 
-                fixed (IntVector2* cP = &currentChunk)
+                fixed (IntVector2* cP = &player.ChunkPos)
                 {
-                    fixed (Vector2* tP = &possition)
+                    fixed (Vector2* tP = &player.Pos)
                     {
                         Chunk.FormatPos(cP, tP);
                     }
@@ -110,8 +110,8 @@ namespace Mentula.Client
                         switch (type)
                         {
                             case (NDT.PlayerUpdate):
-                                currentChunk = msg.ReadPoint();
-                                possition = msg.ReadVector2();
+                                player.ChunkPos = msg.ReadPoint();
+                                player.Pos = msg.ReadVector2();
                                 break;
                             case (NDT.InitialChunkRequest):
                                 chunks = msg.ReadChunks();
@@ -129,16 +129,16 @@ namespace Mentula.Client
             {
                 NOM nom = client.CreateMessage();
                 nom.Write((byte)NDT.PlayerUpdate);
-                nom.Write(-currentChunk.X);
-                nom.Write(-currentChunk.Y);
-                nom.Write(-possition.X);
-                nom.Write(-possition.Y);
+                nom.Write(-player.ChunkPos.X);
+                nom.Write(-player.ChunkPos.Y);
+                nom.Write(-player.Pos.X);
+                nom.Write(-player.Pos.Y);
                 client.SendMessage(nom, NetDeliveryMethod.UnreliableSequenced);
                 timeDiff = 0;
             }
 
             timeDiff += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            vGraphics.Update(currentChunk, possition, delta);
+            vGraphics.Update(player, delta);
             base.Update(gameTime);
         }
 
@@ -163,8 +163,8 @@ namespace Mentula.Client
             {
                 Chunk cur = chunks[i];
 
-                if (Math.Abs(cur.ChunkPos.X + currentChunk.X) > Res.Range_C ||
-                    Math.Abs(cur.ChunkPos.Y + currentChunk.Y) > Res.Range_C)
+                if (Math.Abs(cur.ChunkPos.X + player.ChunkPos.X) > Res.Range_C ||
+                    Math.Abs(cur.ChunkPos.Y + player.ChunkPos.Y) > Res.Range_C)
                 {
                     chunks[i] = newChunks[index];
                     index++;

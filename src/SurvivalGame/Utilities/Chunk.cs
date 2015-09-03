@@ -23,16 +23,29 @@ namespace Mentula.Utilities
 
         public static unsafe void FormatPos(IntVector2* chunk, Vector2* tile)
         {
-            int x = (int)(tile->X / Resc.ChunkSize);
-            int y = (int)(tile->Y / Resc.ChunkSize);
-
-            if (x != 0 || y != 0)
+            while(-tile->X < 0 || -tile->Y < 0 || -tile->X > Resc.ChunkSize || -tile->Y > Resc.ChunkSize)
             {
-                tile->X -= x * Resc.ChunkSize;
-                tile->Y -= y * Resc.ChunkSize;
+                if (-tile->X < 0)
+                {
+                    tile->X -= Resc.ChunkSize;
+                    chunk->X++;
+                }
+                else if (-tile->X > Resc.ChunkSize)
+                {
+                    tile->X += Resc.ChunkSize;
+                    chunk->X--;
+                }
 
-                chunk->X += x;
-                chunk->Y += y;
+                if (-tile->Y < 0)
+                {
+                    tile->Y -= Resc.ChunkSize;
+                    chunk->Y++;
+                }
+                else if (-tile->Y > Resc.ChunkSize)
+                {
+                    tile->Y += Resc.ChunkSize;
+                    chunk->Y--;
+                }
             }
         }
     }
