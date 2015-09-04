@@ -89,5 +89,17 @@ namespace Mentula.Server
 
             Map.UnloadChunks(posses);
         }
+
+        public void PlayerAttack(long id)
+        {
+            Creature[] players = Players.Select(p => p.Value).ToArray();
+            Creature attacker = GetPlayer(id);
+            Combat.OnAttack(ref players, ref attacker, 1, 1);
+            for (int i = 0; i < players.Length; i++)
+            {
+                Players[i].Value.Health = players[i].Health;
+            }
+        }
+
     }
 }

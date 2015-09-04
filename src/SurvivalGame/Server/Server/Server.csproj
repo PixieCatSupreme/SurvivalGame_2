@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AStar.cs" />
+    <Compile Include="Combat.cs" />
     <Compile Include="CPUUsage.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="GameLogic.cs" />
