@@ -74,8 +74,9 @@ namespace Mentula.Server
             {
                 if (Players[i].Key == id)
                 {
-                    if (Players.Length == 1) Players[i] = new KeyValuePair<long, Creature>();
+                    if (Index == 1) Players[i] = new KeyValuePair<long, Creature>();
                     else Players[i] = Players[Index - 1];
+                    Index--;
                 }
             }
         }
