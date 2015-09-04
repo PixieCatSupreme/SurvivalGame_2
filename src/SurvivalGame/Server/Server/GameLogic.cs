@@ -51,14 +51,18 @@ namespace Mentula.Server
             }
         }
 
-        public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile)
+        public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile, float rotation)
         {
             bool legal = true;
 
             // Check if move possible.
             for (int i = 0; i < Players.Length; i++)
             {
-                if (Players[i].Key == id) Players[i].Value.UpdatePos(chunk, tile);
+                if (Players[i].Key == id)
+                {
+                    Players[i].Value.UpdatePos(chunk, tile);
+                    Players[i].Value.Rotation = rotation;
+                }
             }
 
             return legal;

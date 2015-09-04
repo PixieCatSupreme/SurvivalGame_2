@@ -152,6 +152,7 @@ namespace Mentula.Server
                                 IntVector2 chunk = msg.ReadPoint();
                                 IntVector2 oldChunk = logic.GetPlayer(id).ChunkPos;
                                 Vector2 tile = msg.ReadVector2();
+                                float rot = msg.ReadHalfPrecisionSingle();
 
                                 if (chunk != oldChunk)
                                 {
@@ -162,7 +163,7 @@ namespace Mentula.Server
                                     server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
                                 }
 
-                                if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
+                                if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile, rot))
                                 {
                                     nom = server.CreateMessage();
                                     nom.Write((byte)NDT.HeroUpdate);

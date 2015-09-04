@@ -145,6 +145,7 @@ namespace Mentula.Client
                 nom.Write(-hero.ChunkPos.Y);
                 nom.Write(-hero.Pos.X);
                 nom.Write(-hero.Pos.Y);
+                nom.WriteHalfPrecision(hero.Rotation);
                 client.SendMessage(nom, NetDeliveryMethod.UnreliableSequenced);
                 timeDiff = 0;
             }
