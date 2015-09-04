@@ -145,33 +145,39 @@ namespace Mentula.Server
                         break;
                     case (NIMT.Data):
                         NDT type = (NDT)msg.ReadByte();
-
-                        switch (type)
+                        try
                         {
-                            case (NDT.HeroUpdate):
-                                IntVector2 chunk = msg.ReadPoint();
-                                IntVector2 oldChunk = logic.GetPlayer(id).ChunkPos;
-                                Vector2 tile = msg.ReadVector2();
-                                float rot = msg.ReadHalfPrecisionSingle();
+                            switch (type)
+                            {
+                                case (NDT.HeroUpdate):
+                                    IntVector2 chunk = msg.ReadPoint();
+                                    IntVector2 oldChunk = logic.GetPlayer(id).ChunkPos;
+                                    Vector2 tile = msg.ReadVector2();
+                                    float rot = msg.ReadHalfPrecisionSingle();
 
-                                if (chunk != oldChunk)
-                                {
-                                    nom = server.CreateMessage();
-                                    nom.Write((byte)NDT.ChunkRequest);
-                                    Chunk[] chunkArr = logic.Map.GetChunks(oldChunk, chunk);
-                                    nom.Write(chunkArr);
-                                    server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
-                                }
+                                    if (chunk != oldChunk)
+                                    {
+                                        nom = server.CreateMessage();
+                                        nom.Write((byte)NDT.ChunkRequest);
+                                        Chunk[] chunkArr = logic.Map.GetChunks(oldChunk, chunk);
+                                        nom.Write(chunkArr);
+                                        server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
+                                    }
 
-                                if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile, rot))
-                                {
-                                    nom = server.CreateMessage();
-                                    nom.Write((byte)NDT.HeroUpdate);
-                                    nom.Write(&chunk);
-                                    nom.Write(&tile);
-                                    server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
-                                }
-                                break;
+                                    if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile, rot))
+                                    {
+                                        nom = server.CreateMessage();
+                                        nom.Write((byte)NDT.HeroUpdate);
+                                        nom.Write(&chunk);
+                                        nom.Write(&tile);
+                                        server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                                    }
+                                    break;
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            WriteLine(NIMT.Error, "An error occured wile reading a {0} message. Innerexception: {1}", type, e);
                         }
                         break;
                 }
