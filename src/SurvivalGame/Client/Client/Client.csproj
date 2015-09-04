@@ -80,7 +80,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimationState.cs" />
+    <Compile Include="AnimationHandler.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="FPS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

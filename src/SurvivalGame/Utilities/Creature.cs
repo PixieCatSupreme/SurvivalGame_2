@@ -10,7 +10,6 @@ namespace Mentula.Utilities
         public int[] Health;
         public int[] MaxHealth;
 
-
         public int animationName;
         public float animationSpeed;
         public int animationFrame;
