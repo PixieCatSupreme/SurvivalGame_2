@@ -1,4 +1,6 @@
 ﻿using Lidgren.Network;
+using Lidgren.Network.Xna;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +47,7 @@ namespace Mentula.Utilities.Net
 
             msg.Write((ushort)value.Tiles.Length);
 
-            for(int i = 0; i < value.Tiles.Length; i++)
+            for (int i = 0; i < value.Tiles.Length; i++)
             {
                 Tile cur = value.Tiles[i];
 
@@ -60,7 +62,7 @@ namespace Mentula.Utilities.Net
             ushort length = msg.ReadUInt16();
             Chunk[] result = new Chunk[length];
 
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 result[i] = msg.ReadChunk();
             }
@@ -75,6 +77,42 @@ namespace Mentula.Utilities.Net
             for (int i = 0; i < value.Length; i++)
             {
                 msg.Write(value[i]);
+            }
+        }
+
+        public static KeyValuePair<string, Actor>[] ReadPlayers(this NetBuffer msg)
+        {
+            ushort length = msg.ReadUInt16();
+            KeyValuePair<string, Actor>[] result = new KeyValuePair<string, Actor>[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                IntVector2 chunk = msg.ReadPoint();
+                Vector2 tile = msg.ReadVector2();
+                float rot = msg.ReadHalfPrecisionSingle();
+                string name = msg.ReadString();
+
+                result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk));
+            }
+
+            return result;
+        }
+
+        public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length)
+        {
+            if (length > 0)
+            {
+                msg.Write((ushort)length);
+
+                for (int i = 0; i < length; i++)
+                {
+                    KeyValuePair<long, Creature> cur = players[i];
+
+                    fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
+                    fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
+                    msg.WriteHalfPrecision(cur.Value.Rotation);
+                    msg.Write(cur.Value.Name);
+                }
             }
         }
     }

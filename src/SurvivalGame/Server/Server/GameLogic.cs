@@ -11,18 +11,18 @@ namespace Mentula.Server
         public Map Map { get; private set; }
         public KeyValuePair<long, Creature>[] Players;
 
-        private int index;
+        public int Index { get; private set; }
 
         public GameLogic()
         {
             Map = new Map();
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
-            index = 0;
+            Index = 0;
         }
 
         public bool PlayerExists(long id, string name)
         {
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < Index; i++)
             {
                 if (Players[i].Key == id || Players[i].Value.Name == name) return true;
             }
@@ -32,7 +32,7 @@ namespace Mentula.Server
 
         public Creature GetPlayer(long id)
         {
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < Index; i++)
             {
                 if (Players[i].Key == id) return Players[i].Value;
             }
@@ -42,12 +42,12 @@ namespace Mentula.Server
 
         public void AddPlayer(long id, string name)
         {
-            if (index < Players.Length)
+            if (Index < Players.Length)
             {
-                Players[index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Vector2(), new IntVector2()));
+                Players[Index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Vector2(), new IntVector2()));
 
-                Map.Generate(Players[index].Value.ChunkPos);
-                index++;
+                Map.Generate(Players[Index].Value.ChunkPos);
+                Index++;
             }
         }
 
@@ -71,7 +71,7 @@ namespace Mentula.Server
                 if (Players[i].Key == id)
                 {
                     if (Players.Length == 1) Players[i] = new KeyValuePair<long, Creature>();
-                    else Players[i] = Players[index - 1];
+                    else Players[i] = Players[Index - 1];
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace Mentula.Server
         {
             IntVector2[] posses = new IntVector2[Players.Length];
 
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < Index; i++)
             {
                 posses[i] = Players[i].Value.ChunkPos;
                 Map.Generate(posses[i]);

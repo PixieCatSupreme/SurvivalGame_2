@@ -1,4 +1,4 @@
-﻿#define DRUNK
+﻿//#define DRUNK
 
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
@@ -17,7 +17,7 @@ namespace Mentula.Client
         private float ROT = 0;
         private bool invertScale = false;
 
-        public Dictionary<string, Actor> players;
+        public KeyValuePair<string, Actor>[] Players;
         public Camera Camera { get; private set; }
 
         private SpriteBatch batch;
@@ -28,8 +28,7 @@ namespace Mentula.Client
 
         private Chunk[] chunks;
         private Vector2[] vertexBuffer;
-        private float playerR;
-        private Vector2 playerPos;
+        private float heroR;
 
         public VertexGraphics(Game game)
             :base(game)
@@ -39,7 +38,7 @@ namespace Mentula.Client
 
             chunks = new Chunk[0];
             vertexBuffer = new Vector2[0];
-            players = new Dictionary<string, Actor>();
+            Players = new KeyValuePair<string, Actor>[0];
         }
 
         public void Load(ContentManager content)
@@ -53,7 +52,7 @@ namespace Mentula.Client
             fonts.Load("Fonts/", "ConsoleFont", "MenuFont", "NameFont");
         }
 
-        public void Update(Actor player, float delta)
+        public void Update(Actor hero, float delta)
         {
 #if DRUNK
             ROT += 10 * delta;
@@ -61,13 +60,13 @@ namespace Mentula.Client
             SCALE += (invertScale ? -1 : 1) * delta;
 #endif
 
-            Vector2 pos = Chunk.GetTotalPos(player.ChunkPos, player.Pos);
+            Vector2 pos = Chunk.GetTotalPos(hero.ChunkPos, hero.Pos);
             Matrix3 view = Matrix3.Identity;
             view *= Matrix3.ApplyScale(SCALE);
             view *= Matrix3.ApplyRotation(ROT * Res.DEG2RAD);
             view *= Matrix3.ApplyTranslation(new Vect2(pos.X, pos.Y));
             Camera.Update(view);
-            playerPos = Chunk.GetTotalPos(-player.ChunkPos, -player.Pos);
+            heroR = hero.Rotation;
         }
 
         public void Draw(float delta)
@@ -91,12 +90,9 @@ namespace Mentula.Client
                 }
             }
 
-            Vector2[] t = new Vector2[1] { playerPos };
-            Camera.Transform(ref t, ref t);
-            batch.Draw(textures[9997], t[0], null, Color.White, playerR, midTexture, SCALE, 0, 0);
+            batch.Draw(textures[9997], new Vector2(Camera.Offset.X, Camera.Offset.Y), null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
 
             batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
-            batch.DrawString(fonts["ConsoleFont"], playerPos.ToString(), new Vector2(0, 16), Color.Red);
 
             batch.End();
         }

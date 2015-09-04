@@ -2,8 +2,9 @@
 {
     public enum NDT
     {
-        PlayerUpdate,
+        HeroUpdate,
         InitialChunkRequest,
-        ChunkRequest
+        ChunkRequest,
+        PlayerUpdate
     }
 }

@@ -31,6 +31,7 @@ namespace Mentula.Server
         private CPUUsage cpu;
         private NetServer server;
         private GameLogic logic;
+        private float timeDiff;
 
         public Server()
         {
@@ -147,7 +148,7 @@ namespace Mentula.Server
 
                         switch (type)
                         {
-                            case (NDT.PlayerUpdate):
+                            case (NDT.HeroUpdate):
                                 IntVector2 chunk = msg.ReadPoint();
                                 IntVector2 oldChunk = logic.GetPlayer(id).ChunkPos;
                                 Vector2 tile = msg.ReadVector2();
@@ -164,7 +165,7 @@ namespace Mentula.Server
                                 if (!logic.UpdatePlayer(msg.SenderConnection.RemoteUniqueIdentifier, &chunk, &tile))
                                 {
                                     nom = server.CreateMessage();
-                                    nom.Write((byte)NDT.PlayerUpdate);
+                                    nom.Write((byte)NDT.HeroUpdate);
                                     nom.Write(&chunk);
                                     nom.Write(&tile);
                                     server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
@@ -176,6 +177,17 @@ namespace Mentula.Server
             }
 
             logic.Update(time.DeltaTime);
+
+            if (server.Connections.Count > 0 && timeDiff >= 1f / 30)
+            {
+                NOM nom = server.CreateMessage();
+                nom.Write((byte)NDT.PlayerUpdate);
+                nom.Write(ref logic.Players, logic.Index);
+                server.SendToAll(nom, NetDeliveryMethod.Unreliable);
+                timeDiff = 0;
+            }
+
+            timeDiff += time.DeltaTime;
         }
 
         private void Server_Draw(GameTime time)

@@ -13,6 +13,7 @@ using NIM = Lidgren.Network.NetIncomingMessage;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConfig = Lidgren.Network.NetPeerConfiguration;
+using System.Collections.Generic;
 
 namespace Mentula.Client
 {
@@ -26,8 +27,7 @@ namespace Mentula.Client
         private float timeDiff;
         private VertexGraphics vGraphics;
 
-        private Actor player;
-
+        private Actor hero;
         private Chunk[] chunks;
 
         public Main()
@@ -50,7 +50,7 @@ namespace Mentula.Client
         protected override void Initialize()
         {
             client.Start();
-            player = new Actor();
+            hero = new Actor();
             chunks = new Chunk[0];
             base.Initialize();
         }
@@ -80,15 +80,17 @@ namespace Mentula.Client
             if (state.IsKeyDown(Keys.A)) move.X += .1f;
             if (state.IsKeyDown(Keys.S)) move.Y -= .1f;
             if (state.IsKeyDown(Keys.D)) move.X -= .1f;
+            if (state.IsKeyDown(Keys.Q)) hero.Rotation -= .1f * Res.DEG2RAD;
+            if (state.IsKeyDown(Keys.E)) hero.Rotation += .1f * Res.DEG2RAD;
             if (state.IsKeyDown(Keys.Escape)) Exit();
 
             if (move != Vector2.Zero)
             {
-                player.Pos += move;
+                hero.Pos += move;
 
-                fixed (IntVector2* cP = &player.ChunkPos)
+                fixed (IntVector2* cP = &hero.ChunkPos)
                 {
-                    fixed (Vector2* tP = &player.Pos)
+                    fixed (Vector2* tP = &hero.Pos)
                     {
                         Chunk.FormatPos(cP, tP);
                     }
@@ -109,9 +111,9 @@ namespace Mentula.Client
 
                         switch (type)
                         {
-                            case (NDT.PlayerUpdate):
-                                player.ChunkPos = msg.ReadPoint();
-                                player.Pos = msg.ReadVector2();
+                            case (NDT.HeroUpdate):
+                                hero.ChunkPos = msg.ReadPoint();
+                                hero.Pos = msg.ReadVector2();
                                 break;
                             case (NDT.InitialChunkRequest):
                                 chunks = msg.ReadChunks();
@@ -119,6 +121,9 @@ namespace Mentula.Client
                                 break;
                             case (NDT.ChunkRequest):
                                 UpdateChunks(msg.ReadChunks());
+                                break;
+                            case (NDT.PlayerUpdate):
+                                vGraphics.Players = msg.ReadPlayers();
                                 break;
                         }
                         break;
@@ -128,17 +133,17 @@ namespace Mentula.Client
             if (client.ConnectionStatus == NetConnectionStatus.Connected && timeDiff >= 1f / 30)
             {
                 NOM nom = client.CreateMessage();
-                nom.Write((byte)NDT.PlayerUpdate);
-                nom.Write(-player.ChunkPos.X);
-                nom.Write(-player.ChunkPos.Y);
-                nom.Write(-player.Pos.X);
-                nom.Write(-player.Pos.Y);
+                nom.Write((byte)NDT.HeroUpdate);
+                nom.Write(-hero.ChunkPos.X);
+                nom.Write(-hero.ChunkPos.Y);
+                nom.Write(-hero.Pos.X);
+                nom.Write(-hero.Pos.Y);
                 client.SendMessage(nom, NetDeliveryMethod.UnreliableSequenced);
                 timeDiff = 0;
             }
 
             timeDiff += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            vGraphics.Update(player, delta);
+            vGraphics.Update(hero, delta);
             base.Update(gameTime);
         }
 
@@ -163,8 +168,8 @@ namespace Mentula.Client
             {
                 Chunk cur = chunks[i];
 
-                if (Math.Abs(cur.ChunkPos.X + player.ChunkPos.X) > Res.Range_C ||
-                    Math.Abs(cur.ChunkPos.Y + player.ChunkPos.Y) > Res.Range_C)
+                if (Math.Abs(cur.ChunkPos.X + hero.ChunkPos.X) > Res.Range_C ||
+                    Math.Abs(cur.ChunkPos.Y + hero.ChunkPos.Y) > Res.Range_C)
                 {
                     chunks[i] = newChunks[index];
                     index++;
