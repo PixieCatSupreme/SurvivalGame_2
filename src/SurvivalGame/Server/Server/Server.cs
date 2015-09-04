@@ -183,7 +183,7 @@ namespace Mentula.Server
                 NOM nom = server.CreateMessage();
                 nom.Write((byte)NDT.PlayerUpdate);
                 nom.Write(ref logic.Players, logic.Index);
-                server.SendToAll(nom, NetDeliveryMethod.Unreliable);
+                server.SendToAll(nom, NetDeliveryMethod.ReliableOrdered);
                 timeDiff = 0;
             }
 

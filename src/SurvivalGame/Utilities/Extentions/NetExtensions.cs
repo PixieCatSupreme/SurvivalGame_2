@@ -82,17 +82,21 @@ namespace Mentula.Utilities.Net
 
         public static KeyValuePair<string, Actor>[] ReadPlayers(this NetBuffer msg)
         {
-            ushort length = msg.ReadUInt16();
+            int length = msg.ReadUInt16() - 1;
             KeyValuePair<string, Actor>[] result = new KeyValuePair<string, Actor>[length];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length;)
             {
                 IntVector2 chunk = msg.ReadPoint();
                 Vector2 tile = msg.ReadVector2();
                 float rot = msg.ReadHalfPrecisionSingle();
                 string name = msg.ReadString();
 
-                result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk));
+                if (name != Environment.UserName)
+                {
+                    result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk));
+                    i++;
+                }
             }
 
             return result;

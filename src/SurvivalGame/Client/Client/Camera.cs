@@ -2,6 +2,7 @@
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Mentula.Client
 {
@@ -78,14 +79,15 @@ namespace Mentula.Client
             }
         }
 
-        public void Transform(ref Vector2[] sourceArray, ref Vector2[] destinationArray)
+        public unsafe void Transform(ref KeyValuePair<string, Actor>[] sourceArray, ref Vector2[] destinationArray)
         {
             int last = sourceArray.Length;
             int index = 0;
 
             for (int i = 0; i < last; i++)
             {
-                Vector2 curr = sourceArray[i];
+                Actor actor = sourceArray[i].Value;
+                Vector2 curr = Chunk.GetTotalPos(actor.ChunkPos, actor.Pos);
 
                 float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
                 float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;

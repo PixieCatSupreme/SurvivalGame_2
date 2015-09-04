@@ -17,7 +17,6 @@ namespace Mentula.Client
         private float ROT = 0;
         private bool invertScale = false;
 
-        public KeyValuePair<string, Actor>[] Players;
         public Camera Camera { get; private set; }
 
         private SpriteBatch batch;
@@ -27,18 +26,21 @@ namespace Mentula.Client
         private FontCollection fonts;
 
         private Chunk[] chunks;
+        private KeyValuePair<string, Actor>[] players;
         private Vector2[] vertexBuffer;
+        private Vector2[] actorBuffer;
         private float heroR;
 
         public VertexGraphics(Game game)
-            :base(game)
+            : base(game)
         {
             Camera = new Camera();
             fpsCounter = new FPS();
 
             chunks = new Chunk[0];
             vertexBuffer = new Vector2[0];
-            Players = new KeyValuePair<string, Actor>[0];
+            actorBuffer = new Vector2[0];
+            players = new KeyValuePair<string, Actor>[0];
         }
 
         public void Load(ContentManager content)
@@ -73,12 +75,14 @@ namespace Mentula.Client
         {
             fpsCounter.Update(delta);
             Camera.Transform(ref chunks, ref vertexBuffer);
+            Camera.Transform(ref players, ref actorBuffer);
+
+            int index = 0;
+            Vector2 midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
 
             GraphicsDevice.Clear(Color.LimeGreen);
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
 
-            int index = 0;
-            Vector2 midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
             for (int i = 0; i < chunks.Length; i++)
             {
                 Chunk chunk = chunks[i];
@@ -88,6 +92,12 @@ namespace Mentula.Client
                     batch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, ROT * Res.DEG2RAD, midTexture, SCALE, 0, 0.5f);
                     index++;
                 }
+            }
+
+            for (int i = 0; i < players.Length; i++)
+            {
+                batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Value.Rotation + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                batch.DrawString(fonts["NameFont"], players[i].Key, actorBuffer[i] + new Vector2(0, 32), Color.Red);
             }
 
             batch.Draw(textures[9997], new Vector2(Camera.Offset.X, Camera.Offset.Y), null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
@@ -101,6 +111,12 @@ namespace Mentula.Client
         {
             this.chunks = chunks;
             vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
+        }
+
+        public void UpdatePlayers(KeyValuePair<string, Actor>[] players)
+        {
+            this.players = players;
+            actorBuffer = new Vector2[players.Length];
         }
     }
 }
