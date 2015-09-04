@@ -94,7 +94,7 @@ namespace Mentula.Utilities.Net
 
                 if (name != Environment.UserName)
                 {
-                    result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk));
+                    result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk) { Rotation = rot });
                     i++;
                 }
             }
