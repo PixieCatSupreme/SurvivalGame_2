@@ -14,6 +14,7 @@ using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConfig = Lidgren.Network.NetPeerConfiguration;
 using System.Collections.Generic;
+using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Client
 {
@@ -87,8 +88,6 @@ namespace Mentula.Client
             if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
             if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
             if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
-            if (state.IsKeyDown(Keys.Q)) hero.Rotation -= .1f * Res.DEG2RAD;
-            if (state.IsKeyDown(Keys.E)) hero.Rotation += .1f * Res.DEG2RAD;
             if (state.IsKeyDown(Keys.Escape)) Exit();
 
             if (move != Vector2.Zero)
@@ -103,6 +102,10 @@ namespace Mentula.Client
                     }
                 }
             }
+
+            MouseState mState = Mouse.GetState();           /* We need to add 90 degrees (* PI / 180) because */
+            Vect2 mousePos = new Vect2(mState.X, mState.Y); /* the angle will be returned facing right. */
+            hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos) + 1.5707963f;
 
             NIM msg = null;
             while ((msg = client.ReadMessage()) != null)

@@ -97,7 +97,7 @@ namespace Mentula.Client
             for (int i = 0; i < players.Length; i++)
             {
                 batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Value.Rotation + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
-                batch.DrawString(fonts["NameFont"], players[i].Key, actorBuffer[i] + new Vector2(0, 32), Color.Red);
+                batch.DrawString(fonts["NameFont"], players[i].Key, actorBuffer[i] + new Vector2(0, -32), Color.Red);
             }
 
             batch.Draw(textures[9997], new Vector2(Camera.Offset.X, Camera.Offset.Y), null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
@@ -110,13 +110,13 @@ namespace Mentula.Client
         public void UpdateChunks(ref Chunk[] chunks)
         {
             this.chunks = chunks;
-            vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
+            if (chunks.Length != vertexBuffer.Length) vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
         }
 
         public void UpdatePlayers(KeyValuePair<string, Actor>[] players)
         {
             this.players = players;
-            actorBuffer = new Vector2[players.Length];
+            if(players.Length != actorBuffer.Length) actorBuffer = new Vector2[players.Length];
         }
     }
 }
