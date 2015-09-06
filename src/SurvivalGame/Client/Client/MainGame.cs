@@ -20,11 +20,11 @@ namespace Mentula.Client
         public const int WIDTH = 1920;
         public const int HOST = 0;
 
-        internal VertexGraphics vGraphics;
         internal Actor hero;
         internal Chunk[] chunks;
 
-        private ClientNetworking networking;
+        internal VertexGraphics vGraphics;
+        internal ClientNetworking networking;
 
         public MainGame()
         {
@@ -32,12 +32,12 @@ namespace Mentula.Client
             IsFixedTimeStep = false;
             IsMouseVisible = true;
 
-            vGraphics = new VertexGraphics(this)
+            Components.Add(vGraphics = new VertexGraphics(this)
                 {
                     PreferredBackBufferHeight = HEIGHT,
                     PreferredBackBufferWidth = WIDTH,
                     SynchronizeWithVerticalRetrace = false
-                };
+                });
 
             Components.Add(networking = new ClientNetworking(this));
         }
@@ -47,12 +47,6 @@ namespace Mentula.Client
             hero = new Actor();
             chunks = new Chunk[0];
             base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            vGraphics.Load(Content);
-            base.LoadContent();
         }
 
         protected unsafe override void Update(GameTime gameTime)
@@ -79,10 +73,7 @@ namespace Mentula.Client
                 }
             }
 
-            if (state.IsKeyDown(Keys.OemMinus))
-            {
-                networking.Disconect();
-            }
+            if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
 
             Vector2 move = new Vector2();
             if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
@@ -108,7 +99,6 @@ namespace Mentula.Client
             Vect2 mousePos = new Vect2(mState.X, mState.Y); /* the angle will be returned facing right. */
             hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos) + 1.5707963f;
 
-            vGraphics.Update(hero, delta);
             base.Update(gameTime);
         }
 
