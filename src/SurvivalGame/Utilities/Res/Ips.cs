@@ -6,15 +6,15 @@ namespace Mentula.Utilities.Resources
     {
         public const int PORT = 7777;
 
-        public static IPEndPoint EndNico;
-        public static IPEndPoint EndJoëll;
-        public static IPEndPoint EndFrank;
+        public static IPAddress Nico;
+        public static IPAddress Joëll;
+        public static IPAddress Frank;
 
         static Ips()
         {
-            EndNico  = new IPEndPoint(new IPAddress(new byte[4] { 83, 161, 148, 175}), PORT);
-            EndJoëll = new IPEndPoint(new IPAddress(new byte[4] { 83, 82, 128, 64 }), PORT);
-            EndFrank = new IPEndPoint(new IPAddress(new byte[4] { 83, 82, 180, 172 }), PORT);
+            Nico = new IPAddress(new byte[4] { 83, 161, 148, 175 });
+            Joëll = new IPAddress(new byte[4] { 83, 82, 128, 64 });
+            Frank = new IPAddress(new byte[4] { 83, 82, 180, 172 });
         }
     }
 }

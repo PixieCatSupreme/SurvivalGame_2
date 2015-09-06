@@ -24,6 +24,7 @@ namespace Mentula.Client
 
         private TextureCollection textures;
         private FontCollection fonts;
+        private readonly Vector2 midTexture;
 
         private Chunk[] chunks;
         private KeyValuePair<string, Actor>[] players;
@@ -40,6 +41,7 @@ namespace Mentula.Client
             chunks = new Chunk[0];
             vertexBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
+            midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
             players = new KeyValuePair<string, Actor>[0];
         }
 
@@ -76,9 +78,8 @@ namespace Mentula.Client
             fpsCounter.Update(delta);
             Camera.Transform(ref chunks, ref vertexBuffer);
             Camera.Transform(ref players, ref actorBuffer);
-
+            
             int index = 0;
-            Vector2 midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
 
             GraphicsDevice.Clear(Color.LimeGreen);
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);

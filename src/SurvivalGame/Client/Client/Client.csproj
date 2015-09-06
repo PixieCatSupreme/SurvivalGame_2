@@ -82,10 +82,12 @@
   <ItemGroup>
     <Compile Include="AnimationHandler.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="ClientNetworking.cs" />
     <Compile Include="FPS.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="MainGame.cs" />
     <Compile Include="TextureCollection.cs" />
     <Compile Include="VertexGraphics.cs" />
   </ItemGroup>

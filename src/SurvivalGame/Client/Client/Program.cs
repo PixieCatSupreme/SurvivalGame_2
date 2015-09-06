@@ -8,7 +8,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            using (Main game = new Main())
+            using (MainGame game = new MainGame())
             {
                 game.Run();
             }
