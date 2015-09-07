@@ -12,11 +12,11 @@ namespace Mentula.Server
     public static class Combat
     {
 
-        public static bool OnAttack(ref Creature[] creatures, ref Creature attacker, float arc, float range)
+        public static bool OnAttackPlayer(ref Creature[] creatures, ref Creature attacker, float arc, float range, int index)
         {
             bool hitSomeone = false;
             Vector2 angle = MathEX.RadiansToVector(attacker.Rotation);
-            for (int i = 0; i < creatures.Length; i++)
+            for (int i = 0; i < index; i++)
             {
                 float dgr = MathEX.VectorToRadians(new Vector2(creatures[i].Pos.X - attacker.Pos.X, creatures[i].Pos.Y - attacker.Pos.Y));
                 float dist = Vector2.Distance(creatures[i].Pos, attacker.Pos);
