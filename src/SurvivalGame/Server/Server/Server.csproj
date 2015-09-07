@@ -85,14 +85,18 @@
     <Compile Include="AStar.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="CPUUsage.cs" />
+    <Compile Include="Creature.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\PerlinNoise.cs" />
     <Compile Include="Map\Terrain\Map.cs" />
+    <Compile Include="NetExtensions.cs" />
+    <Compile Include="NPC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="Stats.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Third-Party\MentulaContent\MentulaContent.csproj">

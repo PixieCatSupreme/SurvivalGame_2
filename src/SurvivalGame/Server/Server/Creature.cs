@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Mentula.Utilities;
+using Microsoft.Xna.Framework;
 
-namespace Mentula.Utilities
+namespace Mentula.Server
 {
     public class Creature : Actor
     {
-
         public string Name;
         public Stats Stats;
         public int[] Health;

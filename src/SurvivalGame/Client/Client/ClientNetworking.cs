@@ -164,4 +164,57 @@ namespace Mentula.Client
             else throw new InvalidOperationException("Stop or kill must be called before calling restart.");
         }
     }
+
+    internal static class NetExtensions
+    {
+        public static Chunk ReadChunk(this NetBuffer msg)
+        {
+            IntVector2 chunkPos = msg.ReadPoint();
+            Chunk result = new Chunk(chunkPos);
+
+            ushort length = msg.ReadUInt16();
+            result.Tiles = new Tile[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                int texture = msg.ReadInt32();
+                IntVector2 pos = msg.ReadPoint();
+                result.Tiles[i] = new Tile(texture, pos);
+            }
+
+            return result;
+        }
+
+        public static Chunk[] ReadChunks(this NetBuffer msg)
+        {
+            ushort length = msg.ReadUInt16();
+            Chunk[] result = new Chunk[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = msg.ReadChunk();
+            }
+
+            return result;
+        }
+
+        public static Player[] ReadPlayers(this NetBuffer msg)
+        {
+            int length = msg.ReadUInt16();
+            Player[] result = new Player[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                IntVector2 chunk = msg.ReadPoint();
+                Vector2 tile = msg.ReadVector2();
+                float rot = msg.ReadHalfPrecisionSingle();
+                float health = msg.ReadHalfPrecisionSingle();
+                string name = msg.ReadString();
+
+                result[i] = new Player(chunk, tile, rot, health, name);
+            }
+
+            return result;
+        }
+    }
 }

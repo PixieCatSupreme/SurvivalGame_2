@@ -1,7 +1,4 @@
-﻿
-
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
 using Resc = Mentula.Utilities.Resources.Res;
 
@@ -12,7 +9,6 @@ namespace Mentula.Utilities
         public Tile[] Tiles;
         public IntVector2 ChunkPos;
         public float Rain;
-        public List<NPC> NPCs;
 
         public Chunk(IntVector2 pos)
         {

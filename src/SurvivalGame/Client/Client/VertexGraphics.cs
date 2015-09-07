@@ -1,5 +1,7 @@
 ﻿//#define DRUNK
 
+#pragma warning disable 67
+
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;

@@ -1,6 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Mentula.Utilities;
+using Microsoft.Xna.Framework;
 
-namespace Mentula.Utilities
+namespace Mentula.Client
 {
     public class Player : Actor
     {
