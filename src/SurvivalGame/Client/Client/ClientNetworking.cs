@@ -198,10 +198,10 @@ namespace Mentula.Client
             return result;
         }
 
-        public static Player[] ReadPlayers(this NetBuffer msg)
+        public static NPC[] ReadPlayers(this NetBuffer msg)
         {
             int length = msg.ReadUInt16();
-            Player[] result = new Player[length];
+            NPC[] result = new NPC[length];
 
             for (int i = 0; i < length; i++)
             {
@@ -211,7 +211,7 @@ namespace Mentula.Client
                 float health = msg.ReadHalfPrecisionSingle();
                 string name = msg.ReadString();
 
-                result[i] = new Player(chunk, tile, rot, health, name);
+                result[i] = new NPC(chunk, tile, rot, health, name);
             }
 
             return result;

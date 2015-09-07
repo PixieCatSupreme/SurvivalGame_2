@@ -79,7 +79,7 @@ namespace Mentula.Client
             }
         }
 
-        public unsafe void Transform(ref Player[] sourceArray, ref Vector2[] destinationArray)
+        public unsafe void Transform(ref NPC[] sourceArray, ref Vector2[] destinationArray)
         {
             int last = sourceArray.Length;
             int index = 0;

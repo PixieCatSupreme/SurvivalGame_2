@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework;
 
 namespace Mentula.Client
 {
-    public class Player : Actor
+    public class NPC : Actor
     {
         public string Name;
         public float HealthPrec;
 
-        public Player(IntVector2 chunk, Vector2 tile, float rotation, float health, string name)
+        public NPC(IntVector2 chunk, Vector2 tile, float rotation, float health, string name)
             :base(tile, chunk)
         {
             Rotation = rotation;

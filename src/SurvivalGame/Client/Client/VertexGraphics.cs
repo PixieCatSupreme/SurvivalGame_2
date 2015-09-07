@@ -33,7 +33,7 @@ namespace Mentula.Client
         private readonly Vector2 nameOffset;
 
         private Chunk[] chunks;
-        private Player[] players;
+        private NPC[] players;
         private Vector2[] vertexBuffer;
         private Vector2[] actorBuffer;
         private float heroR;
@@ -60,7 +60,7 @@ namespace Mentula.Client
             actorBuffer = new Vector2[0];
             midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
             nameOffset = new Vector2(0, -32);
-            players = new Player[0];
+            players = new NPC[0];
         }
 
         public void Initialize()
@@ -144,7 +144,7 @@ namespace Mentula.Client
             if (chunks.Length != vertexBuffer.Length) vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
         }
 
-        public void UpdatePlayers(Player[] players)
+        public void UpdatePlayers(NPC[] players)
         {
             this.players = players;
             if (players.Length != actorBuffer.Length) actorBuffer = new Vector2[players.Length];
