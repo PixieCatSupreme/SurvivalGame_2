@@ -1,12 +1,8 @@
-using System;
-using Mentula.Client;
-
-namespace Client
+namespace Mentula.Client
 {
-#if WINDOWS || XBOX
-    static class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             using (MainGame game = new MainGame())
             {
@@ -14,5 +10,4 @@ namespace Client
             }
         }
     }
-#endif
 }
