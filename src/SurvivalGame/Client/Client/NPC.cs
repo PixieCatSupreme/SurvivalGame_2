@@ -6,6 +6,7 @@ namespace Mentula.Client
     public class NPC : Actor
     {
         public string Name;
+        public int TextureId;
         public float HealthPrec;
 
         public NPC(IntVector2 chunk, Vector2 tile, float rotation, float health, string name)

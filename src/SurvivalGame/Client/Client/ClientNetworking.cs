@@ -79,7 +79,8 @@ namespace Mentula.Client
                                 game.UpdateChunks(msg.ReadChunks());
                                 break;
                             case (NDT.PlayerUpdate):
-                                game.vGraphics.UpdatePlayers(msg.ReadPlayers());
+                                game.players = msg.ReadNPCs();
+                                game.vGraphics.UpdatePlayers(game.players.Length);
                                 break;
                         }
                         break;
@@ -172,15 +173,8 @@ namespace Mentula.Client
             IntVector2 chunkPos = msg.ReadPoint();
             Chunk result = new Chunk(chunkPos);
 
-            ushort length = msg.ReadUInt16();
-            result.Tiles = new Tile[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                int texture = msg.ReadInt32();
-                IntVector2 pos = msg.ReadPoint();
-                result.Tiles[i] = new Tile(texture, pos);
-            }
+            result.Tiles = msg.ReadTiles();
+            result.Creatures = msg.ReadNPCs();
 
             return result;
         }
@@ -190,15 +184,12 @@ namespace Mentula.Client
             ushort length = msg.ReadUInt16();
             Chunk[] result = new Chunk[length];
 
-            for (int i = 0; i < length; i++)
-            {
-                result[i] = msg.ReadChunk();
-            }
+            for (int i = 0; i < length; i++) result[i] = msg.ReadChunk();
 
             return result;
         }
 
-        public static NPC[] ReadPlayers(this NetBuffer msg)
+        public static NPC[] ReadNPCs(this NetBuffer msg)
         {
             int length = msg.ReadUInt16();
             NPC[] result = new NPC[length];
@@ -212,6 +203,21 @@ namespace Mentula.Client
                 string name = msg.ReadString();
 
                 result[i] = new NPC(chunk, tile, rot, health, name);
+            }
+
+            return result;
+        }
+
+        private static Tile[] ReadTiles(this NetBuffer msg)
+        {
+            ushort length = msg.ReadUInt16();
+            Tile[] result = new Tile[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                int texture = msg.ReadInt32();
+                IntVector2 pos = msg.ReadPoint();
+                result[i] = new Tile(texture, pos);
             }
 
             return result;

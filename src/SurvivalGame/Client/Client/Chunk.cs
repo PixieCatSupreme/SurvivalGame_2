@@ -13,6 +13,7 @@ namespace Mentula.Client
     public class Chunk
     {
         public Tile[] Tiles;
+        public NPC[] Creatures;
         public IntVector2 ChunkPos;
 
         public Chunk(IntVector2 pos)

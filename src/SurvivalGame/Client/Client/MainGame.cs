@@ -14,6 +14,7 @@ namespace Mentula.Client
         public const int HOST = 0;
 
         internal Actor hero;
+        internal NPC[] players;
         internal Chunk[] chunks;
 
         internal VertexGraphics vGraphics;
@@ -39,6 +40,7 @@ namespace Mentula.Client
         {
             hero = new Actor();
             chunks = new Chunk[0];
+            players = new NPC[0];
             base.Initialize();
         }
 

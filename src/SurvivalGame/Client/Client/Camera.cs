@@ -62,19 +62,28 @@ namespace Mentula.Client
             _mv = _model * _view;
         }
 
-        public void Transform(ref Chunk[] sourceArray, ref Vector2[] destinationArray)
+        public void Transform(ref Chunk[] sourceArray, ref Vector2[] destinationArray_Tiles, ref Vector2[] destinationArray_Creatures)
         {
             for (int i = 0; i < sourceArray.Length; i++)
             {
                 Chunk cur = sourceArray[i];
 
-                for(int j = 0; j < cur.Tiles.Length; j++)
+                for (int j = 0; j < cur.Tiles.Length; j++)
                 {
                     Vector2 curr = Chunk.GetTotalPos(cur.ChunkPos, cur.Tiles[j].Pos.ToVector2());
                     float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
                     float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
-                    destinationArray[(i * Res.ChunkTileLength) + j] = new Vector2(x, y);
+                    destinationArray_Tiles[(i * Res.ChunkTileLength) + j] = new Vector2(x, y);
+                }
+
+                for (int j = 0; j < cur.Creatures.Length; j++)
+                {
+                    Vector2 curr = Chunk.GetTotalPos(cur.ChunkPos, cur.Creatures[j].Pos);
+                    float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
+                    float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
+
+                    destinationArray_Creatures[(i * Res.ChunkTileLength) + j] = new Vector2(x, y);
                 }
             }
         }

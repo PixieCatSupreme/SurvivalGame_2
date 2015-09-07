@@ -21,6 +21,10 @@ namespace Mentula.Client
         private bool invertScale = false;
 
         public Camera Camera { get; private set; }
+        public bool Enabled { get { return true; } }
+        public int UpdateOrder { get { return 0; } }
+        public int DrawOrder { get { return 0; } }
+        public bool Visible { get { return true; } }
 
         private SpriteBatch batch;
         private FPS fpsCounter;
@@ -32,16 +36,10 @@ namespace Mentula.Client
         private readonly Vector2 midTexture;
         private readonly Vector2 nameOffset;
 
-        private Chunk[] chunks;
-        private NPC[] players;
-        private Vector2[] vertexBuffer;
+        private Vector2[] tileBuffer;
+        private Vector2[] creatureBuffer;
         private Vector2[] actorBuffer;
         private float heroR;
-
-        public bool Enabled { get { return true; } }
-        public int UpdateOrder { get { return 0; } }
-        public int DrawOrder { get { return 0; } }
-        public bool Visible { get { return true; } }
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
@@ -55,12 +53,12 @@ namespace Mentula.Client
             fpsCounter = new FPS();
             this.game = game;
 
-            chunks = new Chunk[0];
-            vertexBuffer = new Vector2[0];
-            actorBuffer = new Vector2[0];
             midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
             nameOffset = new Vector2(0, -32);
-            players = new NPC[0];
+
+            tileBuffer = new Vector2[0];
+            creatureBuffer = new Vector2[0];
+            actorBuffer = new Vector2[0];
         }
 
         public void Initialize()
@@ -96,29 +94,35 @@ namespace Mentula.Client
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             fpsCounter.Update(delta);
-            Camera.Transform(ref chunks, ref vertexBuffer);
-            Camera.Transform(ref players, ref actorBuffer);
+            Camera.Transform(ref game.chunks, ref tileBuffer, ref creatureBuffer);
+            Camera.Transform(ref game.players, ref actorBuffer);
 
             int index = 0;
 
             GraphicsDevice.Clear(Color.LimeGreen);
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
 
-            for (int i = 0; i < chunks.Length; i++)
+            for (int i = 0; i < game.chunks.Length; i++)
             {
-                Chunk chunk = chunks[i];
+                Chunk chunk = game.chunks[i];
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
-                    Vector2 pos = vertexBuffer[index];
+                    Vector2 pos = tileBuffer[index];
                     batch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, ROT * Res.DEG2RAD, midTexture, SCALE, 0, 0.5f);
                     index++;
                 }
+
+                for (int j = 0; j < chunk.Creatures.Length; j++)
+                {
+                    Vector2 pos = creatureBuffer[j];
+                    batch.Draw(textures[chunk.Creatures[j].TextureId], pos, null, Color.White, chunk.Creatures[j].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0.3f);
+                }
             }
 
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < game.players.Length; i++)
             {
-                string name = players[i].Name;
-                string text = string.Format("{0} | {1}", players[i].HealthPrec, name);
+                string name = game.players[i].Name;
+                string text = string.Format("{0} | {1}", game.players[i].HealthPrec, name);
 
                 if (name == Environment.UserName)
                 {
@@ -128,7 +132,7 @@ namespace Mentula.Client
                 }
                 else
                 {
-                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, game.players[i].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
                     batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
                 }
             }
@@ -140,14 +144,18 @@ namespace Mentula.Client
 
         public void UpdateChunks(ref Chunk[] chunks)
         {
-            this.chunks = chunks;
-            if (chunks.Length != vertexBuffer.Length) vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
+            int tileLength = chunks.Length * Res.ChunkTileLength;
+            int creatureLength = 0;
+
+            for (int i = 0; i < chunks.Length; i++) creatureLength += chunks[i].Creatures.Length;
+
+            if (tileLength != tileBuffer.Length) tileBuffer = new Vector2[tileLength];
+            if (creatureLength != creatureBuffer.Length) creatureBuffer = new Vector2[creatureLength];
         }
 
-        public void UpdatePlayers(NPC[] players)
+        public void UpdatePlayers(int newLength)
         {
-            this.players = players;
-            if (players.Length != actorBuffer.Length) actorBuffer = new Vector2[players.Length];
+            if (newLength != actorBuffer.Length) actorBuffer = new Vector2[newLength];
         }
     }
 }
