@@ -9,6 +9,7 @@ namespace Mentula.Utilities
         public Stats Stats;
         public int[] Health;
         public int[] MaxHealth;
+        public bool IsAlive;
 
         public int animationName;
         public float animationSpeed;
@@ -21,6 +22,7 @@ namespace Mentula.Utilities
             Stats = new Stats();
             Health = new int[6] { dh, dh, dh, dh, dh, dh };
             MaxHealth = new int[6] { dh, dh, dh, dh, dh, dh };
+            IsAlive = true;
 
             animationName = 0;
             animationSpeed = 0;
@@ -34,6 +36,7 @@ namespace Mentula.Utilities
             Stats = new Stats();
             Health = new int[6] { dh, dh, dh, dh, dh, dh };
             MaxHealth = new int[6] { dh, dh, dh, dh, dh, dh };
+            IsAlive = true;
 
             animationName = 0;
             animationSpeed = 0;
@@ -47,6 +50,7 @@ namespace Mentula.Utilities
             Stats = s;
             Health = new int[6] { h, h, h, h, h, h };
             MaxHealth = new int[6] { h, h, h, h, h, h };
+            IsAlive = true;
 
             animationName = 0;
             animationSpeed = 0;

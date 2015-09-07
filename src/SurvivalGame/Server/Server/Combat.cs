@@ -20,7 +20,7 @@ namespace Mentula.Server
             {
                 float dgr = MathEX.VectorToRadians(new Vector2(creatures[i].Pos.X - attacker.Pos.X, creatures[i].Pos.Y - attacker.Pos.Y));
                 float dist = Vector2.Distance(creatures[i].Pos, attacker.Pos);
-                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc & dist < range)
+                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
                 {
                     DoDamage(ref creatures[i], ref attacker);
                     hitSomeone = true;
@@ -32,14 +32,21 @@ namespace Mentula.Server
         private static void DoDamage(ref Creature defender, ref Creature attacker)
         {
             Random r = new Random();
-            while (true)
+            if (defender.Health[0] > 0 && defender.Health[1] > 0)
             {
-                int n = (int)(r.NextDouble() * defender.Health.Length);
-                if (defender.Health[n] > 0)
+                while (true)
                 {
-                    defender.Health[n] = Math.Max(defender.Health[n] - attacker.Stats.Strength, 0);
-                    break;
+                    int n = (int)(r.NextDouble() * defender.Health.Length);
+                    if (defender.Health[n] > 0)
+                    {
+                        defender.Health[n] = Math.Max(defender.Health[n] - attacker.Stats.Strength, 0);
+                        break;
+                    }
                 }
+            }
+            else
+            {
+                defender.IsAlive = false;
             }
         }
 
