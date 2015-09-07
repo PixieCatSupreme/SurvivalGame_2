@@ -11,6 +11,13 @@ namespace Mentula.Server
         private Vector2 targetArea;
         private double lastAttackTime;
 
+        public NPC(string n, Stats s, int h, Vector2 pos, IntVector2 chunkpos)
+            : base(n, s, h, pos, chunkpos)
+        {
+            targetArea = pos + chunkpos * Resc.ChunkSize;
+            lastAttackTime = 0;
+        }
+
         public void DoStuff(float deltaTime, ref Creature[] players, int Index)
         {
             GetTarget(ref players, Index);
@@ -76,7 +83,7 @@ namespace Mentula.Server
             Vect2 m = Vect2.Normalize(v0 - v1) * deltaTime * 5;
             if (Vect2.Distance(v0, v1) > Vect2.Distance(v0, m))
             {
-                Pos += new Vector2(m.X,m.Y);
+                Pos += new Vector2(m.X, m.Y);
             }
             else
             {

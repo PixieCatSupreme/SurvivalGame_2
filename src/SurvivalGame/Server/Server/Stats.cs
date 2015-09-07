@@ -17,6 +17,24 @@
             Perception = 0;
         }
 
+        public Stats(short n)
+        {
+            Strength = n;
+            Intelect = n;
+            Endurance = n;
+            Agility = n;
+            Perception = n;
+        }
+
+        public Stats(short strength,short intelect, short endurance, short agility, short perception)
+        {
+            Strength = strength;
+            Intelect = intelect;
+            Endurance = endurance;
+            Agility = agility;
+            Perception = perception;
+        }
+
         public Stats(Stats s)
         {
             Strength = s.Strength;
