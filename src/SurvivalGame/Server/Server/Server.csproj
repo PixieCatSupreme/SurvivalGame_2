@@ -82,6 +82,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI.cs" />
     <Compile Include="AStar.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="CPUUsage.cs" />

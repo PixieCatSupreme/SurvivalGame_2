@@ -29,6 +29,20 @@ namespace Mentula.Server
             return hitSomeone;
         }
 
+        public static bool OnAttackNPC(ref Creature defender, Creature attacker, float arc, float range)
+        {
+            bool hitSomeone = false;
+            Vector2 angle = MathEX.RadiansToVector(attacker.Rotation);
+                float dgr = MathEX.VectorToRadians(new Vector2(defender.Pos.X - attacker.Pos.X, defender.Pos.Y - attacker.Pos.Y));
+                float dist = Vector2.Distance(defender.Pos, attacker.Pos);
+                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
+                {
+                    DoDamage(ref defender, ref attacker);
+                    hitSomeone = true;
+                }
+            return hitSomeone;
+        }
+
         private static void DoDamage(ref Creature defender, ref Creature attacker)
         {
             Random r = new Random();
