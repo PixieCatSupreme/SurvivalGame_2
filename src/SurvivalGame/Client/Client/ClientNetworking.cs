@@ -124,7 +124,7 @@ namespace Mentula.Client
         public void Disconect()
         {
             client.Disconnect("Normal");
-            state ^= 0x1;
+            if ((state & 0x1) != 0) state ^= 0x1;
         }
 
         public void Stop()
