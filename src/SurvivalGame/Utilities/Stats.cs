@@ -16,7 +16,7 @@ namespace Mentula.Utilities
 
         public Stats()
         {
-            Strength = 0;
+            Strength = 10;
             Intelect = 0;
             Endurance = 0;
             Agility = 0;
