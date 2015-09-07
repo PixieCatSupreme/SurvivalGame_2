@@ -91,8 +91,21 @@ namespace Mentula.Server
                 Map.Generate(posses[i]);
                 Map.LoadChunks(posses[i]);
             }
-
             Map.UnloadChunks(posses);
+            Creature[] players = Players.Select(p => p.Value).ToArray();
+            for (int i = 0; i < Map.LoadedChunks.Count; i++)
+            {
+                for (int j = 0; j < Map.LoadedChunks[i].Creatures.Count; j++)
+                {
+                    Map.LoadedChunks[i].Creatures[j].DoStuff(delta, ref players, Index);
+
+                }
+            }
+            for (int i = 0; i < Index; i++)
+            {
+                Players[i].Value.Health = players[i].Health;
+            }
+
         }
 
         public void PlayerAttack(long id)
