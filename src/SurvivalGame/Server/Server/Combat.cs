@@ -20,7 +20,7 @@ namespace Mentula.Server
             {
                 float dgr = MathEX.VectorToRadians(new Vector2(creatures[i].Pos.X - attacker.Pos.X, creatures[i].Pos.Y - attacker.Pos.Y));
                 float dist = Vector2.Distance(creatures[i].Pos, attacker.Pos);
-                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
+                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc & dist < range)
                 {
                     DoDamage(ref creatures[i], ref attacker);
                     hitSomeone = true;
