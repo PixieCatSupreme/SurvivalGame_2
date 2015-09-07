@@ -80,23 +80,20 @@ namespace Mentula.Utilities.Net
             }
         }
 
-        public static KeyValuePair<string, Actor>[] ReadPlayers(this NetBuffer msg)
+        public static Player[] ReadPlayers(this NetBuffer msg)
         {
-            int length = msg.ReadUInt16() - 1;
-            KeyValuePair<string, Actor>[] result = new KeyValuePair<string, Actor>[length];
+            int length = msg.ReadUInt16();
+            Player[] result = new Player[length];
 
-            for (int i = 0; i < length;)
+            for (int i = 0; i < length; i++)
             {
                 IntVector2 chunk = msg.ReadPoint();
                 Vector2 tile = msg.ReadVector2();
                 float rot = msg.ReadHalfPrecisionSingle();
+                float health = msg.ReadHalfPrecisionSingle();
                 string name = msg.ReadString();
 
-                if (name != Environment.UserName)
-                {
-                    result[i] = new KeyValuePair<string, Actor>(name, new Actor(tile, chunk) { Rotation = rot });
-                    i++;
-                }
+                result[i] = new Player(chunk, tile, rot, health, name);
             }
 
             return result;
@@ -115,6 +112,7 @@ namespace Mentula.Utilities.Net
                     fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
                     fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
                     msg.WriteHalfPrecision(cur.Value.Rotation);
+                    msg.WriteHalfPrecision(cur.Value.GetHealth());
                     msg.Write(cur.Value.Name);
                 }
             }

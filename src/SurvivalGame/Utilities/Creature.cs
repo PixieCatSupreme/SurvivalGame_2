@@ -4,7 +4,7 @@ namespace Mentula.Utilities
 {
     public class Creature : Actor
     {
-        
+
         public string Name;
         public Stats Stats;
         public int[] Health;
@@ -23,7 +23,7 @@ namespace Mentula.Utilities
             MaxHealth = new int[6] { dh, dh, dh, dh, dh, dh };
 
             animationName = 0;
-            animationSpeed =0;
+            animationSpeed = 0;
             animationFrame = 0;
         }
 
@@ -51,6 +51,27 @@ namespace Mentula.Utilities
             animationName = 0;
             animationSpeed = 0;
             animationFrame = 0;
+        }
+
+        public float GetHealth()
+        {
+            float perc =
+                (MaxHealth[0] * 3 +
+                MaxHealth[1] * 3 +
+                MaxHealth[2] +
+                MaxHealth[3] +
+                MaxHealth[4] +
+                MaxHealth[5]) / 100;
+
+            float current =
+                Health[0] * 3 +
+                Health[1] * 3 +
+                Health[2] +
+                Health[3] +
+                Health[4] +
+                Health[5];
+
+            return current / perc;
         }
 
         private const int dh = 50;

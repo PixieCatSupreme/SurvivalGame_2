@@ -173,6 +173,9 @@ namespace Mentula.Server
                                         server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                     }
                                     break;
+                                case (NDT.Attack):
+                                    logic.PlayerAttack(id);
+                                    break;
                             }
                         }
                         catch(Exception e)

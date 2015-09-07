@@ -79,14 +79,14 @@ namespace Mentula.Client
             }
         }
 
-        public unsafe void Transform(ref KeyValuePair<string, Actor>[] sourceArray, ref Vector2[] destinationArray)
+        public unsafe void Transform(ref Player[] sourceArray, ref Vector2[] destinationArray)
         {
             int last = sourceArray.Length;
             int index = 0;
 
             for (int i = 0; i < last; i++)
             {
-                Actor actor = sourceArray[i].Value;
+                Actor actor = sourceArray[i];
                 Vector2 curr = Chunk.GetTotalPos(actor.ChunkPos, actor.Pos);
 
                 float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;

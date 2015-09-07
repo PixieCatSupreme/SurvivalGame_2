@@ -1,15 +1,8 @@
-using Lidgren.Network;
-using Lidgren.Network.Xna;
 using Mentula.Utilities;
-using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using NIM = Lidgren.Network.NetIncomingMessage;
-using NIMT = Lidgren.Network.NetIncomingMessageType;
-using NOM = Lidgren.Network.NetOutgoingMessage;
-using NPConfig = Lidgren.Network.NetPeerConfiguration;
 using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
@@ -100,12 +93,6 @@ namespace Mentula.Client
             hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos) + 1.5707963f;
 
             base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            vGraphics.Draw((float)gameTime.ElapsedGameTime.TotalSeconds);
-            base.Draw(gameTime);
         }
 
         protected override void OnExiting(object sender, EventArgs args)

@@ -12,7 +12,7 @@ using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
 {
-    public class VertexGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable
+    public class VertexGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
         private float SCALE = 2f;
         private float ROT = 0;
@@ -26,19 +26,25 @@ namespace Mentula.Client
 
         private TextureCollection textures;
         private FontCollection fonts;
+
         private readonly Vector2 midTexture;
+        private readonly Vector2 nameOffset;
 
         private Chunk[] chunks;
-        private KeyValuePair<string, Actor>[] players;
+        private Player[] players;
         private Vector2[] vertexBuffer;
         private Vector2[] actorBuffer;
         private float heroR;
 
         public bool Enabled { get { return true; } }
         public int UpdateOrder { get { return 0; } }
+        public int DrawOrder { get { return 0; } }
+        public bool Visible { get { return true; } }
 
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
+        public event EventHandler<EventArgs> DrawOrderChanged;
+        public event EventHandler<EventArgs> VisibleChanged;
 
         public VertexGraphics(MainGame game)
             : base(game)
@@ -51,7 +57,8 @@ namespace Mentula.Client
             vertexBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
             midTexture = new Vector2(Res.TileSize >> 1, Res.TileSize >> 1);
-            players = new KeyValuePair<string, Actor>[0];
+            nameOffset = new Vector2(0, -32);
+            players = new Player[0];
         }
 
         public void Initialize()
@@ -82,12 +89,14 @@ namespace Mentula.Client
             heroR = game.hero.Rotation;
         }
 
-        public void Draw(float delta)
+        public void Draw(GameTime gameTime)
         {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             fpsCounter.Update(delta);
             Camera.Transform(ref chunks, ref vertexBuffer);
             Camera.Transform(ref players, ref actorBuffer);
-            
+
             int index = 0;
 
             GraphicsDevice.Clear(Color.LimeGreen);
@@ -106,11 +115,21 @@ namespace Mentula.Client
 
             for (int i = 0; i < players.Length; i++)
             {
-                batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Value.Rotation + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
-                batch.DrawString(fonts["NameFont"], players[i].Key, actorBuffer[i] + new Vector2(0, -32), Color.Red);
-            }
+                string name = players[i].Name;
+                string text = string.Format("{0} | {1}", players[i].HealthPrec, name);
 
-            batch.Draw(textures[9997], new Vector2(Camera.Offset.X, Camera.Offset.Y), null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                if (name == Environment.UserName)
+                {
+                    Vector2 pos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
+                    batch.Draw(textures[9997], pos, null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                    batch.DrawString(fonts["NameFont"], text, pos + nameOffset, Color.Red);
+                }
+                else
+                {
+                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Rotation + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                    batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
+                }
+            }
 
             batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
 
@@ -123,10 +142,10 @@ namespace Mentula.Client
             if (chunks.Length != vertexBuffer.Length) vertexBuffer = new Vector2[chunks.Length * Res.ChunkTileLength];
         }
 
-        public void UpdatePlayers(KeyValuePair<string, Actor>[] players)
+        public void UpdatePlayers(Player[] players)
         {
             this.players = players;
-            if(players.Length != actorBuffer.Length) actorBuffer = new Vector2[players.Length];
+            if (players.Length != actorBuffer.Length) actorBuffer = new Vector2[players.Length];
         }
     }
 }

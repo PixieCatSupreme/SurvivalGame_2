@@ -4,6 +4,7 @@ using Mentula.Utilities;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Net;
 using NIM = Lidgren.Network.NetIncomingMessage;
@@ -19,6 +20,7 @@ namespace Mentula.Client
         public NetConnectionStatus NetStatus { get { return client.ConnectionStatus; } }
 
         private float timeDiff;
+        private TimeSpan prevAttack;
         private MainGame game;
         private NetClient client;
         /* 1 -> Discovery send.     0x1
@@ -82,6 +84,15 @@ namespace Mentula.Client
                         }
                         break;
                 }
+            }
+
+            MouseState mState = Mouse.GetState();
+            if (mState.LeftButton == ButtonState.Pressed && (gameTime.TotalGameTime - prevAttack).Milliseconds > 500)
+            {
+                prevAttack = gameTime.TotalGameTime;
+                NOM nom = client.CreateMessage();
+                nom.Write((byte)NDT.Attack);
+                client.SendMessage(nom, NetDeliveryMethod.Unreliable);
             }
 
             if (client.ConnectionStatus == NetConnectionStatus.Connected && timeDiff >= 1f / 30)
