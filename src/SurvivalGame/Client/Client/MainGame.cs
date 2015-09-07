@@ -44,54 +44,56 @@ namespace Mentula.Client
 
         protected unsafe override void Update(GameTime gameTime)
         {
-            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.OemPlus))
+            if (IsActive)
             {
-                switch (HOST)
+                float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                KeyboardState state = Keyboard.GetState();
+
+                if (state.IsKeyDown(Keys.OemPlus))
                 {
-                    case (0):
-                        networking.LocalConnect();
-                        break;
-                    case (1):
-                        networking.NetworkConnect(Ips.Joëll);
-                        break;
-                    case (2):
-                        networking.NetworkConnect(Ips.Nico);
-                        break;
-                    case (4):
-                        networking.NetworkConnect(Ips.Frank);
-                        break;
-                }
-            }
-
-            if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
-
-            Vector2 move = new Vector2();
-            if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
-            if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
-            if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
-            if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
-            if (state.IsKeyDown(Keys.Escape)) Exit();
-
-            if (move != Vector2.Zero)
-            {
-                hero.Pos += move;
-
-                fixed (IntVector2* cP = &hero.ChunkPos)
-                {
-                    fixed (Vector2* tP = &hero.Pos)
+                    switch (HOST)
                     {
-                        Chunk.FormatPos(cP, tP);
+                        case (0):
+                            networking.LocalConnect();
+                            break;
+                        case (1):
+                            networking.NetworkConnect(Ips.Joëll);
+                            break;
+                        case (2):
+                            networking.NetworkConnect(Ips.Nico);
+                            break;
+                        case (4):
+                            networking.NetworkConnect(Ips.Frank);
+                            break;
                     }
                 }
+
+                if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
+
+                Vector2 move = new Vector2();
+                if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
+                if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
+                if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
+                if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
+                if (state.IsKeyDown(Keys.Escape)) Exit();
+
+                if (move != Vector2.Zero)
+                {
+                    hero.Pos += move;
+
+                    fixed (IntVector2* cP = &hero.ChunkPos)
+                    {
+                        fixed (Vector2* tP = &hero.Pos)
+                        {
+                            Chunk.FormatPos(cP, tP);
+                        }
+                    }
+                }
+
+                MouseState mState = Mouse.GetState();           /* We need to add 90 degrees (* PI / 180) because */
+                Vect2 mousePos = new Vect2(mState.X, mState.Y); /* the angle will be returned facing right. */
+                hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos);
             }
-
-            MouseState mState = Mouse.GetState();           /* We need to add 90 degrees (* PI / 180) because */
-            Vect2 mousePos = new Vect2(mState.X, mState.Y); /* the angle will be returned facing right. */
-            hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos) + 1.5707963f;
-
             base.Update(gameTime);
         }
 

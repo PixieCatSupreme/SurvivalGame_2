@@ -121,12 +121,12 @@ namespace Mentula.Client
                 if (name == Environment.UserName)
                 {
                     Vector2 pos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
-                    batch.Draw(textures[9997], pos, null, Color.White, heroR + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                    batch.Draw(textures[9997], pos, null, Color.White, heroR + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
                     batch.DrawString(fonts["NameFont"], text, pos + nameOffset, Color.Red);
                 }
                 else
                 {
-                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Rotation + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
+                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, players[i].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
                     batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
                 }
             }
