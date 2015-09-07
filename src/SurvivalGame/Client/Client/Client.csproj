@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="AnimationHandler.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Chunk.cs" />
     <Compile Include="ClientNetworking.cs" />
     <Compile Include="FPS.cs" />
     <Compile Include="GameState.cs" />

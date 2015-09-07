@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="BytePoint.cs" />
-    <Compile Include="Chunk.cs" />
     <Compile Include="Extentions\LidgrenExtensions.cs" />
     <Compile Include="Extentions\MathExtensions.cs" />
     <Compile Include="Extentions\NetExtensions.cs" />
