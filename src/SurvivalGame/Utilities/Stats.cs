@@ -8,11 +8,11 @@ namespace Mentula.Utilities
 {
     public class Stats
     {
-        public byte Strength;
-        public byte Intelect;
-        public byte Endurance;
-        public byte Agility;
-        public byte Perception;
+        public short Strength;
+        public short Intelect;
+        public short Endurance;
+        public short Agility;
+        public short Perception;
 
         public Stats()
         {
