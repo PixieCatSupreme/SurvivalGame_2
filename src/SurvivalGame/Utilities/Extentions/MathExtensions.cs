@@ -73,7 +73,7 @@ namespace Mentula.Utilities.MathExtensions
 
         public static Vector2 RadiansToVector(float rad)
         {
-            return new Vector2((float)math.Cos(rad), (float)math.Sin(rad));
+            return new Vector2((float)math.Sin(rad), (float)math.Cos(rad));
         }
 
         public static Vector2 Abs(Vector2 vec)
