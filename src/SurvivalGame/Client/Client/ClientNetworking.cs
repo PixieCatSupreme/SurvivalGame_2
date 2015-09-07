@@ -201,8 +201,9 @@ namespace Mentula.Client
                 float rot = msg.ReadHalfPrecisionSingle();
                 float health = msg.ReadHalfPrecisionSingle();
                 string name = msg.ReadString();
+                int textId = msg.ReadInt32();
 
-                result[i] = new NPC(chunk, tile, rot, health, name);
+                result[i] = new NPC(chunk, tile, rot, health, name) { TextureId = textId };
             }
 
             return result;

@@ -9,7 +9,7 @@ namespace Mentula.Server
 {
     internal static class NetExtensions
     {
-        public static void Write(this NetBuffer msg, Chunk value)
+        public static unsafe void Write(this NetBuffer msg, Chunk value)
         {
             msg.Write(value.ChunkPos.X);
             msg.Write(value.ChunkPos.Y);
@@ -23,6 +23,20 @@ namespace Mentula.Server
                 msg.Write(cur.Tex);
                 msg.Write(cur.Pos.X);
                 msg.Write(cur.Pos.Y);
+            }
+
+            msg.Write((ushort)value.Creatures.Count);
+
+            for (int i = 0; i < value.Creatures.Count; i++)
+            {
+                NPC cur = value.Creatures[i];
+
+                fixed (IntVector2* cP = &cur.ChunkPos) msg.Write(cP);
+                fixed (Vector2* cT = &cur.Pos) msg.Write(cT);
+                msg.WriteHalfPrecision(cur.Rotation);
+                msg.WriteHalfPrecision(cur.GetHealth());
+                msg.Write(cur.Name);
+                msg.Write(cur.TextureId);
             }
         }
 
@@ -51,6 +65,7 @@ namespace Mentula.Server
                     msg.WriteHalfPrecision(cur.Value.Rotation);
                     msg.WriteHalfPrecision(cur.Value.GetHealth());
                     msg.Write(cur.Value.Name);
+                    msg.Write(9996);
                 }
             }
         }

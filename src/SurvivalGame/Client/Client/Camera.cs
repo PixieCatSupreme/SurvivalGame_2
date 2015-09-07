@@ -83,7 +83,7 @@ namespace Mentula.Client
                     float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
                     float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
-                    destinationArray_Creatures[(i * Res.ChunkTileLength) + j] = new Vector2(x, y);
+                    destinationArray_Creatures[j] = new Vector2(x, y);
                 }
             }
         }

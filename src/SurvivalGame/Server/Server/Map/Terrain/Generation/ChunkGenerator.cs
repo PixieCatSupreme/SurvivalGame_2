@@ -65,13 +65,15 @@ namespace Mentula.Server
         private static void GenerateWindlife(ref Chunk chunk)
         {
             Random r = new Random(RNG.RIntFromString(chunk.ChunkPos.X + Res.Seed + chunk.ChunkPos.Y));
+            bool inverse = false;
             for (int i = 0; i < r.NextDouble() * Res.ChunkSize; i++)
             {
                 Vector2 p = new Vector2((int)(r.NextDouble() * Res.ChunkSize), (int)(r.NextDouble() * Res.ChunkSize));
-                chunk.Creatures.Add(new NPC("Wolf", new Stats(7), 35, p, chunk.ChunkPos));
+                chunk.Creatures.Add(new NPC("Wolf", new Stats(7), 35, p, chunk.ChunkPos) { TextureId = inverse ? 9996 : 9995 });
                 chunk.Creatures[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
-            }
 
+                inverse = !inverse;
+            }
         }
 
     }

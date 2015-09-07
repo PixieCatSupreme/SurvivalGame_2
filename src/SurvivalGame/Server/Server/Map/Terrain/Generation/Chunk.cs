@@ -16,6 +16,7 @@ namespace Mentula.Server
         public Chunk(IntVector2 pos)
         {
             ChunkPos = pos;
+            Creatures = new List<NPC>();
         }
     }
 }
