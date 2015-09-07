@@ -87,6 +87,7 @@ namespace Mentula.Utilities
         public static IntVector2 operator /(IntVector2 sender, IntVector2 caller) { return new IntVector2((int)(sender.X / caller.X), (int)(sender.Y / caller.Y)); }
         public static bool operator !=(IntVector2 sender, IntVector2 caller) { return (sender.X != caller.X || sender.Y != caller.Y); }
         public static bool operator ==(IntVector2 sender, IntVector2 caller) { return (sender.X == caller.X && sender.Y == caller.Y); }
+        public static implicit operator Vector2(IntVector2 sender) { return new Vector2(sender.X, sender.Y); }
 
         /// <summary> Adds two vectors. </summary>
         /// <param name="value1"> Source vector. </param>
