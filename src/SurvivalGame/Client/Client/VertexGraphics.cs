@@ -97,7 +97,8 @@ namespace Mentula.Client
             Camera.Transform(ref game.chunks, ref tileBuffer, ref creatureBuffer);
             Camera.Transform(ref game.players, ref actorBuffer);
 
-            int index = 0;
+            int tileIndex = 0;
+            int creatureIndex = 0;
 
             GraphicsDevice.Clear(Color.LimeGreen);
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
@@ -107,15 +108,16 @@ namespace Mentula.Client
                 Chunk chunk = game.chunks[i];
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
-                    Vector2 pos = tileBuffer[index];
+                    Vector2 pos = tileBuffer[tileIndex];
                     batch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, ROT * Res.DEG2RAD, midTexture, SCALE, 0, 0.5f);
-                    index++;
+                    tileIndex++;
                 }
 
                 for (int j = 0; j < chunk.Creatures.Length; j++)
                 {
-                    Vector2 pos = creatureBuffer[j];
+                    Vector2 pos = creatureBuffer[creatureIndex];
                     batch.Draw(textures[chunk.Creatures[j].TextureId], pos, null, Color.White, chunk.Creatures[j].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0.3f);
+                    creatureIndex++;
                 }
             }
 
