@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Resc = Mentula.Utilities.Resources.Res;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Engine.Core;
+using System;
 
 namespace Mentula.Server
 {
@@ -20,11 +21,17 @@ namespace Mentula.Server
 
         public void DoStuff(float deltaTime, ref Creature[] players, int Index)
         {
-            GetTarget(ref players, Index);
-            if (!TryToAttack(ref players, Index))
+            //GetTarget(ref players, Index);
+            //if (!TryToAttack(ref players, Index))
+            //{
+            //    MoveToTarget(deltaTime);
+            //}
+            Rotation += deltaTime * 3;
+            if (Rotation>=Math.PI*2)
             {
-                MoveToTarget(deltaTime);
+                Rotation -= (float)(Math.PI * 2);
             }
+            Pos += MathEX.RadiansToVector(Rotation) * deltaTime*5;
 
         }
 

@@ -17,7 +17,7 @@ namespace Mentula.Client
 {
     public class VertexGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
-        private float SCALE = .2f;
+        private float SCALE = 2f;
         private float ROT = 0;
         private bool invertScale = false;
 
