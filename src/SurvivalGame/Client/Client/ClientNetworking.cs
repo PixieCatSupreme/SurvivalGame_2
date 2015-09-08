@@ -78,8 +78,10 @@ namespace Mentula.Client
                             case (NDT.ChunkRequest):
                                 game.UpdateChunks(msg.ReadChunks());
                                 break;
-                            case (NDT.PlayerUpdate):
+                            case (NDT.Update):
                                 game.players = msg.ReadNPCs();
+                                msg.ReadNPCUpdate(ref game.chunks);
+
                                 game.vGraphics.UpdatePlayers(game.players.Length);
                                 break;
                         }
@@ -207,6 +209,28 @@ namespace Mentula.Client
             }
 
             return result;
+        }
+
+        public static void ReadNPCUpdate(this NetBuffer msg, ref Chunk[] chunks)
+        {
+            ushort chunkLength = msg.ReadUInt16();
+
+            for (int i = 0; i < chunkLength; i++)
+            {
+                if (i > chunks.Length) break;
+
+                ushort crLength = msg.ReadUInt16();
+
+                for (int j = 0; j < crLength; j++)
+                {
+                    if (j > chunks[i].Creatures.Length) break;
+
+                    chunks[i].Creatures[j].ChunkPos = msg.ReadPoint();
+                    chunks[i].Creatures[j].Pos = msg.ReadVector2();
+                    chunks[i].Creatures[j].Rotation = msg.ReadHalfPrecisionSingle();
+                    chunks[i].Creatures[j].HealthPrec = msg.ReadHalfPrecisionSingle();
+                }
+            }
         }
 
         private static Tile[] ReadTiles(this NetBuffer msg)

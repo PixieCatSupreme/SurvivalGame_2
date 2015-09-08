@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Matrix3 = Mentula.Engine.Core.Matrix3;
 using Vect2 = Mentula.Engine.Core.Vect2;
 
@@ -16,7 +17,7 @@ namespace Mentula.Client
 {
     public class VertexGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
-        private float SCALE = 2f;
+        private float SCALE = .2f;
         private float ROT = 0;
         private bool invertScale = false;
 
@@ -109,14 +110,17 @@ namespace Mentula.Client
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
                     Vector2 pos = tileBuffer[tileIndex];
-                    batch.Draw(textures[chunk.Tiles[j].Tex], pos, null, Color.White, ROT * Res.DEG2RAD, midTexture, SCALE, 0, 0.5f);
+                    DrawBatch(textures[chunk.Tiles[j].Tex], pos, ROT * Res.DEG2RAD);
                     tileIndex++;
                 }
 
                 for (int j = 0; j < chunk.Creatures.Length; j++)
                 {
                     Vector2 pos = creatureBuffer[creatureIndex];
-                    batch.Draw(textures[chunk.Creatures[j].TextureId], pos, null, Color.White, chunk.Creatures[j].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0.3f);
+                    string text = string.Format("{0} | {1}", chunk.Creatures[j].HealthPrec, chunk.Creatures[j].Name);
+
+                    DrawBatch(textures[chunk.Creatures[j].TextureId], pos, Rot(chunk.Creatures[j].Rotation));
+                    batch.DrawString(fonts["NameFont"], text, pos + nameOffset, Color.Red);
                     creatureIndex++;
                 }
             }
@@ -126,18 +130,11 @@ namespace Mentula.Client
                 string name = game.players[i].Name;
                 string text = string.Format("{0} | {1}", game.players[i].HealthPrec, name);
 
-                if (name == Environment.UserName)
-                {
-                    Vector2 pos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
-                    batch.Draw(textures[9997], pos, null, Color.White, heroR + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
-                    batch.DrawString(fonts["NameFont"], text, pos + nameOffset, Color.Red);
-                }
-                else
-                {
-                    batch.Draw(textures[9997], actorBuffer[i], null, Color.White, game.players[i].Rotation + 1.5707963f + (ROT * Res.DEG2RAD), midTexture, SCALE, 0, 0);
-                    batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
-                }
+                DrawBatch(textures[9997], actorBuffer[i], Rot(game.players[i].Rotation));
+                batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
             }
+            Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
+            DrawBatch(textures[9997], heroPos, Rot(heroR));
 
             batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
 
@@ -159,5 +156,11 @@ namespace Mentula.Client
         {
             if (newLength != actorBuffer.Length) actorBuffer = new Vector2[newLength];
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private float Rot(float rot) { return ROT * Res.DEG2RAD + rot + 1.5707963f; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DrawBatch(Texture2D tex, Vector2 pos, float rot) { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
     }
 }

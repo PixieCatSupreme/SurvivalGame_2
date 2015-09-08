@@ -8,7 +8,7 @@ namespace Mentula.Server
 {
     public class GameLogic
     {
-        public Map Map { get; private set; }
+        public Map Map;
         public KeyValuePair<long, Creature>[] Players;
 
         public int Index { get; private set; }

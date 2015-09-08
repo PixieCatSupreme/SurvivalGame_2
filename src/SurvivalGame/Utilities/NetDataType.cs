@@ -5,7 +5,7 @@
         HeroUpdate,
         InitialChunkRequest,
         ChunkRequest,
-        PlayerUpdate,
+        Update,
         Attack
     }
 }

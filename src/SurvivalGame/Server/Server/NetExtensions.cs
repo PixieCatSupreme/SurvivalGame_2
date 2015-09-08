@@ -50,22 +50,45 @@ namespace Mentula.Server
             }
         }
 
-        public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length)
+        public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length, long id)
         {
-            if (length > 0)
+            msg.Write((ushort)length - 1);
+
+            for (int i = 0; i < length; i++)
             {
-                msg.Write((ushort)length);
+                KeyValuePair<long, Creature> cur = players[i];
 
-                for (int i = 0; i < length; i++)
+                if (cur.Key == id) continue;
+
+                fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
+                fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
+                msg.WriteHalfPrecision(cur.Value.Rotation);
+                msg.WriteHalfPrecision(cur.Value.GetHealth());
+                msg.Write(cur.Value.Name);
+                msg.Write(9996);
+            }
+        }
+
+        public static unsafe void Write(this NetBuffer msg, ref Map map, IntVector2 chunkPos)
+        {
+            Chunk[] chunks = map.GetChunks(chunkPos);
+
+            msg.Write((ushort)chunks.Length);
+
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                Chunk cur = chunks[i];
+
+                msg.Write((ushort)cur.Creatures.Count);
+
+                for (int j = 0; j < cur.Creatures.Count; j++)
                 {
-                    KeyValuePair<long, Creature> cur = players[i];
+                    NPC curr = cur.Creatures[j];
 
-                    fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
-                    fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
-                    msg.WriteHalfPrecision(cur.Value.Rotation);
-                    msg.WriteHalfPrecision(cur.Value.GetHealth());
-                    msg.Write(cur.Value.Name);
-                    msg.Write(9996);
+                    fixed (IntVector2* cP = &curr.ChunkPos) msg.Write(cP);
+                    fixed (Vector2* tP = &curr.Pos) msg.Write(tP);
+                    msg.WriteHalfPrecision(curr.Rotation);
+                    msg.WriteHalfPrecision(curr.GetHealth());
                 }
             }
         }

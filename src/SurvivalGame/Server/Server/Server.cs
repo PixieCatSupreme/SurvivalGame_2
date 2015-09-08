@@ -190,10 +190,18 @@ namespace Mentula.Server
 
             if (server.Connections.Count > 0 && timeDiff >= 1f / 30)
             {
-                NOM nom = server.CreateMessage();
-                nom.Write((byte)NDT.PlayerUpdate);
-                nom.Write(ref logic.Players, logic.Index);
-                server.SendToAll(nom, NetDeliveryMethod.ReliableOrdered);
+                for (int i = 0; i < logic.Index; i++)
+                {
+                    NetConnection conn = server.Connections[i];
+                    KeyValuePair<long, Creature> cur = logic.Players.First(p => p.Key == conn.RemoteUniqueIdentifier);
+                    NOM nom = server.CreateMessage();
+
+                    nom.Write((byte)NDT.Update);
+                    nom.Write(ref logic.Players, logic.Index, cur.Key);
+                    nom.Write(ref logic.Map, cur.Value.ChunkPos);
+                    server.SendMessage(nom, conn, NetDeliveryMethod.Unreliable);
+                }
+
                 timeDiff = 0;
             }
 
