@@ -1,4 +1,6 @@
-﻿using Mentula.Utilities;
+﻿#define YOU_SPIN_ME_RIGHT_ROUND_BABY
+
+using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 using Resc = Mentula.Utilities.Resources.Res;
 using Mentula.Utilities.MathExtensions;
@@ -21,17 +23,20 @@ namespace Mentula.Server
 
         public void DoStuff(float deltaTime, ref Creature[] players, int Index)
         {
-            //GetTarget(ref players, Index);
-            //if (!TryToAttack(ref players, Index))
-            //{
-            //    MoveToTarget(deltaTime);
-            //}
+#if !YOU_SPIN_ME_RIGHT_ROUND_BABY
+            GetTarget(ref players, Index);
+            if (!TryToAttack(ref players, Index))
+            {
+                MoveToTarget(deltaTime);
+            }
+#else
             Rotation += deltaTime * 3;
             if (Rotation>=Math.PI*2)
             {
                 Rotation -= (float)(Math.PI * 2);
             }
             Pos += MathEX.RadiansToVector(Rotation) * deltaTime*5;
+#endif
 
         }
 

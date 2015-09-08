@@ -80,6 +80,7 @@ namespace Mentula.Client
                                 break;
                             case (NDT.Update):
                                 game.players = msg.ReadNPCs();
+                                var t = msg.ReadUInt16();
                                 msg.ReadNPCUpdate(ref game.chunks);
 
                                 game.vGraphics.UpdatePlayers(game.players.Length);
@@ -193,7 +194,7 @@ namespace Mentula.Client
 
         public static NPC[] ReadNPCs(this NetBuffer msg)
         {
-            int length = msg.ReadUInt16();
+            ushort length = msg.ReadUInt16();
             NPC[] result = new NPC[length];
 
             for (int i = 0; i < length; i++)
@@ -217,13 +218,13 @@ namespace Mentula.Client
 
             for (int i = 0; i < chunkLength; i++)
             {
-                if (i > chunks.Length) break;
+                if (i >= chunks.Length) break;
 
                 ushort crLength = msg.ReadUInt16();
 
                 for (int j = 0; j < crLength; j++)
                 {
-                    if (j > chunks[i].Creatures.Length) break;
+                    if (j >= chunks[i].Creatures.Length) break;
 
                     chunks[i].Creatures[j].ChunkPos = msg.ReadPoint();
                     chunks[i].Creatures[j].Pos = msg.ReadVector2();
