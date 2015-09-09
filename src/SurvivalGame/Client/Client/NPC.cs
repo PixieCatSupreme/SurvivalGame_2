@@ -16,5 +16,13 @@ namespace Mentula.Client
             HealthPrec = health;
             Name = name;
         }
+
+        public void Update(IntVector2 chunk, Vector2 tile, float rot, float health)
+        {
+            ChunkPos = chunk;
+            Pos = tile;
+            Rotation = rot;
+            HealthPrec = health;
+        }
     }
 }

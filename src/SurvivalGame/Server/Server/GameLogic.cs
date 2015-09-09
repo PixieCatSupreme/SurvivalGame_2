@@ -13,11 +13,14 @@ namespace Mentula.Server
 
         public int Index { get; private set; }
 
-        public GameLogic()
+        private Server server; 
+
+        public GameLogic(Server server)
         {
             Map = new Map();
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             Index = 0;
+            this.server = server;
         }
 
         public bool PlayerExists(long id, string name)

@@ -52,7 +52,7 @@ namespace Mentula.Server
 
         public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length, long id)
         {
-            msg.Write((ushort)length - 1);
+            msg.Write((ushort)(length - 1));
 
             for (int i = 0; i < length; i++)
             {
@@ -80,6 +80,7 @@ namespace Mentula.Server
                 Chunk cur = chunks[i];
 
                 msg.Write((ushort)cur.Creatures.Count);
+                fixed (IntVector2* cP = &cur.ChunkPos) msg.Write(cP);
 
                 for (int j = 0; j < cur.Creatures.Count; j++)
                 {
