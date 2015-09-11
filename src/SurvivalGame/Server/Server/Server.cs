@@ -189,9 +189,9 @@ namespace Mentula.Server
 
             logic.Update(time.DeltaTime);
 
-            if (timeDiff >= 1f / 30)
+            if (timeDiff >= 1f / 30 && logic.Index > 0)
             {
-                for (int i = 0; i < logic.Index; i++)
+                for (int i = 0; i < server.Connections.Count; i++)
                 {
                     NetConnection conn = server.Connections[i];
                     KeyValuePair<long, Creature> cur = logic.Players.First(p => p.Key == conn.RemoteUniqueIdentifier);

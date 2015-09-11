@@ -98,11 +98,11 @@ namespace Mentula.Client
             Camera.Transform(ref game.chunks, ref tileBuffer, ref creatureBuffer);
             Camera.Transform(ref game.players, ref actorBuffer);
 
-            int tileIndex = 0;
-            int creatureIndex = 0;
+            int tileIndex = 0, creatureIndex = 0;
+            SpriteFont nameFont = fonts["NameFont"];
 
             GraphicsDevice.Clear(Color.LimeGreen);
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
             for (int i = 0; i < game.chunks.Length; i++)
             {
@@ -113,38 +113,41 @@ namespace Mentula.Client
                     DrawBatch(textures[chunk.Tiles[j].Tex], pos, ROT * Res.DEG2RAD);
                     tileIndex++;
                 }
+            }
 
+            for (int i = 0; i < game.chunks.Length; i++)
+            {
+                Chunk chunk = game.chunks[i];
                 for (int j = 0; j < chunk.Creatures.Length; j++)
                 {
                     Vector2 pos = creatureBuffer[creatureIndex];
-                    string text = string.Format("{0} | {1}", chunk.Creatures[j].HealthPrec, chunk.Creatures[j].Name);
+                    NPC npc = chunk.Creatures[j];
 
-                    DrawBatch(textures[chunk.Creatures[j].TextureId], pos, Rot(chunk.Creatures[j].Rotation));
-                    batch.DrawString(fonts["NameFont"], text, pos + nameOffset, Color.Red);
+                    DrawBatch(textures[npc.TextureId], pos, Rot(npc.Rotation));
+                    batch.DrawString(nameFont, npc.HealthPrec + " | " + npc.Name, pos + nameOffset, Color.Red);
                     creatureIndex++;
                 }
             }
 
             for (int i = 0; i < game.players.Length; i++)
             {
-                string name = game.players[i].Name;
-                string text = string.Format("{0} | {1}", game.players[i].HealthPrec, name);
+                Vector2 pos = actorBuffer[i];
+                NPC actor = game.players[i];
 
-                DrawBatch(textures[9997], actorBuffer[i], Rot(game.players[i].Rotation));
-                batch.DrawString(fonts["NameFont"], text, actorBuffer[i] + nameOffset, Color.Red);
+                DrawBatch(textures[9997], pos, Rot(actor.Rotation));
+                batch.DrawString(nameFont, actor.HealthPrec + " | " + actor.Name, pos + nameOffset, Color.Red);
             }
+
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
             DrawBatch(textures[9997], heroPos, Rot(heroR));
 
             batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
-
             batch.End();
         }
 
         public void UpdateChunks(ref Chunk[] chunks)
         {
-            int tileLength = chunks.Length * Res.ChunkTileLength;
-            int creatureLength = 0;
+            int tileLength = chunks.Length * Res.ChunkTileLength, creatureLength = 0;
 
             for (int i = 0; i < chunks.Length; i++) creatureLength += chunks[i].Creatures.Length;
 
