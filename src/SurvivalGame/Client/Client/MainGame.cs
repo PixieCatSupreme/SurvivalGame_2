@@ -3,6 +3,7 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Net;
 using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
@@ -13,11 +14,14 @@ namespace Mentula.Client
         public const int WIDTH = 800;
         public const int HOST = 0;
 
+        internal GameState gameState;
+        internal string heroName;
         internal Actor hero;
         internal NPC[] players;
         internal Chunk[] chunks;
 
         internal VertexGraphics vGraphics;
+        internal MainMenu mainMenu;
         internal ClientNetworking networking;
 
         public MainGame()
@@ -25,14 +29,16 @@ namespace Mentula.Client
             Content.RootDirectory = "Content";
             IsFixedTimeStep = false;
             IsMouseVisible = true;
+            gameState = GameState.MainMenu;
 
             Components.Add(vGraphics = new VertexGraphics(this)
                 {
                     PreferredBackBufferHeight = HEIGHT,
                     PreferredBackBufferWidth = WIDTH,
-                    SynchronizeWithVerticalRetrace = false
+                    SynchronizeWithVerticalRetrace = false,
                 });
 
+            Components.Add(mainMenu = new MainMenu(this) { Visible = true });
             Components.Add(networking = new ClientNetworking(this));
         }
 
@@ -41,6 +47,7 @@ namespace Mentula.Client
             hero = new Actor();
             chunks = new Chunk[0];
             players = new NPC[0];
+            mainMenu.DiscoverCalled += OnConnect;
             base.Initialize();
         }
 
@@ -48,62 +55,39 @@ namespace Mentula.Client
         {
             if (IsActive)
             {
-                float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                KeyboardState state = Keyboard.GetState();
-
-                if (state.IsKeyDown(Keys.OemPlus))
+                if (gameState == GameState.Game)
                 {
-                    switch (HOST)
+                    float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    KeyboardState state = Keyboard.GetState();
+
+                    if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
+
+                    Vector2 move = new Vector2();
+                    if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
+                    if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
+                    if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
+                    if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
+                    if (state.IsKeyDown(Keys.Escape)) Exit();
+
+                    if (move != Vector2.Zero)
                     {
-                        case (0):
-                            networking.LocalConnect();
-                            break;
-                        case (1):
-                            networking.NetworkConnect(Ips.Joëll);
-                            break;
-                        case (2):
-                            networking.NetworkConnect(Ips.Nico);
-                            break;
-                        case (4):
-                            networking.NetworkConnect(Ips.Frank);
-                            break;
-                    }
-                }
+                        hero.Pos += move;
 
-                if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
-
-                Vector2 move = new Vector2();
-                if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
-                if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
-                if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
-                if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
-                if (state.IsKeyDown(Keys.Escape)) Exit();
-
-                if (move != Vector2.Zero)
-                {
-                    hero.Pos += move;
-
-                    fixed (IntVector2* cP = &hero.ChunkPos)
-                    {
-                        fixed (Vector2* tP = &hero.Pos)
+                        fixed (IntVector2* cP = &hero.ChunkPos)
                         {
-                            Chunk.FormatPos(cP, tP);
+                            fixed (Vector2* tP = &hero.Pos)
+                            {
+                                Chunk.FormatPos(cP, tP);
+                            }
                         }
                     }
-                }
 
-                MouseState mState = Mouse.GetState();           /* We need to add 90 degrees (* PI / 180) because */
-                Vect2 mousePos = new Vect2(mState.X, mState.Y); /* the angle will be returned facing right. */
-                hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos);
+                    MouseState mState = Mouse.GetState();
+                    Vect2 mousePos = new Vect2(mState.X, mState.Y);
+                    hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos);
+                }
             }
             base.Update(gameTime);
-        }
-
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            networking.Disconect();
-            networking.Stop();
-            base.OnExiting(sender, args);
         }
 
         public void UpdateChunks(Chunk[] newChunks)
@@ -123,6 +107,21 @@ namespace Mentula.Client
             }
 
             vGraphics.UpdateChunks(ref chunks);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            networking.Disconect();
+            networking.Stop();
+            base.OnExiting(sender, args);
+        }
+
+        protected void OnConnect(object sender, object[] args)
+        {
+            heroName = (string)args[0];
+            networking.NetworkConnect((IPAddress)args[1]);
+            mainMenu.Visible = false;
+            mainMenu.Enabled = false;
         }
     }
 }

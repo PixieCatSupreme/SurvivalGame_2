@@ -25,14 +25,14 @@ namespace Mentula.Client
         public bool Enabled { get { return true; } }
         public int UpdateOrder { get { return 0; } }
         public int DrawOrder { get { return 0; } }
-        public bool Visible { get { return true; } }
+        public bool Visible { get; set; }
 
         private SpriteBatch batch;
         private FPS fpsCounter;
         private MainGame game;
 
-        private TextureCollection textures;
-        private FontCollection fonts;
+        public TextureCollection textures;
+        public FontCollection fonts;
 
         private readonly Vector2 midTexture;
         private readonly Vector2 nameOffset;

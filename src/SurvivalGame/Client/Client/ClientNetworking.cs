@@ -60,7 +60,7 @@ namespace Mentula.Client
                 switch (msg.MessageType)
                 {
                     case (NIMT.DiscoveryResponse):
-                        NOM nom = client.CreateMessage(Environment.UserName);
+                        NOM nom = client.CreateMessage(game.heroName);
                         client.Connect(msg.SenderEndPoint, nom);
                         break;
                     case (NIMT.Data):
@@ -75,6 +75,8 @@ namespace Mentula.Client
                             case (NDT.InitialChunkRequest):
                                 game.chunks = msg.ReadChunks();
                                 game.vGraphics.UpdateChunks(ref game.chunks);
+                                game.gameState = GameState.Game;
+                                game.vGraphics.Visible = true;
                                 break;
                             case (NDT.ChunkRequest):
                                 game.UpdateChunks(msg.ReadChunks());

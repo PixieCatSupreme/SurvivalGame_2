@@ -2,8 +2,8 @@
 {
     public enum GameState
     {
-        MainMenu,
-        Options,
-        Game
+        MainMenu = 0,
+        Options = 1,
+        Game = 2
     }
 }
