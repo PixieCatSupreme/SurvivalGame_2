@@ -36,7 +36,7 @@ namespace Mentula.Server
         public Server()
         {
             InitializeComponent();
-            logic = new GameLogic();
+            logic = new GameLogic(this);
             WriteFirstLine("Console Created.");
             IsMouseVisible = true;
 
@@ -128,6 +128,7 @@ namespace Mentula.Server
                                 logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
 
+                                logic.Update(0);
                                 Chunk[] chunks = logic.Map.GetChunks(logic.GetPlayer(id).ChunkPos);
 
                                 nom = server.CreateMessage();
@@ -188,12 +189,20 @@ namespace Mentula.Server
 
             logic.Update(time.DeltaTime);
 
-            if (server.Connections.Count > 0 && timeDiff >= 1f / 30)
+            if (timeDiff >= 1f / 30 && logic.Index > 0)
             {
-                NOM nom = server.CreateMessage();
-                nom.Write((byte)NDT.PlayerUpdate);
-                nom.Write(ref logic.Players, logic.Index);
-                server.SendToAll(nom, NetDeliveryMethod.ReliableOrdered);
+                for (int i = 0; i < server.Connections.Count; i++)
+                {
+                    NetConnection conn = server.Connections[i];
+                    KeyValuePair<long, Creature> cur = logic.Players.First(p => p.Key == conn.RemoteUniqueIdentifier);
+                    NOM nom = server.CreateMessage();
+
+                    nom.Write((byte)NDT.Update);
+                    nom.Write(ref logic.Players, logic.Index, cur.Key);
+                    nom.Write(ref logic.Map, cur.Value.ChunkPos);
+                    server.SendMessage(nom, conn, NetDeliveryMethod.UnreliableSequenced);
+                }
+
                 timeDiff = 0;
             }
 

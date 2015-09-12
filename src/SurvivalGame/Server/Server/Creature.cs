@@ -49,7 +49,7 @@ namespace Mentula.Server
                 MaxHealth[2] +
                 MaxHealth[3] +
                 MaxHealth[4] +
-                MaxHealth[5]) / 100;
+                MaxHealth[5]) / 100f;
 
             float current =
                 Health[0] * 3 +

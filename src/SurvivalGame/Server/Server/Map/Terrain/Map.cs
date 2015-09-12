@@ -46,6 +46,7 @@ namespace Mentula.Server
                         ChunkGenerator.Generate(ref c);
                         LoadedChunks.Add(c);
                         ChunkList.Add(c);
+                        gen = true;
                     }
                 }
             }

@@ -6,6 +6,7 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using System.Net;
 using NIM = Lidgren.Network.NetIncomingMessage;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
@@ -78,8 +79,11 @@ namespace Mentula.Client
                             case (NDT.ChunkRequest):
                                 game.UpdateChunks(msg.ReadChunks());
                                 break;
-                            case (NDT.PlayerUpdate):
+                            case (NDT.Update):
                                 game.players = msg.ReadNPCs();
+                                msg.ReadNPCUpdate(ref game.chunks);
+
+                                game.vGraphics.UpdateChunks(ref game.chunks);
                                 game.vGraphics.UpdatePlayers(game.players.Length);
                                 break;
                         }
@@ -191,7 +195,7 @@ namespace Mentula.Client
 
         public static NPC[] ReadNPCs(this NetBuffer msg)
         {
-            int length = msg.ReadUInt16();
+            ushort length = msg.ReadUInt16();
             NPC[] result = new NPC[length];
 
             for (int i = 0; i < length; i++)
@@ -207,6 +211,32 @@ namespace Mentula.Client
             }
 
             return result;
+        }
+
+        public static void ReadNPCUpdate(this NetBuffer msg, ref Chunk[] chunks)
+        {
+            ushort chunkLength = msg.ReadUInt16();
+
+            for (int i = 0; i < chunkLength; i++)
+            {
+                if (i >= chunks.Length) break;
+
+                ushort crLength = msg.ReadUInt16();
+                IntVector2 cP = msg.ReadPoint();
+                Chunk cur = chunks.First(c => c.ChunkPos == cP);
+
+                if (crLength > cur.Creatures.Length) Array.Resize(ref cur.Creatures, crLength);
+
+                for (int j = 0; j < crLength; j++)
+                {
+                    IntVector2 chunkPos = msg.ReadPoint();
+                    Vector2 tile = msg.ReadVector2();
+                    float rotation = msg.ReadHalfPrecisionSingle();
+                    float healthPrec = msg.ReadHalfPrecisionSingle();
+                    if (cur.Creatures[j] == null) chunks[i].Creatures[j] = new NPC(chunkPos, tile, rotation, healthPrec, "Darude Sandstorm");
+                    else cur.Creatures[j].Update(chunkPos, tile, rotation, healthPrec);
+                }
+            }
         }
 
         private static Tile[] ReadTiles(this NetBuffer msg)
