@@ -60,7 +60,7 @@ namespace Mentula.Client
                     float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     KeyboardState state = Keyboard.GetState();
 
-                    if (state.IsKeyDown(Keys.OemMinus)) networking.Disconect();
+                    if (state.IsKeyDown(Keys.E)) networking.Disconect();
 
                     Vector2 move = new Vector2();
                     if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
@@ -68,6 +68,11 @@ namespace Mentula.Client
                     if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
                     if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
                     if (state.IsKeyDown(Keys.Escape)) Exit();
+
+                    if (move != Vector2.Zero)
+
+                        if (state.IsKeyDown(Keys.OemMinus)) vGraphics.SCALE *= 1 - 2f * delta;
+                    if (state.IsKeyDown(Keys.OemPlus)) vGraphics.SCALE *= 1 + 2f * delta;
 
                     if (move != Vector2.Zero)
                     {
