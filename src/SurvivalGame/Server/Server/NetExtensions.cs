@@ -52,10 +52,10 @@ namespace Mentula.Server
 
         public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length)
         {
+            msg.Write((ushort)length);
+
             if (length > 0)
             {
-                msg.Write((ushort)length);
-
                 for (int i = 0; i < length; i++)
                 {
                     KeyValuePair<long, Creature> cur = players[i];
