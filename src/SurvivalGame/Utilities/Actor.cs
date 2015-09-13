@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mentula.Utilities;
 using Microsoft.Xna.Framework;
+using Resc = Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Utilities
 {
@@ -30,6 +31,34 @@ namespace Mentula.Utilities
         {
             ChunkPos = *chunk;
             Pos = *tile;
+        }
+
+        public void FormatPos()
+        {
+            while (Pos.X < 0 | Pos.Y < 0 | Pos.X > Resc.ChunkSize | Pos.Y > Resc.ChunkSize)
+            {
+                if (Pos.X < 0)
+                {
+                    Pos.X += Resc.ChunkSize;
+                    ChunkPos.X--;
+                }
+                else if (Pos.X > Resc.ChunkSize)
+                {
+                    Pos.X -= Resc.ChunkSize;
+                    ChunkPos.X++;
+                }
+
+                if (Pos.Y < 0)
+                {
+                    Pos.Y += Resc.ChunkSize;
+                    ChunkPos.Y--;
+                }
+                else if (Pos.Y > Resc.ChunkSize)
+                {
+                    Pos.Y -= Resc.ChunkSize;
+                    ChunkPos.Y++;
+                }
+            }
         }
     }
 }

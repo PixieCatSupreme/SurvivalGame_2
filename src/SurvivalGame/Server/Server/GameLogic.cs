@@ -102,6 +102,7 @@ namespace Mentula.Server
             for (int i = 0; i < Map.LoadedNPCs.Count; i++)
             {
                 Map.LoadedNPCs[i].DoStuff(delta,ref players, Index);
+                Map.LoadedNPCs[i].FormatPos();
             }
 
             for (int i = 0; i < Index; i++)
