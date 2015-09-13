@@ -19,7 +19,10 @@ namespace Mentula.Server
         public static Chunk Generate(ref Chunk chunk, ref List<NPC> n)
         {
             GenerateTerrain(ref chunk);
-            GenerateWildlife(ref n, chunk.ChunkPos);
+            GenerateTrees(ref chunk);
+            GenerateWildlife(ref n,ref chunk);
+            
+
 
             return chunk;
         }
@@ -62,9 +65,9 @@ namespace Mentula.Server
             return n;
         }
 
-        private static void GenerateWildlife(ref List<NPC> n, IntVector2 chunkPos)
+        private static void GenerateWildlife(ref List<NPC> n,ref Chunk c)
         {
-            Random r = new Random(RNG.RIntFromString(chunkPos.X + Res.Seed + chunkPos.Y));
+            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Res.Seed + c.ChunkPos.Y));
             for (int i = 0; i < r.NextDouble() * Res.ChunkSize; )
             {
                 bool canplace = true;
@@ -76,14 +79,49 @@ namespace Mentula.Server
                         canplace = false;
                     }
                 }
+                for (int j = 0; j <c.Destructibles.Count ; j++)
+                {
+                    if (p==c.Destructibles[j].Pos)
+                    {
+                        canplace = false; 
+                    }
+                }
+
 
                 if (canplace)
                 {
-                    n.Add(new NPC("Wolf", new Stats(7), 35, p, chunkPos) { TextureId = 9996 });
+                    n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
                     n[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
                     i++;
                 }
 
+            }
+
+        }
+
+        private static void GenerateTrees(ref Chunk c)
+        {
+            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
+            for (int i = 0; i < Res.ChunkSize*Res.ChunkSize; i++)
+            {
+                float chance = rainArray[i] / 10;
+                if (r.NextDouble()<chance)
+                {
+                    Vector2 pos = new Vector2(i % Res.ChunkSize, i / Res.ChunkSize);
+                    bool canplace = true;
+                    for (int j = 0; j < c.Destructibles.Count; j++)
+                    {
+                        if (c.Destructibles[j].Pos==pos)
+                        {
+                            canplace = false;
+                        }
+                    }
+
+                    if (canplace)
+                    {
+                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
+                    }
+                }
             }
 
         }
