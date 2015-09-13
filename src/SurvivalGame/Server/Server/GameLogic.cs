@@ -99,13 +99,9 @@ namespace Mentula.Server
 
             Creature[] players = Players.Select(p => p.Value).ToArray();
 
-            for (int i = 0; i < Map.LoadedChunks.Count; i++)
+            for (int i = 0; i < Map.LoadedNPCs.Count; i++)
             {
-                for (int j = 0; j < Map.LoadedChunks[i].Creatures.Count; j++)
-                {
-                    Map.LoadedChunks[i].Creatures[j].DoStuff(delta, ref players, Index);
-
-                }
+                Map.LoadedNPCs[i].DoStuff(delta,ref players, Index);
             }
 
             for (int i = 0; i < Index; i++)

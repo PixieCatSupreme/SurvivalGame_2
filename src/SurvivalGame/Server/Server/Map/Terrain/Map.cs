@@ -14,12 +14,17 @@ namespace Mentula.Server
     {
         public List<Chunk> LoadedChunks;
         public List<Chunk> ChunkList;
+        public List<NPC> LoadedNPCs;
+        public List<NPC> NPCList;
+
         public const int Range_S = Res.Range_C + 1;
 
         public Map()
         {
             LoadedChunks = new List<Chunk>();
             ChunkList = new List<Chunk>();
+            LoadedNPCs = new List<NPC>();
+            NPCList = new List<NPC>();
         }
 
         public bool Generate(IntVector2 pos)
@@ -42,10 +47,13 @@ namespace Mentula.Server
                     }
                     if (!chunkexists)
                     {
+                        List<NPC> n = new List<NPC>();
                         Chunk c = new Chunk(pos + new IntVector2(x, y));
-                        ChunkGenerator.Generate(ref c);
+                        ChunkGenerator.Generate(ref c, ref n);
                         LoadedChunks.Add(c);
                         ChunkList.Add(c);
+                        LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
+                        NPCList.InsertRange(NPCList.Count, n);
                         gen = true;
                     }
                 }
@@ -76,6 +84,23 @@ namespace Mentula.Server
                     }
                 }
             }
+            List<NPC> n = new List<NPC>();
+            for (int i = 0; i < NPCList.Count; i++)
+            {
+                bool isloaded = false;
+                for (int p = 0; p < LoadedNPCs.Count; p++)
+                {
+                    if (NPCList[i] == LoadedNPCs[p])
+                    {
+                        isloaded = true;
+                    }
+                }
+                if (MathEX.GetMaxDiff(NPCList[i].ChunkPos, pos) <= Range_S && !isloaded)
+                {
+                    n.Add(NPCList[i]);
+                }
+            }
+            LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
         }
 
         public Chunk[] GetChunks(IntVector2 pos)
@@ -148,15 +173,24 @@ namespace Mentula.Server
                 bool isnearplayer = false;
                 for (int p = 0; p < pos.Length; p++)
                 {
-                    if (Math.Abs(LoadedChunks[i].ChunkPos.X - pos[p].X) <= Range_S & Math.Abs(LoadedChunks[i].ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
+                    if (Math.Abs(LoadedChunks[i].ChunkPos.X - pos[p].X) <= Range_S && Math.Abs(LoadedChunks[i].ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
                 }
 
                 if (!isnearplayer) LoadedChunks.RemoveAt(i);
                 else i++;
             }
+            for (int i = 0; i < LoadedNPCs.Count; )
+            {
+                bool isnearplayer = false;
+                for (int p = 0; p < pos.Length; p++)
+                {
+                    if (Math.Abs(LoadedNPCs[i].ChunkPos.X - pos[p].X) <= Range_S && Math.Abs(LoadedNPCs[i].ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
+                }
+
+                if (!isnearplayer) LoadedNPCs.RemoveAt(i);
+                else i++;
+            }
         }
-
-
 
     }
 }

@@ -16,10 +16,10 @@ namespace Mentula.Server
         private static float[] rainArray;
 
 
-        public static Chunk Generate(ref Chunk chunk)
+        public static Chunk Generate(ref Chunk chunk, ref List<NPC> n)
         {
             GenerateTerrain(ref chunk);
-            GenerateWindlife(ref chunk);
+            GenerateWildlife(ref n, chunk.ChunkPos);
 
             return chunk;
         }
@@ -62,27 +62,25 @@ namespace Mentula.Server
             return n;
         }
 
-        private static void GenerateWindlife(ref Chunk chunk)
+        private static void GenerateWildlife(ref List<NPC> n, IntVector2 chunkPos)
         {
-            Random r = new Random(RNG.RIntFromString(chunk.ChunkPos.X + Res.Seed + chunk.ChunkPos.Y));
+            Random r = new Random(RNG.RIntFromString(chunkPos.X + Res.Seed + chunkPos.Y));
             for (int i = 0; i < r.NextDouble() * Res.ChunkSize; )
             {
                 bool canplace = true;
                 Vector2 p = new Vector2((int)(r.NextDouble() * Res.ChunkSize), (int)(r.NextDouble() * Res.ChunkSize));
-                for (int j = 0; j < chunk.Creatures.Count; j++)
+                for (int j = 0; j < n.Count; j++)
                 {
-                    if (p == chunk.Creatures[j].Pos)
+                    if (p == n[j].Pos)
                     {
                         canplace = false;
                     }
                 }
 
-
-
                 if (canplace)
                 {
-                    chunk.Creatures.Add(new NPC("Wolf", new Stats(7), 35, p, chunk.ChunkPos) { TextureId = 9996 });
-                    chunk.Creatures[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
+                    n.Add(new NPC("Wolf", new Stats(7), 35, p, chunkPos) { TextureId = 9996 });
+                    n[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
                     i++;
                 }
 

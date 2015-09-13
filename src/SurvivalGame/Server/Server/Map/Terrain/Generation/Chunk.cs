@@ -11,12 +11,10 @@ namespace Mentula.Server
         public Tile[] Tiles;
         public IntVector2 ChunkPos;
         public float Rain;
-        public List<NPC> Creatures;
 
         public Chunk(IntVector2 pos)
         {
             ChunkPos = pos;
-            Creatures = new List<NPC>();
         }
     }
 }
