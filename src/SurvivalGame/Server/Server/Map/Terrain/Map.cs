@@ -157,6 +157,19 @@ namespace Mentula.Server
             return r.ToArray();
         }
 
+        public NPC[] GetNPC(IntVector2 pos)
+        {
+            List<NPC> n = new List<NPC>();
+            for (int i = 0; i < LoadedNPCs.Count; i++)
+            {
+                if (MathEX.GetMinDiff(LoadedNPCs[i].ChunkPos, pos) <= Res.Range_C)
+                {
+                    n.Add(LoadedNPCs[i]);
+                }
+            }
+            return n.ToArray();
+        }
+
         public void UnloadChunks(IntVector2 pos)
         {
             for (int i = 0; i < LoadedChunks.Count; )
