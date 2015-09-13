@@ -249,9 +249,10 @@ namespace Mentula.Client
                 Vector2 tilePos = msg.ReadVector2();
                 float rot = msg.ReadHalfPrecisionSingle();
                 float healthPerc = msg.ReadHalfPrecisionSingle();
+                string name = msg.ReadString();
+                int textId = msg.ReadInt32();
 
-                if (npcs[i] != null) npcs[i].Update(chunkPos, tilePos, rot, healthPerc);
-                else npcs[i] = new NPC(chunkPos, tilePos, rot, healthPerc, "Darude");
+                npcs[i] = new NPC(chunkPos, tilePos, rot, healthPerc, name) { TextureId = textId };
             }
         }
 

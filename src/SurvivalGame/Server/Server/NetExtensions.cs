@@ -71,22 +71,5 @@ namespace Mentula.Server
                 }
             }
         }
-
-        public static unsafe void Write(this NetBuffer msg, ref Map map, IntVector2 chunkPos)
-        {
-            NPC[] npcs = map.GetNPC(chunkPos);
-
-            msg.Write((ushort)npcs.Length);
-
-            for (int i = 0; i < npcs.Length; i++)
-            {
-                NPC cur = npcs[i];
-
-                fixed (IntVector2* cP = &cur.ChunkPos) msg.Write(cP);
-                fixed (Vector2* tP = &cur.Pos) msg.Write(tP);
-                msg.WriteHalfPrecision(cur.Rotation);
-                msg.WriteHalfPrecision(cur.GetHealth());
-            }
-        }
     }
 }

@@ -203,8 +203,8 @@ namespace Mentula.Server
 
                     nom.Write((byte)NDT.Update);
                     nom.Write(ref logic.Players, logic.Index, cur.Key);
-                    nom.Write(ref logic.Map, cur.Value.ChunkPos);
-                    server.SendMessage(nom, conn, NetDeliveryMethod.UnreliableSequenced);
+                    nom.Write(logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+                    server.SendMessage(nom, conn, NetDeliveryMethod.ReliableOrdered);
                 }
 
                 timeDiff = 0;
