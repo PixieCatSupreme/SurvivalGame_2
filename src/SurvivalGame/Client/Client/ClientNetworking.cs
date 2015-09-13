@@ -203,6 +203,7 @@ namespace Mentula.Client
             Chunk result = new Chunk(chunkPos);
 
             result.Tiles = msg.ReadTiles();
+            result.Destrucables = msg.ReadDestr();
 
             return result;
         }
@@ -261,11 +262,36 @@ namespace Mentula.Client
             ushort length = msg.ReadUInt16();
             Tile[] result = new Tile[length];
 
+            int x = 0, y = 0;
             for (int i = 0; i < length; i++)
             {
-                int texture = msg.ReadInt32();
-                IntVector2 pos = msg.ReadPoint();
-                result[i] = new Tile(texture, pos);
+                int id = msg.ReadInt32();
+                IntVector2 pos = new IntVector2(x, y);
+                result[i] = new Tile(id, pos);
+
+                x++;
+                if (x >= Res.ChunkSize)
+                {
+                    x = 0;
+                    y++;
+                }
+            }
+
+            return result;
+        }
+
+        private static Destructable[] ReadDestr(this NetBuffer msg)
+        {
+            ushort length = msg.ReadUInt16();
+            Destructable[] result = new Destructable[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                int id = msg.ReadInt32();
+                Vector2 pos = msg.ReadVector2();
+                float health = msg.ReadHalfPrecisionSingle();
+
+                result[i] = new Destructable(id, new IntVector2(pos), health);
             }
 
             return result;

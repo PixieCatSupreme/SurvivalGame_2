@@ -11,18 +11,19 @@ namespace Mentula.Server
     {
         public static unsafe void Write(this NetBuffer msg, Chunk value)
         {
-            msg.Write(value.ChunkPos.X);
-            msg.Write(value.ChunkPos.Y);
+            fixed (IntVector2* cP = &value.ChunkPos) msg.Write(cP);
 
             msg.Write((ushort)value.Tiles.Length);
+            for (int i = 0; i < value.Tiles.Length; i++) msg.Write(value.Tiles[i].Tex);
 
-            for (int i = 0; i < value.Tiles.Length; i++)
+            msg.Write((ushort)value.Destructibles.Count);
+            for (int i = 0; i < value.Destructibles.Count; i++)
             {
-                Tile cur = value.Tiles[i];
+                Destructible cur = value.Destructibles[i];
 
-                msg.Write(cur.Tex);
-                msg.Write(cur.Pos.X);
-                msg.Write(cur.Pos.Y);
+                msg.Write(cur.Id);
+                fixed (Vector2* tP = &cur.Pos) msg.Write(tP);
+                msg.WriteHalfPrecision(cur.GetHealth());
             }
         }
 

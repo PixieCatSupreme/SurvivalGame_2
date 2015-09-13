@@ -38,6 +38,7 @@ namespace Mentula.Client
         private readonly Vector2 nameOffset;
 
         private Vector2[] tileBuffer;
+        private Vector2[] destrBuffer;
         private Vector2[] actorBuffer;
         private float heroR;
 
@@ -57,6 +58,7 @@ namespace Mentula.Client
             nameOffset = new Vector2(0, -32);
 
             tileBuffer = new Vector2[0];
+            destrBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
 
             PreferredBackBufferHeight = 600;
@@ -97,10 +99,10 @@ namespace Mentula.Client
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             fpsCounter.Update(delta);
-            Camera.Transform(ref game.chunks, ref tileBuffer);
+            Camera.Transform(ref game.chunks, ref tileBuffer, ref destrBuffer);
             Camera.Transform(ref game.npcs, ref actorBuffer);
 
-            int tileIndex = 0;
+            int tileIndex = 0, destrIndex = 0;
             SpriteFont nameFont = fonts["NameFont"];
 
             GraphicsDevice.Clear(Color.LimeGreen);
@@ -109,11 +111,19 @@ namespace Mentula.Client
             for (int i = 0; i < game.chunks.Length; i++)
             {
                 Chunk chunk = game.chunks[i];
+
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
                     Vector2 pos = tileBuffer[tileIndex];
                     DrawBatch(textures[chunk.Tiles[j].Tex], pos, ROT * Res.DEG2RAD);
                     tileIndex++;
+                }
+
+                for (int j = 0; j < chunk.Destrucables.Length; j++)
+                {
+                    Vector2 pos = destrBuffer[destrIndex];
+                    DrawBatch(textures[chunk.Destrucables[j].Tex], pos, ROT * Res.DEG2RAD);
+                    destrIndex++;
                 }
             }
 
@@ -136,8 +146,11 @@ namespace Mentula.Client
         public void UpdateChunks(ref Chunk[] chunks, ref NPC[] npcs)
         {
             int tileLength = chunks.Length * Res.ChunkTileLength;
+            int destrLength = 0;
+            for (int i = 0; i < chunks.Length; i++) destrLength += chunks[i].Destrucables.Length;
 
             if (tileLength != tileBuffer.Length) tileBuffer = new Vector2[tileLength];
+            if (destrLength != destrBuffer.Length) destrBuffer = new Vector2[destrLength];
             if (npcs.Length != actorBuffer.Length) actorBuffer = new Vector2[npcs.Length];
         }
 

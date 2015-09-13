@@ -13,11 +13,14 @@ namespace Mentula.Client
     public class Chunk
     {
         public Tile[] Tiles;
+        public Destructable[] Destrucables;
         public IntVector2 ChunkPos;
 
         public Chunk(IntVector2 pos)
         {
             ChunkPos = pos;
+            Tiles = new Tile[0];
+            Destrucables = new Destructable[0];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

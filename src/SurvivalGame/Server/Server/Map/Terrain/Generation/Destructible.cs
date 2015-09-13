@@ -22,6 +22,10 @@ namespace Mentula.Utilities
             MaxHealth = 100;
         }
 
-
+        public float GetHealth()
+        {
+            float perc = MaxHealth * 0.01f;
+            return Health * perc;
+        }
     }
 }
