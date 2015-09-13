@@ -90,6 +90,7 @@
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\Chunk.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
+    <Compile Include="Map\Terrain\Generation\Destructible.cs" />
     <Compile Include="Map\Terrain\Generation\PerlinNoise.cs" />
     <Compile Include="Map\Terrain\Map.cs" />
     <Compile Include="NetExtensions.cs" />
