@@ -11,6 +11,7 @@
 	[Container: "Destructable"]
 	{
 		[Tree: id=500, name="Tree"]
+		[Stump: id=501, name="Tree_Stump"]
 	}
 
 	[Container: "Creatures"]

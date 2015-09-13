@@ -104,7 +104,7 @@ namespace Mentula.Server
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
             for (int i = 0; i < Res.ChunkSize*Res.ChunkSize; i++)
             {
-                float chance = rainArray[i] / 10;
+                float chance = rainArray[i] / 1000;
                 if (r.NextDouble()<chance)
                 {
                     Vector2 pos = new Vector2(i % Res.ChunkSize, i / Res.ChunkSize);
@@ -119,7 +119,7 @@ namespace Mentula.Server
 
                     if (canplace)
                     {
-                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
+                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 501));
                     }
                 }
             }
