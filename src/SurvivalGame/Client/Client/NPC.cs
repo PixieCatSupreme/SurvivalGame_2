@@ -9,6 +9,13 @@ namespace Mentula.Client
         public int TextureId;
         public float HealthPrec;
 
+        public NPC()
+        {
+            Name = "The Unnameable";
+            TextureId = 9997;
+            HealthPrec = 100;
+        }
+
         public NPC(IntVector2 chunk, Vector2 tile, float rotation, float health, string name)
             :base(tile, chunk)
         {

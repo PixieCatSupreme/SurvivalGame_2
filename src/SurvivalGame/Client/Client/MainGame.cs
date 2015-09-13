@@ -10,13 +10,8 @@ namespace Mentula.Client
 {
     public class MainGame : Game
     {
-        public const int HEIGHT = 600;
-        public const int WIDTH = 800;
-        public const int HOST = 0;
-
         internal GameState gameState;
-        internal string heroName;
-        internal Actor hero;
+        internal NPC hero;
         internal NPC[] players;
         internal Chunk[] chunks;
 
@@ -29,22 +24,16 @@ namespace Mentula.Client
             Content.RootDirectory = "Content";
             IsFixedTimeStep = false;
             IsMouseVisible = true;
-            gameState = GameState.MainMenu;
 
-            Components.Add(vGraphics = new VertexGraphics(this)
-                {
-                    PreferredBackBufferHeight = HEIGHT,
-                    PreferredBackBufferWidth = WIDTH,
-                    SynchronizeWithVerticalRetrace = false,
-                });
-
-            Components.Add(mainMenu = new MainMenu(this) { Visible = true });
+            Components.Add(vGraphics = new VertexGraphics(this));
+            Components.Add(mainMenu = new MainMenu(this));
             Components.Add(networking = new ClientNetworking(this));
+            SetState(GameState.MainMenu);
         }
 
         protected override void Initialize()
         {
-            hero = new Actor();
+            hero = new NPC();
             chunks = new Chunk[0];
             players = new NPC[0];
             mainMenu.DiscoverCalled += OnConnect;
@@ -60,18 +49,14 @@ namespace Mentula.Client
                     float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     KeyboardState state = Keyboard.GetState();
 
-                    if (state.IsKeyDown(Keys.E)) networking.Disconect();
-
                     Vector2 move = new Vector2();
                     if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
                     if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
                     if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
                     if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
+                    if (state.IsKeyDown(Keys.E)) networking.Disconect();
                     if (state.IsKeyDown(Keys.Escape)) Exit();
-
-                    if (move != Vector2.Zero)
-
-                        if (state.IsKeyDown(Keys.OemMinus)) vGraphics.SCALE *= 1 - 2f * delta;
+                    if (state.IsKeyDown(Keys.OemMinus)) vGraphics.SCALE *= 1 - 2f * delta;
                     if (state.IsKeyDown(Keys.OemPlus)) vGraphics.SCALE *= 1 + 2f * delta;
 
                     if (move != Vector2.Zero)
@@ -114,19 +99,35 @@ namespace Mentula.Client
             vGraphics.UpdateChunks(ref chunks);
         }
 
-        protected override void OnExiting(object sender, EventArgs args)
+        public void SetState(GameState newState)
         {
-            networking.Disconect();
-            networking.Stop();
-            base.OnExiting(sender, args);
+            switch (newState)
+            {
+                case (GameState.MainMenu):
+                    vGraphics.Visible = false;
+                    mainMenu.Enabled = true;
+                    mainMenu.Visible = true;
+                    break;
+                case (GameState.Loading):
+                    vGraphics.Visible = false;
+                    mainMenu.Visible = false;
+                    mainMenu.Enabled = false;
+                    break;
+                case (GameState.Game):
+                    vGraphics.Visible = true;
+                    mainMenu.Visible = false;
+                    mainMenu.Enabled = false;
+                    break;
+            }
+
+            gameState = newState;
         }
 
         protected void OnConnect(object sender, object[] args)
         {
-            heroName = (string)args[0];
+            hero.Name = (string)args[0];
             networking.NetworkConnect((IPAddress)args[1]);
-            mainMenu.Visible = false;
-            mainMenu.Enabled = false;
+            SetState(GameState.Loading);
         }
     }
 }

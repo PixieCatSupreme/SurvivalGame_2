@@ -60,8 +60,17 @@ namespace Mentula.Client
                 switch (msg.MessageType)
                 {
                     case (NIMT.DiscoveryResponse):
-                        NOM nom = client.CreateMessage(game.heroName);
+                        NOM nom = client.CreateMessage(game.hero.Name);
                         client.Connect(msg.SenderEndPoint, nom);
+                        break;
+                    case (NIMT.StatusChanged):
+                        NetConnectionStatus status = (NetConnectionStatus)msg.ReadByte();
+
+                        if (status == NetConnectionStatus.Disconnected)
+                        {
+                            game.mainMenu.SetError(msg.ReadString());
+                            game.SetState(GameState.MainMenu);
+                        }
                         break;
                     case (NIMT.Data):
                         NDT type = (NDT)msg.ReadByte();
@@ -75,8 +84,7 @@ namespace Mentula.Client
                             case (NDT.InitialChunkRequest):
                                 game.chunks = msg.ReadChunks();
                                 game.vGraphics.UpdateChunks(ref game.chunks);
-                                game.gameState = GameState.Game;
-                                game.vGraphics.Visible = true;
+                                game.SetState(GameState.Game);
                                 break;
                             case (NDT.ChunkRequest):
                                 game.UpdateChunks(msg.ReadChunks());
@@ -169,6 +177,17 @@ namespace Mentula.Client
                 state ^= 0x2;
             }
             else throw new InvalidOperationException("Stop or kill must be called before calling restart.");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Disconect();
+                Stop();
+            }
+
+            base.Dispose(disposing);
         }
     }
 

@@ -60,6 +60,10 @@ namespace Mentula.Client
             tileBuffer = new Vector2[0];
             creatureBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
+
+            PreferredBackBufferHeight = 600;
+            PreferredBackBufferWidth = 800;
+            SynchronizeWithVerticalRetrace = false;
         }
 
         public void Initialize()

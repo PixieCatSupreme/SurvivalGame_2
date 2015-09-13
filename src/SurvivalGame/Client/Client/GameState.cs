@@ -4,6 +4,7 @@
     {
         MainMenu = 0,
         Options = 1,
-        Game = 2
+        Loading = 2,
+        Game = 3
     }
 }
