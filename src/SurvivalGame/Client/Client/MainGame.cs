@@ -125,8 +125,8 @@ namespace Mentula.Client
                     break;
                 case (GameState.Loading):
                     vGraphics.Visible = false;
-                    mainMenu.Visible = false;
                     mainMenu.Enabled = false;
+                    mainMenu.Visible = false;
                     break;
                 case (GameState.Game):
                     vGraphics.Visible = true;

@@ -71,6 +71,7 @@ namespace Mentula.Client
                         {
                             game.mainMenu.SetError(msg.ReadString());
                             game.SetState(GameState.MainMenu);
+                            if ((state & 0x1) != 0) state ^= 0x1;
                         }
                         break;
                     case (NIMT.Data):

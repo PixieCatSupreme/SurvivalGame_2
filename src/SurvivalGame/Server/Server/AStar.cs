@@ -1,5 +1,6 @@
 ﻿using Mentula.Utilities;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,14 +9,14 @@ namespace Mentula.Server
 {
     public static class AStar
     {
-        public const int MOVE = 10;
-
         private static Map _map;
         private static List<IntVector2> _open;
         private static List<IntVector2> _closed;
 
-        public static Node[] GetRoute(Map map)
+        public static Node[] GetRoute4(Map map)
         {
+            const int MOVE = 1;
+
             _map = map;
             _open = new List<IntVector2>();
             _closed = new List<IntVector2>();
@@ -26,7 +27,7 @@ namespace Mentula.Server
                 if (_open.Contains(current.Position)) _open.Remove(current.Position);
                 _closed.Add(current.Position);
 
-                IntVector2[] ajNodes = FilterNodes(GetAjasonNodes(current.Position));
+                IntVector2[] ajNodes = FilterNodes(GetAjasonNodes4(current.Position));
                 if (ajNodes.Contains(map.endPos)) break;
 
                 for (int i = 0; i < ajNodes.Length; i++)
@@ -46,17 +47,67 @@ namespace Mentula.Server
             return Callback(ref end);
         }
 
-        private static Node[] GetAjasonNodes(IntVector2 nodePos)
+        public static Node[] GetRoute8(Map map)
         {
-            List<Node> returnV = new List<Node>();
+            _map = map;
+            _open = new List<IntVector2>();
+            _closed = new List<IntVector2>();
+            Node current = _map.GetStartNode();
+
+            while (true)
+            {
+                if (_open.Contains(current.Position)) _open.Remove(current.Position);
+                _closed.Add(current.Position);
+
+                IntVector2[] ajNodes = FilterNodes(GetAjasonNodes8(current.Position));
+                if (ajNodes.Contains(map.endPos)) break;
+
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    Node cur = _map[ajNodes[i].X, ajNodes[i].Y];
+                    float move = GetMove(cur, current);
+                    if (cur.Parent == null) cur.SetParent(current, move);
+                    if (current.GValue + move < cur.GValue) cur.SetParent(current, move);
+                    if (!_open.Contains(cur.Position)) _open.Add(cur.Position);
+                }
+
+                if (_open.Count == 0) return new Node[0];
+                current = GetNodeWithLowestFV(GetNodes());
+            }
+
+            Node end = map.GetEndNode();
+            end.SetParent(current, GetMove(end, current));
+            return Callback(ref end);
+        }
+
+        private static Node[] GetAjasonNodes4(IntVector2 nodePos)
+        {
+            List<Node> result = new List<Node>();
             Rectangle dim = _map.GetDim();
 
-            if (nodePos.X - 1 >= dim.X) returnV.Add(_map[nodePos.X - 1, nodePos.Y]);
-            if (nodePos.X + 1 < dim.Width) returnV.Add(_map[nodePos.X + 1, nodePos.Y]);
-            if (nodePos.Y - 1 >= dim.Y) returnV.Add(_map[nodePos.X, nodePos.Y - 1]);
-            if (nodePos.Y + 1 < dim.Height) returnV.Add(_map[nodePos.X, nodePos.Y + 1]);
+            if (nodePos.X - 1 >= dim.X) result.Add(_map[nodePos.X - 1, nodePos.Y]);
+            if (nodePos.X + 1 < dim.Width) result.Add(_map[nodePos.X + 1, nodePos.Y]);
+            if (nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X, nodePos.Y - 1]);
+            if (nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X, nodePos.Y + 1]);
 
-            return returnV.ToArray();
+            return result.ToArray();
+        }
+
+        private static Node[] GetAjasonNodes8(IntVector2 nodePos)
+        {
+            List<Node> result = new List<Node>();
+            Rectangle dim = _map.GetDim();
+
+            if (nodePos.X - 1 >= dim.X) result.Add(_map[nodePos.X - 1, nodePos.Y]);
+            if (nodePos.X + 1 < dim.Width) result.Add(_map[nodePos.X + 1, nodePos.Y]);
+            if (nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X, nodePos.Y - 1]);
+            if (nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X, nodePos.Y + 1]);
+            if (nodePos.X - 1 >= dim.X && nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X - 1, nodePos.Y - 1]);
+            if (nodePos.X - 1 >= dim.X && nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X - 1, nodePos.Y + 1]);
+            if (nodePos.X + 1 < dim.Width && nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X + 1, nodePos.Y - 1]);
+            if (nodePos.X + 1 < dim.Width && nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X + 1, nodePos.Y + 1]);
+
+            return result.ToArray();
         }
 
         private static IntVector2[] FilterNodes(Node[] ajasonNodes)
@@ -117,17 +168,26 @@ namespace Mentula.Server
             return result.ToArray();
         }
 
+        private static float GetMove(Node cur, Node target)
+        {
+            int x0 = cur.Position.X, x1 = target.Position.X, y0 = cur.Position.Y, y1 = target.Position.Y;
+            int xDim = Math.Abs(x0 - x1), yDim = Math.Abs(y0 - y1);
+
+            if (xDim > 0 && yDim > 0) return 1.41421f;
+            else return 1f;
+        }
+
         [DebuggerDisplay("Pos={Position} Parent={Parent != null}")]
         public class Node
         {
             public IntVector2 Position { get; private set; }
             public int Heuristic { get; private set; }
 
-            public int FValue { get { return GValue + Heuristic; } }
+            public float FValue { get { return GValue + Heuristic; } }
             public Node Parent { get { return _parent; } }
 
             public bool wall;
-            public int GValue;
+            public float GValue;
 
             private Node _parent;
 
@@ -154,7 +214,7 @@ namespace Mentula.Server
                 Heuristic = IntVector2.Distance(Position, endIntVector2);
             }
 
-            public void SetParent(Node parent, int move)
+            public void SetParent(Node parent, float move)
             {
                 GValue += parent.GValue + move;
                 _parent = parent;
