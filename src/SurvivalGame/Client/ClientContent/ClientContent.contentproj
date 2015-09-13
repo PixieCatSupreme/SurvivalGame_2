@@ -141,12 +141,12 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Tiles\Tree.png">
+    <Compile Include="Destructable\Tree.png">
       <Name>Tree</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Tiles\Tree_Stump.png">
+    <Compile Include="Destructable\Tree_Stump.png">
       <Name>Tree_Stump</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

@@ -96,8 +96,7 @@ namespace Mentula.Client
                                 game.UpdateChunks(chunks, npcs);
                                 break;
                             case (NDT.Update):
-                                playerLength = msg.ReadNPCs(ref game.npcs);
-                                msg.ReadNPCUpdate(ref game.npcs, playerLength);
+                                msg.ReadNPCUpdate(ref game.npcs, playerLength = msg.ReadNPCs(ref game.npcs));
 
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs);
                                 break;

@@ -67,7 +67,7 @@ namespace Mentula.Server
                     msg.WriteHalfPrecision(cur.Value.Rotation);
                     msg.WriteHalfPrecision(cur.Value.GetHealth());
                     msg.Write(cur.Value.Name);
-                    msg.Write(9996);
+                    msg.Write(9997);
                 }
             }
         }

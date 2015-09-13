@@ -8,6 +8,11 @@
 		[Forest: id=3, name="Grass_Forest"]
 	}
 
+	[Container: "Destructable"]
+	{
+		[Tree: id=500, name="Tree"]
+	}
+
 	[Container: "Creatures"]
 	{
 		[Wolf2: id=9995, name="Wolf1"]
