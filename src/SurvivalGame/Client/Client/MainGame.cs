@@ -12,7 +12,7 @@ namespace Mentula.Client
     {
         internal GameState gameState;
         internal NPC hero;
-        internal NPC[] players;
+        internal NPC[] npcs;
         internal Chunk[] chunks;
 
         internal VertexGraphics vGraphics;
@@ -35,7 +35,7 @@ namespace Mentula.Client
         {
             hero = new NPC();
             chunks = new Chunk[0];
-            players = new NPC[0];
+            npcs = new NPC[0];
             mainMenu.DiscoverCalled += OnConnect;
             base.Initialize();
         }
@@ -81,7 +81,7 @@ namespace Mentula.Client
             base.Update(gameTime);
         }
 
-        public void UpdateChunks(Chunk[] newChunks)
+        public void UpdateChunks(Chunk[] newChunks, NPC[] newNpcs)
         {
             int index = 0;
 
@@ -97,7 +97,21 @@ namespace Mentula.Client
                 }
             }
 
-            vGraphics.UpdateChunks(ref chunks);
+            index = 0;
+
+            for (int i = 0; i < npcs.Length && index < newNpcs.Length; i++)
+            {
+                NPC cur = npcs[i];
+
+                if (Math.Abs(cur.ChunkPos.X + hero.ChunkPos.X) > Res.Range_C ||
+                    Math.Abs(cur.ChunkPos.Y + hero.ChunkPos.Y) > Res.Range_C)
+                {
+                    npcs[i] = newNpcs[index];
+                    index++;
+                }
+            }
+
+            vGraphics.UpdateChunks(ref chunks, ref npcs);
         }
 
         public void SetState(GameState newState)

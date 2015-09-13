@@ -38,7 +38,6 @@ namespace Mentula.Client
         private readonly Vector2 nameOffset;
 
         private Vector2[] tileBuffer;
-        private Vector2[] creatureBuffer;
         private Vector2[] actorBuffer;
         private float heroR;
 
@@ -58,7 +57,6 @@ namespace Mentula.Client
             nameOffset = new Vector2(0, -32);
 
             tileBuffer = new Vector2[0];
-            creatureBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
 
             PreferredBackBufferHeight = 600;
@@ -99,10 +97,10 @@ namespace Mentula.Client
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             fpsCounter.Update(delta);
-            Camera.Transform(ref game.chunks, ref tileBuffer, ref creatureBuffer);
-            Camera.Transform(ref game.players, ref actorBuffer);
+            Camera.Transform(ref game.chunks, ref tileBuffer);
+            Camera.Transform(ref game.npcs, ref actorBuffer);
 
-            int tileIndex = 0, creatureIndex = 0;
+            int tileIndex = 0;
             SpriteFont nameFont = fonts["NameFont"];
 
             GraphicsDevice.Clear(Color.LimeGreen);
@@ -119,26 +117,12 @@ namespace Mentula.Client
                 }
             }
 
-            for (int i = 0; i < game.chunks.Length; i++)
-            {
-                Chunk chunk = game.chunks[i];
-                for (int j = 0; j < chunk.Creatures.Length; j++)
-                {
-                    Vector2 pos = creatureBuffer[creatureIndex];
-                    NPC npc = chunk.Creatures[j];
-
-                    DrawBatch(textures[npc.TextureId], pos, Rot(npc.Rotation));
-                    batch.DrawString(nameFont, npc.HealthPrec + " | " + npc.Name, pos + nameOffset, Color.Red);
-                    creatureIndex++;
-                }
-            }
-
-            for (int i = 0; i < game.players.Length; i++)
+            for (int i = 0; i < game.npcs.Length; i++)
             {
                 Vector2 pos = actorBuffer[i];
-                NPC actor = game.players[i];
+                NPC actor = game.npcs[i];
 
-                DrawBatch(textures[9997], pos, Rot(actor.Rotation));
+                DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
                 batch.DrawString(nameFont, actor.HealthPrec + " | " + actor.Name, pos + nameOffset, Color.Red);
             }
 
@@ -149,19 +133,12 @@ namespace Mentula.Client
             batch.End();
         }
 
-        public void UpdateChunks(ref Chunk[] chunks)
+        public void UpdateChunks(ref Chunk[] chunks, ref NPC[] npcs)
         {
-            int tileLength = chunks.Length * Res.ChunkTileLength, creatureLength = 0;
-
-            for (int i = 0; i < chunks.Length; i++) creatureLength += chunks[i].Creatures.Length;
+            int tileLength = chunks.Length * Res.ChunkTileLength;
 
             if (tileLength != tileBuffer.Length) tileBuffer = new Vector2[tileLength];
-            if (creatureLength != creatureBuffer.Length) creatureBuffer = new Vector2[creatureLength];
-        }
-
-        public void UpdatePlayers(int newLength)
-        {
-            if (newLength != actorBuffer.Length) actorBuffer = new Vector2[newLength];
+            if (npcs.Length != actorBuffer.Length) actorBuffer = new Vector2[npcs.Length];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

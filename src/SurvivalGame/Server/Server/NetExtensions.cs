@@ -24,30 +24,30 @@ namespace Mentula.Server
                 msg.Write(cur.Pos.X);
                 msg.Write(cur.Pos.Y);
             }
+        }
 
-            msg.Write((ushort)value.Creatures.Count);
-
-            for (int i = 0; i < value.Creatures.Count; i++)
-            {
-                NPC cur = value.Creatures[i];
-
-                fixed (IntVector2* cP = &cur.ChunkPos) msg.Write(cP);
-                fixed (Vector2* cT = &cur.Pos) msg.Write(cT);
-                msg.WriteHalfPrecision(cur.Rotation);
-                msg.WriteHalfPrecision(cur.GetHealth());
-                msg.Write(cur.Name);
-                msg.Write(cur.TextureId);
-            }
+        public static unsafe void Write(this NetBuffer msg, NPC value)
+        {
+            fixed (IntVector2* cP = &value.ChunkPos) msg.Write(cP);
+            fixed (Vector2* tP = &value.Pos) msg.Write(tP);
+            msg.WriteHalfPrecision(value.Rotation);
+            msg.WriteHalfPrecision(value.GetHealth());
+            msg.Write(value.Name);
+            msg.Write(value.TextureId);
         }
 
         public static void Write(this NetBuffer msg, Chunk[] value)
         {
             msg.Write((ushort)value.Length);
 
-            for (int i = 0; i < value.Length; i++)
-            {
-                msg.Write(value[i]);
-            }
+            for (int i = 0; i < value.Length; i++) msg.Write(value[i]);
+        }
+
+        public static void Write(this NetBuffer msg, NPC[] value)
+        {
+            msg.Write((ushort)value.Length);
+
+            for (int i = 0; i < value.Length; i++) msg.Write(value[i]);
         }
 
         public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length, long id)
@@ -74,26 +74,18 @@ namespace Mentula.Server
 
         public static unsafe void Write(this NetBuffer msg, ref Map map, IntVector2 chunkPos)
         {
-            Chunk[] chunks = map.GetChunks(chunkPos);
+            NPC[] npcs = map.GetNPC(chunkPos);
 
-            msg.Write((ushort)chunks.Length);
+            msg.Write((ushort)npcs.Length);
 
-            for (int i = 0; i < chunks.Length; i++)
+            for (int i = 0; i < npcs.Length; i++)
             {
-                Chunk cur = chunks[i];
+                NPC cur = npcs[i];
 
-                msg.Write((ushort)cur.Creatures.Count);
                 fixed (IntVector2* cP = &cur.ChunkPos) msg.Write(cP);
-
-                for (int j = 0; j < cur.Creatures.Count; j++)
-                {
-                    NPC curr = cur.Creatures[j];
-
-                    fixed (IntVector2* cP = &curr.ChunkPos) msg.Write(cP);
-                    fixed (Vector2* tP = &curr.Pos) msg.Write(tP);
-                    msg.WriteHalfPrecision(curr.Rotation);
-                    msg.WriteHalfPrecision(curr.GetHealth());
-                }
+                fixed (Vector2* tP = &cur.Pos) msg.Write(tP);
+                msg.WriteHalfPrecision(cur.Rotation);
+                msg.WriteHalfPrecision(cur.GetHealth());
             }
         }
     }

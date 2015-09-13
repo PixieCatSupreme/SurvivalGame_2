@@ -157,12 +157,29 @@ namespace Mentula.Server
             return r.ToArray();
         }
 
+        public NPC[] GetNPC(IntVector2 oldpos, IntVector2 newpos)
+        {
+            List<NPC> n = new List<NPC>();
+            for (int i = 0; i < LoadedNPCs.Count; i++)
+            {
+                if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, oldpos) > Res.Range_C)
+                {
+                    if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, newpos) <= Res.Range_C)
+                    {
+                        n.Add(LoadedNPCs[i]);
+                    }
+                }
+
+            }
+            return n.ToArray();
+        }
+
         public NPC[] GetNPC(IntVector2 pos)
         {
             List<NPC> n = new List<NPC>();
             for (int i = 0; i < LoadedNPCs.Count; i++)
             {
-                if (MathEX.GetMinDiff(LoadedNPCs[i].ChunkPos, pos) <= Res.Range_C)
+                if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, pos) <= Res.Range_C)
                 {
                     n.Add(LoadedNPCs[i]);
                 }

@@ -21,6 +21,7 @@ namespace Mentula.Client
         public NetConnectionStatus NetStatus { get { return client.ConnectionStatus; } }
 
         private float timeDiff;
+        private ushort playerLength;
         private TimeSpan prevAttack;
         private MainGame game;
         private NetClient client;
@@ -83,18 +84,21 @@ namespace Mentula.Client
                                 break;
                             case (NDT.InitialChunkRequest):
                                 game.chunks = msg.ReadChunks();
-                                game.vGraphics.UpdateChunks(ref game.chunks);
+                                msg.ReadNPCs(ref game.npcs);
+                                game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs);
                                 game.SetState(GameState.Game);
                                 break;
                             case (NDT.ChunkRequest):
-                                game.UpdateChunks(msg.ReadChunks());
+                                Chunk[] chunks = msg.ReadChunks();
+                                NPC[] npcs = new NPC[0];
+                                msg.ReadNPCs(ref npcs);
+                                game.UpdateChunks(chunks, npcs);
                                 break;
                             case (NDT.Update):
-                                game.players = msg.ReadNPCs();
-                                msg.ReadNPCUpdate(ref game.chunks);
+                                playerLength = msg.ReadNPCs(ref game.npcs);
+                                msg.ReadNPCUpdate(ref game.npcs, playerLength);
 
-                                game.vGraphics.UpdateChunks(ref game.chunks);
-                                game.vGraphics.UpdatePlayers(game.players.Length);
+                                game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs);
                                 break;
                         }
                         break;
@@ -199,7 +203,6 @@ namespace Mentula.Client
             Chunk result = new Chunk(chunkPos);
 
             result.Tiles = msg.ReadTiles();
-            result.Creatures = msg.ReadNPCs();
 
             return result;
         }
@@ -214,10 +217,10 @@ namespace Mentula.Client
             return result;
         }
 
-        public static NPC[] ReadNPCs(this NetBuffer msg)
+        public static ushort ReadNPCs(this NetBuffer msg, ref NPC[] npcs)
         {
             ushort length = msg.ReadUInt16();
-            NPC[] result = new NPC[length];
+            if (length > npcs.Length) Array.Resize(ref npcs, length);
 
             for (int i = 0; i < length; i++)
             {
@@ -228,35 +231,27 @@ namespace Mentula.Client
                 string name = msg.ReadString();
                 int textId = msg.ReadInt32();
 
-                result[i] = new NPC(chunk, tile, rot, health, name) { TextureId = textId };
+                npcs[i] = new NPC(chunk, tile, rot, health, name) { TextureId = textId };
             }
 
-            return result;
+            return length;
         }
 
-        public static void ReadNPCUpdate(this NetBuffer msg, ref Chunk[] chunks)
+        public static void ReadNPCUpdate(this NetBuffer msg, ref NPC[] npcs, int index)
         {
-            ushort chunkLength = msg.ReadUInt16();
+            ushort length = msg.ReadUInt16();
 
-            for (int i = 0; i < chunkLength; i++)
+            if (index + length != npcs.Length) Array.Resize(ref npcs, length);
+
+            for (int i = index; i < length; i++)
             {
-                if (i >= chunks.Length) break;
+                IntVector2 chunkPos = msg.ReadPoint();
+                Vector2 tilePos = msg.ReadVector2();
+                float rot = msg.ReadHalfPrecisionSingle();
+                float healthPerc = msg.ReadHalfPrecisionSingle();
 
-                ushort crLength = msg.ReadUInt16();
-                IntVector2 cP = msg.ReadPoint();
-                Chunk cur = chunks.First(c => c.ChunkPos == cP);
-
-                if (crLength > cur.Creatures.Length) Array.Resize(ref cur.Creatures, crLength);
-
-                for (int j = 0; j < crLength; j++)
-                {
-                    IntVector2 chunkPos = msg.ReadPoint();
-                    Vector2 tile = msg.ReadVector2();
-                    float rotation = msg.ReadHalfPrecisionSingle();
-                    float healthPrec = msg.ReadHalfPrecisionSingle();
-                    if (cur.Creatures[j] == null) chunks[i].Creatures[j] = new NPC(chunkPos, tile, rotation, healthPrec, "Darude Sandstorm");
-                    else cur.Creatures[j].Update(chunkPos, tile, rotation, healthPrec);
-                }
+                if (npcs[i] != null) npcs[i].Update(chunkPos, tilePos, rot, healthPerc);
+                else npcs[i] = new NPC(chunkPos, tilePos, rot, healthPerc, "Darude");
             }
         }
 
