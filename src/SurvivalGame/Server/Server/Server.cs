@@ -179,7 +179,7 @@ namespace Mentula.Server
                                     break;
                             }
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             WriteLine(NIMT.Error, "An error occured wile reading a {0} message. Innerexception: {1}", type, e);
                         }
@@ -524,7 +524,11 @@ namespace Mentula.Server
 
         private void btn_Restart_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (server.Status == NetPeerStatus.NotRunning)
+            {
+                server.Start();
+                WriteLine(NIMT.Data, "Server restarting.");
+            }
         }
 
         private void btn_Stop_Click(object sender, EventArgs e)

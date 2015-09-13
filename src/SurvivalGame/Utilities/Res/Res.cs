@@ -1,6 +1,7 @@
 ﻿namespace Mentula.Utilities.Resources
 {
     using Mentula.Utilities.Res;
+    using System;
 
     public static class Res
     {
@@ -21,7 +22,7 @@
             ChunkTileLength = ChunkSize * ChunkSize;
             TileSize = int.Parse(Resources.TileSize);
             MaxPlayers = int.Parse(Resources.MaxPlayers);
-            Seed = "DesertPlz";
+            Seed = DateTime.Now.ToString();
         }
     }
 }

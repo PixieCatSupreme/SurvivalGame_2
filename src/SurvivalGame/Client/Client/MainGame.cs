@@ -49,11 +49,12 @@ namespace Mentula.Client
                     float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     KeyboardState state = Keyboard.GetState();
 
+                    const float SPEED = 20;
                     Vector2 move = new Vector2();
-                    if (state.IsKeyDown(Keys.W)) move.Y += 5f * delta;
-                    if (state.IsKeyDown(Keys.A)) move.X += 5f * delta;
-                    if (state.IsKeyDown(Keys.S)) move.Y -= 5f * delta;
-                    if (state.IsKeyDown(Keys.D)) move.X -= 5f * delta;
+                    if (state.IsKeyDown(Keys.W)) move.Y += SPEED * delta;
+                    if (state.IsKeyDown(Keys.A)) move.X += SPEED * delta;
+                    if (state.IsKeyDown(Keys.S)) move.Y -= SPEED * delta;
+                    if (state.IsKeyDown(Keys.D)) move.X -= SPEED * delta;
                     if (state.IsKeyDown(Keys.E)) networking.Disconect();
                     if (state.IsKeyDown(Keys.Escape)) Exit();
                     if (state.IsKeyDown(Keys.OemMinus)) vGraphics.SCALE *= 1 - 2f * delta;

@@ -40,8 +40,8 @@ namespace Mentula.Client
 
             int txtWidth = 150, txtHeight = 25;
             txtName = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { Text = "UserName", Focused = true };
-            txtHost = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + (txtHeight >> 1), txtWidth, txtHeight), font) { Text = Ips.Frank.ToString() };
-            lblError = new Label(game.GraphicsDevice, new Rectangle(wndMinW + (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { AutoSize = true };
+            txtHost = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + (txtHeight >> 1), txtWidth, txtHeight), font) { Text = Ips.Frank.ToString(), BackColor = Color.Transparent };
+            lblError = new Label(game.GraphicsDevice, new Rectangle(wndMinW + (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { AutoSize = true, BackColor = Color.Transparent };
             btnConnect = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 3), txtWidth, txtHeight), font) { Text = "Connect" };
 
             btnConnect.LeftClick += btnConnect_LeftClick;
