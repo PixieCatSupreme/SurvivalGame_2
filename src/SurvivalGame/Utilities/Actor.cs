@@ -11,6 +11,9 @@ namespace Mentula.Utilities
 {
     public class Actor
     {
+        public const float MOVE_SPEED = 10;
+        public const float DIFF = 0.8f;
+
         public Vector2 Pos;
         public IntVector2 ChunkPos;
         public float Rotation;
@@ -59,6 +62,20 @@ namespace Mentula.Utilities
                     ChunkPos.Y++;
                 }
             }
+        }
+
+        public static Vector2 FormatPos(Vector2 tilePos)
+        {
+            while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)
+            {
+                if (tilePos.X < 0) tilePos.X += Resc.ChunkSize;
+                else if (tilePos.X > Resc.ChunkSize) tilePos.X -= Resc.ChunkSize;
+
+                if (tilePos.Y < 0) tilePos.Y += Resc.ChunkSize;
+                else if (tilePos.Y > Resc.ChunkSize) tilePos.Y -= Resc.ChunkSize;
+            }
+
+            return tilePos;
         }
     }
 }
