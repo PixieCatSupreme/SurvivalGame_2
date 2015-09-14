@@ -7,9 +7,11 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using Matrix3 = Mentula.Engine.Core.Matrix3;
 using Vect2 = Mentula.Engine.Core.Vect2;
 
@@ -144,6 +146,11 @@ namespace Mentula.Client
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
             DrawBatch(textures[9997], heroPos, Rot(heroR));
 
+            MouseState mState = Mouse.GetState();
+            float adder = 8 * SCALE;
+            Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
+            DrawBatch(textures[9998], mousePos, 0);
+
             batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
             batch.End();
         }
@@ -157,6 +164,12 @@ namespace Mentula.Client
             if (tileLength != tileBuffer.Length) tileBuffer = new Vector2[tileLength];
             if (destrLength != destrBuffer.Length) destrBuffer = new Vector2[destrLength];
             if (npcs.Length != actorBuffer.Length) actorBuffer = new Vector2[npcs.Length];
+        }
+
+        public static void ChangeWindowBorder(IntPtr handle, byte newType)
+        {
+            Control window = Control.FromHandle(handle);
+            window.FindForm().FormBorderStyle = (FormBorderStyle)newType;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -34,6 +34,7 @@ namespace Mentula.Client
 
         protected override void Initialize()
         {
+            VertexGraphics.ChangeWindowBorder(Window.Handle, 0);
             hero = new NPC();
             chunks = new Chunk[0];
             npcs = new NPC[0];
@@ -231,16 +232,19 @@ namespace Mentula.Client
             switch (newState)
             {
                 case (GameState.MainMenu):
+                    IsMouseVisible = true;
                     vGraphics.Visible = false;
                     mainMenu.Enabled = true;
                     mainMenu.Visible = true;
                     break;
                 case (GameState.Loading):
+                    IsMouseVisible = false;
                     vGraphics.Visible = false;
                     mainMenu.Enabled = false;
                     mainMenu.Visible = false;
                     break;
                 case (GameState.Game):
+                    IsMouseVisible = false;
                     vGraphics.Visible = true;
                     mainMenu.Visible = false;
                     mainMenu.Enabled = false;
