@@ -118,6 +118,11 @@ namespace Mentula.Client
                     DrawBatch(textures[chunk.Tiles[j].Tex], pos, ROT * Res.DEG2RAD);
                     tileIndex++;
                 }
+            }
+
+            for (int i = 0; i < game.chunks.Length; i++)
+            {
+                Chunk chunk = game.chunks[i];
 
                 for (int j = 0; j < chunk.Destrucables.Length; j++)
                 {

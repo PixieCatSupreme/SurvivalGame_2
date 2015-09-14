@@ -141,7 +141,8 @@ namespace Mentula.Client
         protected void OnConnect(object sender, object[] args)
         {
             hero.Name = (string)args[0];
-            networking.NetworkConnect((IPAddress)args[1]);
+            if (args.Length > 1) networking.NetworkConnect((IPAddress)args[1]);
+            else networking.LocalConnect();
             SetState(GameState.Loading);
         }
     }

@@ -119,7 +119,7 @@ namespace Mentula.Server
 
                     if (canplace)
                     {
-                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 501));
+                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
                     }
                 }
             }

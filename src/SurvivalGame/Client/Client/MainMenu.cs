@@ -45,6 +45,8 @@ namespace Mentula.Client
             btnConnect = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 3), txtWidth, txtHeight), font) { Text = "Connect" };
 
             btnConnect.LeftClick += btnConnect_LeftClick;
+            txtName.Click += (sender, args) => { txtName.Focused = true; txtHost.Focused = false; };
+            txtHost.Click += (sender, args) => { txtName.Focused = false; txtHost.Focused = true; };
 
             base.Initialize();
         }
@@ -86,6 +88,12 @@ namespace Mentula.Client
             if (name.Length < 1 || name.Length > 16)
             {
                 SetError("Name must be between 1 and 16 characters");
+                return;
+            }
+
+            if (host.ToUpper() == "LOCALHOST")
+            {
+                if (DiscoverCalled != null) DiscoverCalled(this, new object[1] { name });
                 return;
             }
 
