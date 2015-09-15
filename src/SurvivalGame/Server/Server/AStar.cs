@@ -13,7 +13,7 @@ namespace Mentula.Server
         private static List<IntVector2> _open;
         private static List<IntVector2> _closed;
 
-        public static Node[] GetRoute4(Map map)
+        public static IntVector2[] GetRoute4(Map map)
         {
             const int MOVE = 1;
 
@@ -38,7 +38,7 @@ namespace Mentula.Server
                     if (!_open.Contains(cur.Position)) _open.Add(cur.Position);
                 }
 
-                if (_open.Count == 0) return new Node[0];
+                if (_open.Count == 0) return new IntVector2[0];
                 current = GetNodeWithLowestFV(GetNodes());
             }
 
@@ -47,7 +47,7 @@ namespace Mentula.Server
             return Callback(ref end);
         }
 
-        public static Node[] GetRoute8(Map map)
+        public static IntVector2[] GetRoute8(Map map)
         {
             _map = map;
             _open = new List<IntVector2>();
@@ -71,7 +71,7 @@ namespace Mentula.Server
                     if (!_open.Contains(cur.Position)) _open.Add(cur.Position);
                 }
 
-                if (_open.Count == 0) return new Node[0];
+                if (_open.Count == 0) return new IntVector2[0];
                 current = GetNodeWithLowestFV(GetNodes());
             }
 
@@ -152,20 +152,22 @@ namespace Mentula.Server
             return result;
         }
 
-        private static Node[] Callback(ref Node endPos)
+        private static IntVector2[] Callback(ref Node endPos)
         {
-            List<Node> result = new List<Node>();
+            List<Node> temp = new List<Node>();
             Node current = endPos;
 
             while (current.Parent != null)
             {
-                result.Add(current);
+                temp.Add(current);
                 current = current.Parent;
             }
 
-            result.RemoveAt(0);
+            IntVector2[] result = new IntVector2[temp.Count];
 
-            return result.ToArray();
+            for (int i = 0, j = temp.Count; i < temp.Count; i++, j--) result[i] = temp.ElementAt(j).Position;
+
+            return result;
         }
 
         private static float GetMove(Node cur, Node target)

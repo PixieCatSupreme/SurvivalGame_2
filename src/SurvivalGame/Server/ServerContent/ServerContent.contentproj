@@ -46,7 +46,7 @@
     <Compile Include="Metals.mm">
       <Name>Metals</Name>
       <Importer>MMImporter</Importer>
-      <Processor>MBioProcessor</Processor>
+      <Processor>MMetalProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
