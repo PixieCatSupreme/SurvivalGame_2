@@ -25,9 +25,10 @@ namespace Mentula.Server
             lastAttackTime = 0;
         }
 
-        public void DoStuff(ref Chunk[] c, float deltaTime, ref Creature[] players, int Index)
+        public void DoStuff( Chunk[] c, float deltaTime, ref Creature[] players, int Index)
         {
 #if !YOU_SPIN_ME_RIGHT_ROUND_BABY
+
             Attack(deltaTime, ref players, Index);
 #else
             Rotation += deltaTime * 3;
@@ -77,7 +78,7 @@ namespace Mentula.Server
             return t;
         }
 
-        private bool MoveToNearest(ref Chunk[] c, float delta, ref Creature[] players, int index)
+        private bool MoveToNearest(Chunk[] c, float delta, ref Creature[] players, int index)
         {
             bool t = false;
             if (index > 0)
