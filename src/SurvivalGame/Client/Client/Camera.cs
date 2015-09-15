@@ -91,10 +91,9 @@ namespace Mentula.Client
 
         public unsafe void Transform(ref NPC[] sourceArray, ref Vector2[] destinationArray)
         {
-            int last = sourceArray.Length;
             int index = 0;
 
-            for (int i = 0; i < last; i++)
+            for (int i = 0; i < sourceArray.Length; i++)
             {
                 Actor actor = sourceArray[i];
                 Vector2 curr = Chunk.GetTotalPos(actor.ChunkPos, actor.Pos);
@@ -102,8 +101,7 @@ namespace Mentula.Client
                 float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
                 float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
 
-                destinationArray[index] = new Vector2(x, y);
-                index++;
+                destinationArray[index++] = new Vector2(x, y);
             }
         }
 

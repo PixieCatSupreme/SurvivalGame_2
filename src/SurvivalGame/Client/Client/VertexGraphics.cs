@@ -1,4 +1,5 @@
 ﻿//#define DRUNK
+//#define VSCYNC
 
 #pragma warning disable 67
 
@@ -65,7 +66,10 @@ namespace Mentula.Client
 
             PreferredBackBufferHeight = 600;
             PreferredBackBufferWidth = 800;
+#if !VSCYNC
             SynchronizeWithVerticalRetrace = false;
+            game.IsFixedTimeStep = false;
+#endif
         }
 
         public void Initialize()
@@ -116,9 +120,8 @@ namespace Mentula.Client
 
                 for (int j = 0; j < chunk.Tiles.Length; j++)
                 {
-                    Vector2 pos = tileBuffer[tileIndex];
+                    Vector2 pos = tileBuffer[tileIndex++];
                     DrawBatch(textures[chunk.Tiles[j].Tex], pos, ROT * Res.DEG2RAD);
-                    tileIndex++;
                 }
             }
 
@@ -128,9 +131,8 @@ namespace Mentula.Client
 
                 for (int j = 0; j < chunk.Destrucables.Length; j++)
                 {
-                    Vector2 pos = destrBuffer[destrIndex];
+                    Vector2 pos = destrBuffer[destrIndex++];
                     DrawBatch(textures[chunk.Destrucables[j].Tex], pos, ROT * Res.DEG2RAD);
-                    destrIndex++;
                 }
             }
 
@@ -140,7 +142,7 @@ namespace Mentula.Client
                 NPC actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                batch.DrawString(nameFont, actor.HealthPrec + " | " + actor.Name, pos + nameOffset, Color.Red);
+                DrawString(nameFont, actor.HealthPrec + " | " + actor.Name, pos + nameOffset, Color.Red);
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
@@ -151,7 +153,7 @@ namespace Mentula.Client
             Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
             DrawBatch(textures[9998], mousePos, 0);
 
-            batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
+            DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
             batch.End();
         }
 
@@ -173,9 +175,15 @@ namespace Mentula.Client
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private float Rot(float rot) { return ROT * Res.DEG2RAD + rot + 1.5707963f; }
+        private float Rot(float rot) 
+        { return ROT * Res.DEG2RAD + rot + 1.5707963f; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void DrawBatch(Texture2D tex, Vector2 pos, float rot) { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
+        private void DrawBatch(Texture2D tex, Vector2 pos, float rot) 
+        { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
+        { batch.DrawString(font, text, pos, color, ROT * Res.DEG2RAD, Vector2.Zero, SCALE, 0, 0); }
     }
 }

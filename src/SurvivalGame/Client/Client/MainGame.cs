@@ -23,8 +23,6 @@ namespace Mentula.Client
         public MainGame()
         {
             Content.RootDirectory = "Content";
-            IsFixedTimeStep = false;
-            IsMouseVisible = true;
 
             Components.Add(vGraphics = new VertexGraphics(this));
             Components.Add(mainMenu = new MainMenu(this));

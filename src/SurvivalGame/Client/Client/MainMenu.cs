@@ -53,14 +53,17 @@ namespace Mentula.Client
 
         public override void Update(GameTime gameTime)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            MouseState ms = Mouse.GetState();
-            KeyboardState ks = Keyboard.GetState();
+            if (game.IsActive)
+            {
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                MouseState ms = Mouse.GetState();
+                KeyboardState ks = Keyboard.GetState();
 
-            txtName.Update(ms, ks, dt);
-            txtHost.Update(ms, ks, dt);
-            lblError.Update(ms);
-            btnConnect.Update(ms, dt);
+                txtName.Update(ms, ks, dt);
+                txtHost.Update(ms, ks, dt);
+                lblError.Update(ms);
+                btnConnect.Update(ms, dt);
+            }
 
             base.Update(gameTime);
         }

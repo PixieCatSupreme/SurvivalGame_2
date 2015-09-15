@@ -56,7 +56,17 @@
   <ItemGroup>
     <Compile Include="Cheats.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="MM\Biomass\MBioProcessor.cs" />
+    <Compile Include="MM\Biomass\MBioReader.cs" />
+    <Compile Include="MM\Biomass\MBioWriter.cs" />
     <Compile Include="MM\Container.cs" />
+    <Compile Include="MM\Items\Biomass.cs" />
+    <Compile Include="MM\Items\Material.cs" />
+    <Compile Include="MM\Items\Metal.cs" />
+    <Compile Include="MM\Items\StateOfMatter.cs" />
+    <Compile Include="MM\Metal\MMetalProcessor.cs" />
+    <Compile Include="MM\Metal\MMetalReader.cs" />
+    <Compile Include="MM\Metal\MMetalWriter.cs" />
     <Compile Include="MM\MMImporter.cs" />
     <Compile Include="MM\MMSource.cs" />
     <Compile Include="MM\R\R.cs" />
