@@ -16,7 +16,7 @@ namespace Mentula.Server
         private double lastAttackTime;
         private IntVector2 startpos;
         private IntVector2 endpos;
-        private AStar.Node[] nodeArray;
+        private IntVector2[] nodeArray;
 
         public NPC(string n, Stats s, int h, Vector2 pos, IntVector2 chunkpos)
             : base(n, s, h, pos, chunkpos)
@@ -77,7 +77,7 @@ namespace Mentula.Server
             return t;
         }
 
-        private bool MoveToNearest(ref Chunk[] c, ref Creature[] players, int index)
+        private bool MoveToNearest(ref Chunk[] c, float delta, ref Creature[] players, int index)
         {
             bool t = false;
             if (index > 0)
@@ -99,14 +99,28 @@ namespace Mentula.Server
                 }
                 IntVector2 sPos = new IntVector2(p0.X, p0.Y);
                 IntVector2 ePos = new IntVector2(p1.X, p1.Y);
-                getpath(ref sPos, ref ePos,ref dist, ref c);
-               
-                
+                getpath(ref sPos, ref ePos, ref dist, ref c);
+                Vect2 gp = new Vect2(nodeArray[0].X, nodeArray[0].Y);
+                Rotation = Vect2.Angle(p0, gp);
+                Vect2 newpos = p0 - gp;
+                newpos.Normalize();
+                newpos *= delta;
+                newpos += p0;
+                if (Vect2.Distance(p0, newpos) < Vect2.Distance(p0, gp))
+                {
+                    p0 = newpos;
+                }
+                else
+                {
+                    p0 = gp;
+                }
+                ChunkPos = new IntVector2(p0.X / Resc.ChunkSize, p0.Y / Resc.ChunkSize);
+                Pos = new Vector2(p0.X % Resc.ChunkSize, p0.Y % Resc.ChunkSize);
             }
             return t;
         }
 
-        private void getpath(ref IntVector2 sPos,ref IntVector2 ePos,ref float dist, ref Chunk[] c)
+        private void getpath(ref IntVector2 sPos, ref IntVector2 ePos, ref float dist, ref Chunk[] c)
         {
 
             if ((startpos != sPos || endpos != ePos) && dist < 20)
