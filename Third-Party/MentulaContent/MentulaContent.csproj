@@ -61,6 +61,8 @@
     <Compile Include="MM\Biomass\MBioWriter.cs" />
     <Compile Include="MM\Container.cs" />
     <Compile Include="MM\Items\Biomass.cs" />
+    <Compile Include="MM\Items\Flag.cs" />
+    <Compile Include="MM\Items\Item.cs" />
     <Compile Include="MM\Items\Material.cs" />
     <Compile Include="MM\Items\Metal.cs" />
     <Compile Include="MM\Items\StateOfMatter.cs" />
