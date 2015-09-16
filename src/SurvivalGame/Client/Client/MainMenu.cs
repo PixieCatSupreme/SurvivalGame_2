@@ -14,6 +14,8 @@ namespace Mentula.Client
         public int DrawOrder { get { return 0; } }
         public bool Visible { get; set; }
 
+        internal MenuState menuState;
+
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<object[]> DiscoverCalled;
@@ -22,6 +24,12 @@ namespace Mentula.Client
         private TextBox txtHost;
         private Label lblError;
         private Button btnConnect;
+
+        private Button btnSingleplayer;
+        private Button btnMultiplayer;
+        private Button btnOptions;
+        private Button btnQuit;
+        private Button btnBack;
 
         private MainGame game;
         private SpriteBatch batch;
@@ -39,30 +47,66 @@ namespace Mentula.Client
             SpriteFont font = game.vGraphics.fonts["MenuFont"];
 
             int txtWidth = 150, txtHeight = 25;
-            txtName = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { Text = "UserName", Focused = true };
+            txtName = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { Text = "UserName" };
             txtHost = new TextBox(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + (txtHeight >> 1), txtWidth, txtHeight), font) { Text = Ips.Frank.ToString(), BackColor = Color.Transparent };
             lblError = new Label(game.GraphicsDevice, new Rectangle(wndMinW + (txtWidth >> 1), wndMinH - (txtHeight >> 1), txtWidth, txtHeight), font) { AutoSize = true, BackColor = Color.Transparent };
-            btnConnect = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 3), txtWidth, txtHeight), font) { Text = "Connect" };
+            btnConnect = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 16), txtWidth, txtHeight), font) { Text = "Connect" };
+
+            btnSingleplayer = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 4), txtWidth, txtHeight), font) { Text = "Singleplayer" };
+            btnMultiplayer = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 8), txtWidth, txtHeight), font) { Text = "Multiplayer" };
+            btnOptions = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 12), txtWidth, txtHeight), font) { Text = "Options" };
+            btnQuit = new Button(game.GraphicsDevice, new Rectangle(wndMinW - (txtWidth >> 1), wndMinH + ((txtHeight >> 1) * 16), txtWidth, txtHeight), font) { Text = "Quit" };
+            btnBack = new Button(game.GraphicsDevice, new Rectangle(0, wndMinH + ((txtHeight >> 1) * 16), txtWidth, txtHeight), font) { Text = "Back" };
+
+            btnSingleplayer.LeftClick += (sender, args) => { menuState = MenuState.SINGLEPLAYER; };
+            btnMultiplayer.LeftClick += (sender, args) => { menuState = MenuState.MULTIPLAYER; };
+            btnOptions.LeftClick += (sender, args) => { menuState = MenuState.OPTIONS; };
+            btnQuit.LeftClick += (sender, args) => { game.Exit(); };
+            btnBack.LeftClick += (sender, args) => { menuState = MenuState.MAINMENU; };
+
 
             btnConnect.LeftClick += btnConnect_LeftClick;
             txtName.Click += (sender, args) => { txtName.Focused = true; txtHost.Focused = false; };
             txtHost.Click += (sender, args) => { txtName.Focused = false; txtHost.Focused = true; };
 
+            menuState = new MenuState();
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            MouseState ms = Mouse.GetState();
+            KeyboardState ks = Keyboard.GetState();
+
             if (game.IsActive)
             {
-                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                MouseState ms = Mouse.GetState();
-                KeyboardState ks = Keyboard.GetState();
-
-                txtName.Update(ms, ks, dt);
-                txtHost.Update(ms, ks, dt);
-                lblError.Update(ms);
-                btnConnect.Update(ms, dt);
+                switch (menuState)
+                {
+                    case MenuState.MAINMENU:
+                        btnSingleplayer.Update(ms, dt);
+                        btnMultiplayer.Update(ms, dt);
+                        btnOptions.Update(ms, dt);
+                        btnQuit.Update(ms, dt);
+                        break;
+                    case MenuState.SINGLEPLAYER:
+                        txtName.Update(ms, ks, dt);
+                        lblError.Update(ms);
+                        btnConnect.Update(ms, dt);
+                        break;
+                    case MenuState.MULTIPLAYER:
+                        txtName.Update(ms, ks, dt);
+                        txtHost.Update(ms, ks, dt);
+                        lblError.Update(ms);
+                        btnConnect.Update(ms, dt);
+                        break;
+                    case MenuState.OPTIONS:
+                        break;
+                }
+                if (menuState != MenuState.MAINMENU)
+                {
+                    btnBack.Update(ms, dt);
+                }
             }
 
             base.Update(gameTime);
@@ -71,10 +115,33 @@ namespace Mentula.Client
         public void Draw(GameTime gameTime)
         {
             batch.Begin();
-            txtName.Draw(batch);
-            txtHost.Draw(batch);
-            lblError.Draw(batch);
-            btnConnect.Draw(batch);
+            switch (menuState)
+            {
+                case MenuState.MAINMENU:
+                    btnSingleplayer.Draw(batch);
+                    btnMultiplayer.Draw(batch);
+                    btnOptions.Draw(batch);
+                    btnQuit.Draw(batch); ;
+                    break;
+                case MenuState.SINGLEPLAYER:
+                    txtName.Draw(batch);
+                    lblError.Draw(batch);
+                    btnConnect.Draw(batch);
+                    break;
+                case MenuState.MULTIPLAYER:
+                    txtName.Draw(batch);
+                    txtHost.Draw(batch);
+                    lblError.Draw(batch);
+                    btnConnect.Draw(batch);
+                    break;
+                case MenuState.OPTIONS:
+                    break;
+            }
+            if (menuState != MenuState.MAINMENU)
+            {
+                btnBack.Draw(batch);
+            }
+
             batch.End();
         }
 
@@ -94,7 +161,7 @@ namespace Mentula.Client
                 return;
             }
 
-            if (host.ToUpper() == "LOCALHOST")
+            if (menuState == MenuState.SINGLEPLAYER || host.ToUpper() == "LOCALHOST")
             {
                 if (DiscoverCalled != null) DiscoverCalled(this, new object[1] { name });
                 return;
@@ -114,9 +181,16 @@ namespace Mentula.Client
             if (DiscoverCalled != null) DiscoverCalled(this, new object[2] { name, ip });
             return;
 
-            HostError:
+        HostError:
             SetError("Host invalid.");
             return;
         }
+    }
+    internal enum MenuState
+    {
+        MAINMENU,
+        SINGLEPLAYER,
+        MULTIPLAYER,
+        OPTIONS
     }
 }
