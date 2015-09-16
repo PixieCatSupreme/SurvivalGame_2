@@ -310,6 +310,7 @@ namespace Mentula.Server
         {
             public IntVector2 Start;
             public IntVector2 End;
+            public int Length { get { return _Nodes.Length; } }
             public bool Fitted { get; private set; }
 
             private KeyValuePair<IntVector2, Node>[] _Nodes;

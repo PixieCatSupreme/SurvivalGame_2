@@ -19,6 +19,7 @@ using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConf = Lidgren.Network.NetPeerConfiguration;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
+using System.Threading;
 
 namespace Mentula.Server
 {
@@ -191,7 +192,11 @@ namespace Mentula.Server
                 }
             }
 
-            logic.Update(time.DeltaTime);
+            try { logic.Update(time.DeltaTime); }
+            catch (Exception e)
+            {
+                WriteLine(NIMT.Error, "An error occured wile updating. Innerexception: {0}", e);
+            }
 
             if (timeDiff >= 1f / 30 && logic.Index > 0)
             {
