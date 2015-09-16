@@ -18,6 +18,8 @@ namespace Mentula.Utilities
         public static IntVector2 UnitY { get { return pUnitY; } }
         /// <summary> Returns a IntVector2 with both of its components set to zero. </summary>
         public static IntVector2 Zero { get { return pZero; } }
+        /// <summary> Returns a IntVector2 with both of its components set to -1. </summary>
+        public static IntVector2 InvOne { get { return pInvOne; } }
 
         /// <summary> Gets the area of the vector. </summary>
         public int Area { get { return X * Y; } }
@@ -34,6 +36,7 @@ namespace Mentula.Utilities
         private static IntVector2 pUnitX;
         private static IntVector2 pUnitY;
         private static IntVector2 pZero;
+        private static IntVector2 pInvOne;
 
         /// <summary> Creates a new instance of IntVector2 </summary>
         /// <param name="value"> Value to initialize both componets to. </param>
@@ -71,10 +74,11 @@ namespace Mentula.Utilities
 
         static IntVector2()
         {
-            pOne = new IntVector2(1, 1);
+            pOne = new IntVector2(1);
             pUnitX = new IntVector2(1, 0);
             pUnitY = new IntVector2(0, 1);
-            pZero = new IntVector2(0, 0);
+            pZero = new IntVector2(0);
+            pInvOne = new IntVector2(-1);
         }
 
         public static IntVector2 operator +(IntVector2 sender, IntVector2 caller) { return new IntVector2(sender.X + caller.X, sender.Y + caller.Y); }

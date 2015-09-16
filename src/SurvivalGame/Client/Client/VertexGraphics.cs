@@ -132,7 +132,8 @@ namespace Mentula.Client
                 for (int j = 0; j < chunk.Destrucables.Length; j++)
                 {
                     Vector2 pos = destrBuffer[destrIndex++];
-                    DrawBatch(textures[chunk.Destrucables[j].Tex], pos, ROT * Res.DEG2RAD);
+                    Texture2D t = textures[chunk.Destrucables[j].Tex];
+                    DrawBatch(t, pos, ROT * Res.DEG2RAD, t.Bounds.Width >> 1, t.Bounds.Height >> 1);
                 }
             }
 
@@ -153,7 +154,9 @@ namespace Mentula.Client
             Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
             DrawBatch(textures[9998], mousePos, 0);
 
-            DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
+#if DEBUG
+            batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
+#endif
             batch.End();
         }
 
@@ -183,7 +186,11 @@ namespace Mentula.Client
         { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DrawBatch(Texture2D tex, Vector2 pos, float rot, float xDiff, float yDiff)
+        { batch.Draw(tex, pos, null, Color.White, rot, new Vector2(xDiff, yDiff), SCALE, 0, 0); }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
-        { batch.DrawString(font, text, pos, color, ROT * Res.DEG2RAD, Vector2.Zero, SCALE, 0, 0); }
+        { batch.DrawString(font, text, pos, color, ROT * Res.DEG2RAD, Vector2.Zero, SCALE * 0.5f, 0, 0); }
     }
 }

@@ -9,324 +9,442 @@ namespace Mentula.Server
 {
     public static class AStar
     {
-        private static Map _map;
-        private static List<IntVector2> _open;
-        private static List<IntVector2> _closed;
+        private static IntVector2 Default;
 
-        public static IntVector2[] GetRoute4(Map map)
+        static AStar()
         {
-            const int MOVE = 1;
+            Default = new IntVector2(int.MinValue);
+        }
 
-            _map = map;
-            _open = new List<IntVector2>();
-            _closed = new List<IntVector2>();
-            Node current = _map.GetStartNode();
+        public static IntVector2 Next4(ref Map map)
+        {
+            if (!map.Fitted) map.FitLength();
+            List<IntVector2> open = new List<IntVector2>();
+            List<IntVector2> closed = new List<IntVector2>();
+            IntVector2 toCheck = map.End;
+            open.Add(toCheck);
 
-            while (true)
+            bool endFound = false;
+            while (open.Count != 0)
             {
-                if (_open.Contains(current.Position)) _open.Remove(current.Position);
-                _closed.Add(current.Position);
+                if (open.Contains(toCheck)) open.Remove(toCheck);
+                closed.Add(toCheck);
 
-                IntVector2[] ajNodes = FilterNodes(GetAjasonNodes4(current.Position));
-                if (ajNodes.Contains(map.endPos)) break;
+                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes4(toCheck, ref map, ref closed);
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    if (ajNodes[i].Key == map.Start)
+                    {
+                        endFound = true;
+                        break;
+                    }
+                }
 
                 for (int i = 0; i < ajNodes.Length; i++)
                 {
-                    Node cur = _map[ajNodes[i].X, ajNodes[i].Y];
-                    if (cur.Parent == null) cur.SetParent(current, MOVE);
-                    if (current.GValue + MOVE < cur.GValue) cur.SetParent(current, MOVE);
-                    if (!_open.Contains(cur.Position)) _open.Add(cur.Position);
+                    Node cur = ajNodes[i].Value;
+                    IntVector2 curKey = ajNodes[i].Key;
+
+                    if (cur.Parent == Default) cur.SetParent(toCheck, 1);
+                    if (map.GetNode(toCheck).G + 1 < cur.G) cur.SetParent(toCheck, 1);
+                    if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
-                if (_open.Count == 0) return new IntVector2[0];
-                current = GetNodeWithLowestFV(GetNodes());
+                toCheck = GetLowestF(ref open, ref map);
             }
 
-            Node end = map.GetEndNode();
-            end.SetParent(current, MOVE);
-            return Callback(ref end);
+            if (!endFound) return map.Start;
+            return toCheck;
         }
 
-        public static IntVector2[] GetRoute8(Map map)
+        public static IntVector2 Next8(ref Map map)
         {
-            _map = map;
-            _open = new List<IntVector2>();
-            _closed = new List<IntVector2>();
-            Node current = _map.GetStartNode();
+            if (!map.Fitted) map.FitLength();
+            List<IntVector2> open = new List<IntVector2>();
+            List<IntVector2> closed = new List<IntVector2>();
+            IntVector2 toCheck = map.End;
+            open.Add(toCheck);
 
-            while (true)
+            bool endFound = false;
+            while (open.Count != 0)
             {
-                if (_open.Contains(current.Position)) _open.Remove(current.Position);
-                _closed.Add(current.Position);
+                if (open.Contains(toCheck)) open.Remove(toCheck);
+                closed.Add(toCheck);
 
-                IntVector2[] ajNodes = FilterNodes(GetAjasonNodes8(current.Position));
-                if (ajNodes.Contains(map.endPos)) break;
+                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes4(toCheck, ref map, ref closed);
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    if (ajNodes[i].Key == map.Start)
+                    {
+                        endFound = true;
+                        break;
+                    }
+                }
 
                 for (int i = 0; i < ajNodes.Length; i++)
                 {
-                    Node cur = _map[ajNodes[i].X, ajNodes[i].Y];
-                    float move = GetMove(cur, current);
-                    if (cur.Parent == null) cur.SetParent(current, move);
-                    if (current.GValue + move < cur.GValue) cur.SetParent(current, move);
-                    if (!_open.Contains(cur.Position)) _open.Add(cur.Position);
+                    Node cur = ajNodes[i].Value;
+                    IntVector2 curKey = ajNodes[i].Key;
+                    float move = GetMovement(curKey, toCheck);
+
+                    if (cur.Parent == Default) cur.SetParent(toCheck, move);
+                    if (map.GetNode(toCheck).G + move < cur.G) cur.SetParent(toCheck, move);
+                    if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
-                if (_open.Count == 0) return new IntVector2[0];
-                current = GetNodeWithLowestFV(GetNodes());
+                toCheck = GetLowestF(ref open, ref map);
             }
 
-            Node end = map.GetEndNode();
-            end.SetParent(current, GetMove(end, current));
-            return Callback(ref end);
+            if (!endFound) return map.Start;
+            return toCheck;
         }
 
-        private static Node[] GetAjasonNodes4(IntVector2 nodePos)
+        public static IntVector2[] Route4(ref Map map)
         {
-            List<Node> result = new List<Node>();
-            Rectangle dim = _map.GetDim();
+            if (!map.Fitted) map.FitLength();
+            List<IntVector2> open = new List<IntVector2>();
+            List<IntVector2> closed = new List<IntVector2>();
+            IntVector2 toCheck = map.Start;
+            open.Add(toCheck);
 
-            if (nodePos.X - 1 >= dim.X) result.Add(_map[nodePos.X - 1, nodePos.Y]);
-            if (nodePos.X + 1 < dim.Width) result.Add(_map[nodePos.X + 1, nodePos.Y]);
-            if (nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X, nodePos.Y - 1]);
-            if (nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X, nodePos.Y + 1]);
+            bool endFound = false;
+            while (open.Count != 0)
+            {
+                if (open.Contains(toCheck)) open.Remove(toCheck);
+                closed.Add(toCheck);
 
-            return result.ToArray();
+                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes4(toCheck, ref map, ref closed);
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    if (ajNodes[i].Key == map.Start)
+                    {
+                        endFound = true;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    Node cur = ajNodes[i].Value;
+                    IntVector2 curKey = ajNodes[i].Key;
+
+                    if (cur.Parent == Default) cur.SetParent(toCheck, 1);
+                    if (map.GetNode(toCheck).G + 1 < cur.G) cur.SetParent(toCheck, 1);
+                    if (!open.Contains(curKey)) open.Add(curKey);
+                }
+
+                toCheck = GetLowestF(ref open, ref map);
+            }
+
+            if (!endFound) return new IntVector2[0];
+
+            map.GetNode(map.End).SetParent(toCheck, 1);
+            return Recall(ref map);
         }
 
-        private static Node[] GetAjasonNodes8(IntVector2 nodePos)
+        public static IntVector2[] Route8(ref Map map)
         {
-            List<Node> result = new List<Node>();
-            Rectangle dim = _map.GetDim();
+            if (!map.Fitted) map.FitLength();
+            List<IntVector2> open = new List<IntVector2>();
+            List<IntVector2> closed = new List<IntVector2>();
+            IntVector2 toCheck = map.Start;
+            open.Add(toCheck);
 
-            if (nodePos.X - 1 >= dim.X) result.Add(_map[nodePos.X - 1, nodePos.Y]);
-            if (nodePos.X + 1 < dim.Width) result.Add(_map[nodePos.X + 1, nodePos.Y]);
-            if (nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X, nodePos.Y - 1]);
-            if (nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X, nodePos.Y + 1]);
-            if (nodePos.X - 1 >= dim.X && nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X - 1, nodePos.Y - 1]);
-            if (nodePos.X - 1 >= dim.X && nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X - 1, nodePos.Y + 1]);
-            if (nodePos.X + 1 < dim.Width && nodePos.Y - 1 >= dim.Y) result.Add(_map[nodePos.X + 1, nodePos.Y - 1]);
-            if (nodePos.X + 1 < dim.Width && nodePos.Y + 1 < dim.Height) result.Add(_map[nodePos.X + 1, nodePos.Y + 1]);
+            bool endFound = false;
+            while (open.Count != 0)
+            {
+                if (open.Contains(toCheck)) open.Remove(toCheck);
+                closed.Add(toCheck);
 
-            return result.ToArray();
+                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes4(toCheck, ref map, ref closed);
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    if (ajNodes[i].Key == map.Start)
+                    {
+                        endFound = true;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < ajNodes.Length; i++)
+                {
+                    Node cur = ajNodes[i].Value;
+                    IntVector2 curKey = ajNodes[i].Key;
+                    float move = GetMovement(curKey, toCheck);
+
+                    if (cur.Parent == Default) cur.SetParent(toCheck, move);
+                    if (map.GetNode(toCheck).G + move < cur.G) cur.SetParent(toCheck, move);
+                    if (!open.Contains(curKey)) open.Add(curKey);
+                }
+
+                toCheck = GetLowestF(ref open, ref map);
+            }
+
+            if (!endFound) return new IntVector2[0];
+
+            map.GetNode(map.End).SetParent(toCheck, GetMovement(map.End, toCheck));
+            return Recall(ref map);
         }
 
-        private static IntVector2[] FilterNodes(Node[] ajasonNodes)
+        private static IntVector2[] Recall(ref Map map)
         {
             List<IntVector2> result = new List<IntVector2>();
+            IntVector2 curKey = map.End;
+            Node curNode = map.GetNode(curKey);
 
-            for (int i = 0; i < ajasonNodes.Length; i++)
+            while (curNode.Parent != map.Start)
             {
-                Node cur = ajasonNodes[i];
-
-                if (!cur.wall & !_closed.Contains(cur.Position)) result.Add(cur.Position);
+                result.Add(curKey);
+                curKey = curNode.Parent;
+                curNode = map.GetNode(curKey);
             }
 
             return result.ToArray();
         }
 
-        private static Node GetNodeWithLowestFV(List<Node> openList)
+        private static float GetMovement(IntVector2 cur, IntVector2 target)
         {
-            Node min = openList[0];
+            float xD = Math.Abs(cur.X - target.X);
+            float yD = Math.Abs(cur.Y - target.Y);
 
-            for (int i = 0; i < openList.Count; i++)
-            {
-                Node cur = openList[i];
-
-                if (min.Position != cur.Position & cur.FValue < min.FValue) min = cur;
-            }
-
-            return min;
+            if (xD > 0 && yD > 0) return 1.41421f;
+            else return 1.0f;
         }
 
-        private static List<Node> GetNodes()
+        private static IntVector2 GetLowestF(ref List<IntVector2> open, ref Map map)
         {
-            List<Node> result = new List<Node>();
+            IntVector2 minKey = open[0];
+            float minF = map.GetNode(minKey).F;
 
-            for (int i = 0; i < _open.Count; i++)
+            for (int i = 0; i < open.Count; i++)
             {
-                IntVector2 cur = _open[i];
+                IntVector2 curKey = open[i];
 
-                result.Add(_map[cur.X, cur.Y]);
+                if (minKey != curKey)
+                {
+                    float curF = map.GetNode(curKey).F;
+                    if (curF < minF)
+                    {
+                        minKey = curKey;
+                        minF = curF;
+                    }
+                }
             }
 
-            return result;
+            return minKey;
         }
 
-        private static IntVector2[] Callback(ref Node endPos)
+        private static KeyValuePair<IntVector2, Node>[] GetAjasonNodes4(IntVector2 pos, ref Map map, ref List<IntVector2> closed)
         {
-            List<Node> temp = new List<Node>();
-            Node current = endPos;
+            Dictionary<IntVector2, Node> result = new Dictionary<IntVector2, Node>();
+            Node cur;
+            IntVector2 toCheck;
 
-            while (current.Parent != null)
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X - 1, pos.Y), out cur))
             {
-                temp.Add(current);
-                current = current.Parent;
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X + 1, pos.Y), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X, pos.Y - 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X, pos.Y + 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
             }
 
-            IntVector2[] result = new IntVector2[temp.Count];
-
-            for (int i = 0, j = temp.Count; i < temp.Count; i++, j--) result[i] = temp.ElementAt(j).Position;
-
-            return result;
+            return result.ToArray();
         }
 
-        private static float GetMove(Node cur, Node target)
+        private static KeyValuePair<IntVector2, Node>[] GetAjasonNodes8(IntVector2 pos, ref Map map, ref List<IntVector2> closed)
         {
-            int x0 = cur.Position.X, x1 = target.Position.X, y0 = cur.Position.Y, y1 = target.Position.Y;
-            int xDim = Math.Abs(x0 - x1), yDim = Math.Abs(y0 - y1);
+            Dictionary<IntVector2, Node> result = new Dictionary<IntVector2, Node>();
+            Node cur;
+            IntVector2 toCheck;
 
-            if (xDim > 0 && yDim > 0) return 1.41421f;
-            else return 1f;
-        }
-
-        [DebuggerDisplay("Pos={Position} Parent={Parent != null}")]
-        public class Node
-        {
-            public IntVector2 Position { get; private set; }
-            public int Heuristic { get; private set; }
-
-            public float FValue { get { return GValue + Heuristic; } }
-            public Node Parent { get { return _parent; } }
-
-            public bool wall;
-            public float GValue;
-
-            private Node _parent;
-
-            public Node(IntVector2 position)
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X - 1, pos.Y), out cur))
             {
-                Position = position;
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X + 1, pos.Y), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X, pos.Y - 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X, pos.Y + 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X - 1, pos.Y - 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X - 1, pos.Y + 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X + 1, pos.Y - 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
+            }
+            if (map.TryGetNode(toCheck = new IntVector2(pos.X + 1, pos.Y + 1), out cur))
+            {
+                if (cur.WalkAble && !closed.Contains(toCheck)) result.Add(toCheck, cur);
             }
 
-            public Node(IntVector2 position, int g)
-            {
-                Position = position;
-                GValue = g;
-            }
-
-            public Node(IntVector2 position, int g, bool pathable)
-            {
-                Position = position;
-                GValue = g;
-                wall = !pathable;
-            }
-
-            public void SetHeuristic(IntVector2 endIntVector2)
-            {
-                Heuristic = IntVector2.Distance(Position, endIntVector2);
-            }
-
-            public void SetParent(Node parent, float move)
-            {
-                GValue += parent.GValue + move;
-                _parent = parent;
-            }
+            return result.ToArray();
         }
 
         public class Map
         {
-            public Node[,] nodes;
-            public IntVector2 startPos { get; private set; }
-            public IntVector2 endPos { get; private set; }
+            public IntVector2 Start;
+            public IntVector2 End;
+            public bool Fitted { get; private set; }
 
-            private int _width;
-            private int _height;
+            private KeyValuePair<IntVector2, Node>[] _Nodes;
+            private int _Index;
 
-            public Map(int width, int height)
+            public Map()
             {
-                _width = width;
-                _height = height;
-                EmptyMap();
+                _Nodes = new KeyValuePair<IntVector2, Node>[0];
             }
 
-            public Map(int width, int height, IntVector2 start, IntVector2 end)
+            public Map(IntVector2 start, IntVector2 end)
             {
-                _width = width;
-                _height = height;
-                EmptyMap();
-                startPos = start;
-                endPos = end;
-                SetHeuristic();
+                _Nodes = new KeyValuePair<IntVector2, Node>[0];
+                Start = start;
+                End = end;
             }
 
-            public Map(int width, IntVector2 start, IntVector2 end, Node[] map)
+            public Node GetNode(IntVector2 pos)
             {
-                _width = width;
-                _height = map.Length / width;
-                EmptyMap();
-
-                for (int y = 0; y < _height; y++)
+                for (int i = 0; i < _Nodes.Length; i++)
                 {
-                    for (int x = 0; x < _width; x++)
+                    KeyValuePair<IntVector2, Node> cur = _Nodes[i];
+
+                    if (cur.Key == pos) return cur.Value;
+                }
+
+                return null;
+            }
+
+            public bool TryGetNode(IntVector2 pos, out Node result)
+            {
+                for (int i = 0; i < _Nodes.Length; i++)
+                {
+                    KeyValuePair<IntVector2, Node> cur = _Nodes[i];
+
+                    if (cur.Key == pos)
                     {
-                        nodes[x, y] = map[(y * _width) + x];
+                        result = cur.Value;
+                        return true;
                     }
                 }
 
-                startPos = start;
-                endPos = end;
-                SetHeuristic();
+                result = null;
+                return false;
             }
 
-            public Node this[float x, float y]
+            public void SetLength(int length)
             {
-                get
+                Array.Resize(ref _Nodes, length);
+            }
+
+            public void FitLength()
+            {
+                Fitted = true;
+                int newLength = _Nodes.Length;
+
+                for (int i = 0; i < _Nodes.Length; i++)
                 {
-                    return nodes[(int)x, (int)y];
-                }
-                set
-                {
-                    nodes[(int)x, (int)y] = value;
-                }
-            }
-
-            public void SetStart(IntVector2 pos)
-            {
-                startPos = pos;
-            }
-
-            public void SetEnd(IntVector2 pos)
-            {
-                endPos = pos;
-                SetHeuristic();
-            }
-
-            public void EmptyMap()
-            {
-                nodes = new Node[_width, _height];
-                for (int y = 0; y < _height; y++)
-                {
-                    for (int x = 0; x < _width; x++)
+                    if (_Nodes[i].Value == null)
                     {
-                        nodes[x, y] = new Node(new IntVector2(x, y));
+                        newLength = i;
+                        break;
                     }
                 }
 
-                startPos = -IntVector2.One;
-                endPos = -IntVector2.One;
+                Array.Resize(ref _Nodes, newLength);
             }
 
-            private void SetHeuristic()
+            public void AddNode(IntVector2 pos)
             {
-                foreach (Node cur in nodes)
+                if (NodeExist(pos)) return;
+
+                Fitted = false;
+                if (_Index < _Nodes.Length) _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node());
+                else
                 {
-                    cur.SetHeuristic(endPos);
+                    Array.Resize(ref _Nodes, _Nodes.Length + 10);
+                    _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node());
                 }
             }
 
-            public Rectangle GetDim()
+            public void AddNode(IntVector2 pos, float nodeCost, bool pathAble = true)
             {
-                return new Rectangle(0, 0, _width, _height);
+                if (NodeExist(pos)) return;
+
+                Fitted = false;
+                if (_Index < _Nodes.Length) _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node(nodeCost, pathAble));
+                else
+                {
+                    Array.Resize(ref _Nodes, _Nodes.Length + 10);
+                    _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node(nodeCost, pathAble));
+                }
             }
 
-            public Node GetStartNode()
+            private bool NodeExist(IntVector2 pos)
             {
-                return nodes[(int)startPos.X, (int)startPos.Y];
+                for (int i = 0; i < _Nodes.Length; i++)
+                {
+                    KeyValuePair<IntVector2, Node> cur = _Nodes[i];
+
+                    if (cur.Key == pos) return true;
+                }
+
+                return false;
+            }
+        }
+
+        public class Node
+        {
+            public IntVector2 Parent { get { return _Parent; } }
+            public float F { get { return G + Heuristic; } }
+            public float Heuristic;
+            public float G;
+            public bool WalkAble;
+
+            private IntVector2 _Parent;
+
+            public Node()
+            {
+                WalkAble = true;
+                _Parent = Default;
             }
 
-            public Node GetEndNode()
+            public Node(float g, bool pathAble)
             {
-                return nodes[(int)endPos.X, (int)endPos.Y];
+                G = g;
+                WalkAble = pathAble;
+                _Parent = Default;
+            }
+
+            public void SetHeuristic(IntVector2 node, IntVector2 end)
+            {
+                Heuristic = IntVector2.Distance(node, end);
+            }
+
+            public void SetParent(IntVector2 parent, float cost)
+            {
+                _Parent = parent;
+                G += cost;
             }
         }
     }
