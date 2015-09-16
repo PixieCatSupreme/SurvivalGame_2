@@ -14,8 +14,8 @@ namespace Mentula.Utilities
         public int Health;
         public int MaxHealth;
 
-        public Destructible(IntVector2 chunkPos,Vector2 pos,int id)
-            :base(pos,chunkPos)
+        public Destructible(IntVector2 chunkPos, Vector2 pos, int id)
+            : base(pos, chunkPos)
         {
             Id = id;
             Health = 100;

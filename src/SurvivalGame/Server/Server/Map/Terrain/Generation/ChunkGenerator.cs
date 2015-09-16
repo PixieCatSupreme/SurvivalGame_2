@@ -20,8 +20,8 @@ namespace Mentula.Server
         {
             GenerateTerrain(ref chunk);
             GenerateTrees(ref chunk);
-            GenerateWildlife(ref n,ref chunk);
-            
+            GenerateWildlife(ref n, ref chunk);
+
 
 
             return chunk;
@@ -65,7 +65,7 @@ namespace Mentula.Server
             return n;
         }
 
-        private static void GenerateWildlife(ref List<NPC> n,ref Chunk c)
+        private static void GenerateWildlife(ref List<NPC> n, ref Chunk c)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Res.Seed + c.ChunkPos.Y));
             for (int i = 0; i < r.NextDouble() * Res.ChunkSize; )
@@ -79,11 +79,11 @@ namespace Mentula.Server
                         canplace = false;
                     }
                 }
-                for (int j = 0; j <c.Destructibles.Count ; j++)
+                for (int j = 0; j < c.Destructibles.Count; j++)
                 {
-                    if (p==c.Destructibles[j].Pos)
+                    if (p == c.Destructibles[j].Pos)
                     {
-                        canplace = false; 
+                        canplace = false;
                     }
                 }
 
@@ -102,16 +102,16 @@ namespace Mentula.Server
         private static void GenerateTrees(ref Chunk c)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
-            for (int i = 0; i < Res.ChunkSize*Res.ChunkSize; i++)
+            for (int i = 0; i < Res.ChunkSize * Res.ChunkSize; i++)
             {
                 float chance = rainArray[i] / 1000;
-                if (r.NextDouble()<chance)
+                if (r.NextDouble() < chance)
                 {
                     Vector2 pos = new Vector2(i % Res.ChunkSize, i / Res.ChunkSize);
                     bool canplace = true;
                     for (int j = 0; j < c.Destructibles.Count; j++)
                     {
-                        if (c.Destructibles[j].Pos==pos)
+                        if (c.Destructibles[j].Pos == pos)
                         {
                             canplace = false;
                         }

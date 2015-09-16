@@ -25,10 +25,10 @@ namespace Mentula.Server
             lastAttackTime = 0;
         }
 
-        public void DoStuff( Chunk[] c, float deltaTime, ref Creature[] players, int Index)
+        public void DoStuff(Chunk[] c, float deltaTime, ref Creature[] players, int Index)
         {
 #if !YOU_SPIN_ME_RIGHT_ROUND_BABY
-            MoveToNearest(c, deltaTime,ref players, Index);
+            MoveToNearest(c, deltaTime, ref players, Index);
             //Attack(deltaTime, ref players, Index);
 #else
             Rotation += deltaTime * 3;
@@ -100,7 +100,7 @@ namespace Mentula.Server
                 }
                 IntVector2 sPos = new IntVector2(p0.X, p0.Y);
                 IntVector2 ePos = new IntVector2(p1.X, p1.Y);
-                
+
                 if (getpath(ref sPos, ref ePos, ref dist, ref c))
                 {
                     Vect2 gp = new Vect2(nodeArray[0].X, nodeArray[0].Y);
@@ -144,7 +144,7 @@ namespace Mentula.Server
                 {
                     for (int j = 0; j < c[i].Destructibles.Count; j++)
                     {
-                        int ind = (int)((c[i].Destructibles[j].ChunkPos.X * Resc.ChunkSize - c[0].ChunkPos.X*Resc.ChunkSize + c[i].Destructibles[j].Pos.X) +
+                        int ind = (int)((c[i].Destructibles[j].ChunkPos.X * Resc.ChunkSize - c[0].ChunkPos.X * Resc.ChunkSize + c[i].Destructibles[j].Pos.X) +
                             (c[i].Destructibles[j].ChunkPos.Y * Resc.ChunkSize - c[0].ChunkPos.Y * Resc.ChunkSize + c[i].Destructibles[j].Pos.Y) * Resc.ChunkSize);
                         nr[ind].wall = true;
 
