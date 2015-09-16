@@ -25,7 +25,7 @@ namespace Mentula.Server
             open.Add(toCheck);
 
             bool endFound = false;
-            while (open.Count != 0)
+            while (true)
             {
                 if (open.Contains(toCheck)) open.Remove(toCheck);
                 closed.Add(toCheck);
@@ -50,6 +50,7 @@ namespace Mentula.Server
                     if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
+                if (open.Count == 0) break;
                 toCheck = GetLowestF(ref open, ref map);
             }
 
@@ -66,7 +67,7 @@ namespace Mentula.Server
             open.Add(toCheck);
 
             bool endFound = false;
-            while (open.Count != 0)
+            while (true)
             {
                 if (open.Contains(toCheck)) open.Remove(toCheck);
                 closed.Add(toCheck);
@@ -92,6 +93,7 @@ namespace Mentula.Server
                     if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
+                if (open.Count == 0) break;
                 toCheck = GetLowestF(ref open, ref map);
             }
 
@@ -108,7 +110,7 @@ namespace Mentula.Server
             open.Add(toCheck);
 
             bool endFound = false;
-            while (open.Count != 0)
+            while (true)
             {
                 if (open.Contains(toCheck)) open.Remove(toCheck);
                 closed.Add(toCheck);
@@ -133,6 +135,7 @@ namespace Mentula.Server
                     if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
+                if (open.Count == 0) break;
                 toCheck = GetLowestF(ref open, ref map);
             }
 
@@ -151,7 +154,7 @@ namespace Mentula.Server
             open.Add(toCheck);
 
             bool endFound = false;
-            while (open.Count != 0)
+            while (true)
             {
                 if (open.Contains(toCheck)) open.Remove(toCheck);
                 closed.Add(toCheck);
@@ -177,6 +180,7 @@ namespace Mentula.Server
                     if (!open.Contains(curKey)) open.Add(curKey);
                 }
 
+                if (open.Count == 0) break;
                 toCheck = GetLowestF(ref open, ref map);
             }
 
