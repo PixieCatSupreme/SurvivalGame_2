@@ -16,7 +16,7 @@ namespace Mentula.Server
         private double lastAttackTime;
         private IntVector2 startpos;
         private IntVector2 endpos;
-        private IntVector2[] nodeArray;
+        private IntVector2 nextNode;
 
         public NPC(string n, Stats s, int h, Vector2 pos, IntVector2 chunkpos)
             : base(n, s, h, pos, chunkpos)
@@ -103,7 +103,7 @@ namespace Mentula.Server
 
                 if (getpath(ref sPos, ref ePos, ref dist, ref c))
                 {
-                    Vect2 gp = new Vect2(nodeArray[0].X, nodeArray[0].Y);
+                    Vect2 gp = new Vect2(nextNode.X, nextNode.Y);
                     Rotation = Vect2.Angle(p0, gp);
                     Vect2 newpos = p0 - gp;
                     newpos.Normalize();
@@ -131,27 +131,29 @@ namespace Mentula.Server
             if ((startpos != sPos || endpos != ePos) && dist < 20)
             {
                 startpos = sPos;
-                endpos = ePos;
+                endpos = IntVector2.One;
 
-                AStar.Node[] nr = new AStar.Node[Resc.ChunkSize * Resc.ChunkSize * 9];
-                IntVector2 p = new IntVector2(c[0].ChunkPos.X * Resc.ChunkSize, c[0].ChunkPos.Y * Resc.ChunkSize);
-                for (int i = 0; i < nr.Length; i++)
-                {
-                    IntVector2 pos = p + new IntVector2(i % (Resc.ChunkSize * 3), i / (Resc.ChunkSize * 3));
-                    nr[i] = new AStar.Node(pos, 10, true);
-                }
+                AStar.Map m = new AStar.Map(startpos, endpos);
                 for (int i = 0; i < c.Length; i++)
                 {
                     for (int j = 0; j < c[i].Destructibles.Count; j++)
                     {
-                        int ind = (int)((c[i].Destructibles[j].ChunkPos.X * Resc.ChunkSize - c[0].ChunkPos.X * Resc.ChunkSize + c[i].Destructibles[j].Pos.X) +
-                            (c[i].Destructibles[j].ChunkPos.Y * Resc.ChunkSize - c[0].ChunkPos.Y * Resc.ChunkSize + c[i].Destructibles[j].Pos.Y) * Resc.ChunkSize);
-                        nr[ind].wall = true;
-
+                        IntVector2 p = new IntVector2(c[i].Destructibles[j].ChunkPos.X * Resc.ChunkSize + c[i].Destructibles[j].Pos.X, c[i].Destructibles[j].ChunkPos.Y * Resc.ChunkSize + c[i].Destructibles[j].Pos.Y);
+                        m.AddNode(p, 10, false);
                     }
                 }
-                AStar.Map d = new AStar.Map(Resc.ChunkSize * 3, sPos, ePos, nr);
-                nodeArray = AStar.GetRoute8(d);
+                m.AddNode(endpos);
+                for (int i = 0; i < c.Length; i++)
+                {
+                    for (int j = 0; j < Resc.ChunkSize * Resc.ChunkSize; j++)
+                    {
+                        IntVector2 p = new IntVector2(c[i].ChunkPos.X * Resc.ChunkSize + c[i].Tiles[j].Pos.X, c[i].ChunkPos.Y * Resc.ChunkSize + c[i].Tiles[j].Pos.Y);
+                        m.AddNode(p);
+                    }
+                }
+
+                nextNode = AStar.Next8(ref m);
+
                 t = true;
             }
             return t;

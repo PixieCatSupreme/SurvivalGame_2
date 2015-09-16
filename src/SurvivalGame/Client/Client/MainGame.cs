@@ -32,7 +32,7 @@ namespace Mentula.Client
 
         protected override void Initialize()
         {
-            VertexGraphics.ChangeWindowBorder(Window.Handle, 0);
+            //VertexGraphics.ChangeWindowBorder(Window.Handle, 0);
             hero = new NPC();
             chunks = new Chunk[0];
             npcs = new NPC[0];

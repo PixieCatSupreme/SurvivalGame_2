@@ -101,7 +101,10 @@ namespace Mentula.Server
 
             for (int i = 0; i < Map.LoadedNPCs.Count; i++)
             {
+                server.WriteLine(0, "Start npc AI: {0}", i);
                 Map.LoadedNPCs[i].DoStuff(Map.GetChunks(Map.LoadedNPCs[i].ChunkPos), delta, ref players, Index);
+                server.WriteLine(0, "End npc AI: {0}", i);
+
                 Map.LoadedNPCs[i].FormatPos();
             }
 
