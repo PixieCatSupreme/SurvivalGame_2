@@ -23,6 +23,7 @@ namespace Mentula.Client
         private float timeDiff;
         private ushort playerLength;
         private TimeSpan prevAttack;
+        private TimeSpan prevMessage;
         private MainGame game;
         private NetClient client;
         /* 1 -> Discovery send.     0x1
@@ -69,9 +70,12 @@ namespace Mentula.Client
 
                         if (status == NetConnectionStatus.Disconnected)
                         {
-                            game.mainMenu.SetError(msg.ReadString());
+                            if ((state & 0x1) != 0)
+                            {
+                                state ^= 0x1;
+                                game.mainMenu.SetError(msg.ReadString());
+                            }
                             game.SetState(GameState.MainMenu);
-                            if ((state & 0x1) != 0) state ^= 0x1;
                         }
                         break;
                     case (NIMT.Data):
@@ -80,22 +84,26 @@ namespace Mentula.Client
                         switch (type)
                         {
                             case (NDT.HeroUpdate):
+                                prevMessage = gameTime.TotalGameTime;
                                 game.hero.ChunkPos = msg.ReadPoint();
                                 game.hero.Pos = msg.ReadVector2();
                                 break;
                             case (NDT.InitialChunkRequest):
+                                prevMessage = gameTime.TotalGameTime;
                                 game.chunks = msg.ReadChunks();
                                 msg.ReadNPCs(ref game.npcs);
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs);
                                 game.SetState(GameState.Game);
                                 break;
                             case (NDT.ChunkRequest):
+                                prevMessage = gameTime.TotalGameTime;
                                 Chunk[] chunks = msg.ReadChunks();
                                 NPC[] npcs = new NPC[0];
                                 msg.ReadNPCs(ref npcs);
                                 game.UpdateChunks(chunks, npcs);
                                 break;
                             case (NDT.Update):
+                                prevMessage = gameTime.TotalGameTime;
                                 msg.ReadNPCUpdate(ref game.npcs, playerLength = msg.ReadNPCs(ref game.npcs));
 
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs);
@@ -126,6 +134,13 @@ namespace Mentula.Client
                 nom.WriteHalfPrecision(game.hero.Rotation);
                 client.SendMessage(nom, NetDeliveryMethod.UnreliableSequenced);
                 timeDiff = 0;
+            }
+
+            if (client.ConnectionStatus == NetConnectionStatus.Connected && (gameTime.TotalGameTime - prevMessage).Seconds > Res.ClientDesync)
+            {
+                Disconect();
+                game.mainMenu.SetError("Connection timed out.");
+                game.SetState(GameState.MainMenu);
             }
 
             timeDiff += delta;

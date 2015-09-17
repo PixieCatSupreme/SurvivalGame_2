@@ -19,6 +19,8 @@ namespace Mentula.Server
         public static IntVector2 Next4(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
+            if (!map.Distanced) map.SetHeuristic(true);
+
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
             IntVector2 toCheck = map.End;
@@ -61,6 +63,8 @@ namespace Mentula.Server
         public static IntVector2 Next8(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
+            if (!map.Distanced) map.SetHeuristic(true);
+
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
             IntVector2 toCheck = map.End;
@@ -104,6 +108,8 @@ namespace Mentula.Server
         public static IntVector2[] Route4(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
+            if (!map.Distanced) map.SetHeuristic();
+
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
             IntVector2 toCheck = map.Start;
@@ -148,6 +154,8 @@ namespace Mentula.Server
         public static IntVector2[] Route8(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
+            if (!map.Distanced) map.SetHeuristic();
+
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
             IntVector2 toCheck = map.Start;
@@ -312,6 +320,7 @@ namespace Mentula.Server
             public IntVector2 End;
             public int Length { get { return _Nodes.Length; } }
             public bool Fitted { get; private set; }
+            public bool Distanced { get; private set; }
 
             private KeyValuePair<IntVector2, Node>[] _Nodes;
             private int _Index;
@@ -359,6 +368,7 @@ namespace Mentula.Server
 
             public void SetLength(int length)
             {
+                Fitted = Distanced = false;
                 Array.Resize(ref _Nodes, length);
             }
 
@@ -379,11 +389,22 @@ namespace Mentula.Server
                 Array.Resize(ref _Nodes, newLength);
             }
 
+            public void SetHeuristic(bool inverted = false)
+            {
+                Distanced = true;
+                for (int i = 0; i < _Nodes.Length; i++)
+                {
+                    KeyValuePair<IntVector2, Node> cur = _Nodes[i];
+                    IntVector2 manhDist = IntVector2.Abs((inverted ? Start : End) - cur.Key);
+                    cur.Value.Heuristic = manhDist.X + manhDist.Y;
+                }
+            }
+
             public void AddNode(IntVector2 pos)
             {
                 if (NodeExist(pos)) return;
 
-                Fitted = false;
+                Fitted = Distanced = false;
                 if (_Index < _Nodes.Length) _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node());
                 else
                 {
@@ -396,7 +417,7 @@ namespace Mentula.Server
             {
                 if (NodeExist(pos)) return;
 
-                Fitted = false;
+                Fitted = Distanced = false;
                 if (_Index < _Nodes.Length) _Nodes[_Index++] = new KeyValuePair<IntVector2, Node>(pos, new Node(nodeCost, pathAble));
                 else
                 {

@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Lidgren.Network.Xna;
 using Mentula.Engine;
 using Mentula.Engine.Core;
 using Mentula.Server.GUI;
@@ -12,14 +13,12 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Lidgren.Network.Xna;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
 using NPConf = Lidgren.Network.NetPeerConfiguration;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
-using System.Threading;
 
 namespace Mentula.Server
 {

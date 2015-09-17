@@ -5,15 +5,16 @@
 
     public static class Res
     {
-        public static string AppName;
         public const int Range_C = 1;
         public const float DEG2RAD = 0.017453f;
 
-        public static int ChunkSize;
-        public static int ChunkTileLength;
-        public static int TileSize;
-        public static int MaxPlayers;
-        public static string Seed;
+        public static readonly string AppName;
+        public static readonly int ChunkSize;
+        public static readonly int ChunkTileLength;
+        public static readonly int TileSize;
+        public static readonly int ClientDesync;
+        public static readonly int MaxPlayers;
+        public static readonly string Seed;
 
         static Res()
         {
@@ -21,6 +22,7 @@
             ChunkSize = int.Parse(Resources.ChunkSize);
             ChunkTileLength = ChunkSize * ChunkSize;
             TileSize = int.Parse(Resources.TileSize);
+            ClientDesync = int.Parse(Resources.ClientTimeOut);
             MaxPlayers = int.Parse(Resources.MaxPlayers);
             Seed = DateTime.Now.ToString();
         }

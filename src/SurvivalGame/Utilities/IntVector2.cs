@@ -93,6 +93,24 @@ namespace Mentula.Utilities
         public static bool operator ==(IntVector2 sender, IntVector2 caller) { return (sender.X == caller.X && sender.Y == caller.Y); }
         public static implicit operator Vector2(IntVector2 sender) { return new Vector2(sender.X, sender.Y); }
 
+        /// <summary> Returns the absolute value of the vector. </summary>
+        /// <param name="value"> Source vector. </param>
+        public static IntVector2 Abs(IntVector2 value)
+        {
+            if (value.X < 0) value.X *= -1;
+            if (value.Y < 0) value.Y *= -1;
+            return value;
+        }
+
+        /// <summary> Returns the absolute value of the vector. </summary>
+        /// <param name="value"> Source vector. </param>
+        /// <param name="result"> [OutAttribute] the result vector. </param>
+        public static void Abs(ref IntVector2 value, out IntVector2 result)
+        {
+            result.X = value.X < 0 ? value.X * -1 : value.X;
+            result.Y = value.X < 0 ? value.Y * -1 : value.Y;
+        }
+
         /// <summary> Adds two vectors. </summary>
         /// <param name="value1"> Source vector. </param>
         /// <param name="value2"> Source vector. </param>
