@@ -32,7 +32,6 @@ namespace Mentula.Client
 
         protected override void Initialize()
         {
-            //VertexGraphics.ChangeWindowBorder(Window.Handle, 0);
             hero = new NPC();
             chunks = new Chunk[0];
             npcs = new NPC[0];
@@ -113,61 +112,61 @@ namespace Mentula.Client
                         bool SW = SW_T.HasValue ? SW_T.Value : false;
                         bool SE = SE_T.HasValue ? SE_T.Value : false;
 
-                        if ((NE | SE) & inp.X > 0 & inp.Y == 0) outp.X = -inp.X;        // Move right false
-                        else if ((NW | SW) & inp.X < 0 & inp.Y == 0) outp.X = -inp.X;   // Move left false
-                        else if ((SE | SW) & inp.Y > 0 & inp.X == 0) outp.Y = -inp.Y;   // Move down false
-                        else if ((NE | NW) & inp.Y < 0 & inp.X == 0) outp.Y = -inp.Y;   // Move up false
-                        else if (inp.X > 0 & inp.Y > 0)                                 // Move right, down
+                        if ((NE || SE) && inp.X > 0 && inp.Y == 0) outp.X = -inp.X;        // Move right false
+                        else if ((NW || SW) && inp.X < 0 && inp.Y == 0) outp.X = -inp.X;   // Move left false
+                        else if ((SE || SW) && inp.Y > 0 && inp.X == 0) outp.Y = -inp.Y;   // Move down false
+                        else if ((NE || NW) && inp.Y < 0 && inp.X == 0) outp.Y = -inp.Y;   // Move up false
+                        else if (inp.X > 0 && inp.Y > 0)                                   // Move right, down
                         {
-                            if (SE & !NE & !SW)
+                            if (SE && !NE && !SW)
                             {
-                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (SE_CPos * Res.ChunkSize + SE_TPos).ToVector2());
+                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (SE_CPos * Res.ChunkSize + SE_TPos));
                                 if (dist.X > dist.Y) outp.X = -inp.X;
                                 else if (dist.X < dist.Y) outp.Y = -inp.Y;
                                 else outp = -inp;
                             }
-                            else if ((SE | NE) & !SW) outp.X = -inp.X;                  // Move right false, down
-                            else if ((SE | SW) & !NE) outp.Y = -inp.Y;                  // Move right, down false
-                            else if (SE & SW & NE) outp = -inp;                         // Move right false, down false
+                            else if ((SE || NE) && !SW) outp.X = -inp.X;                  // Move right false, down
+                            else if ((SE || SW) && !NE) outp.Y = -inp.Y;                  // Move right, down false
+                            else if (SE && SW && NE) outp = -inp;                         // Move right false, down false
                         }
-                        else if (inp.X > 0 & inp.Y < 0)                                 // Move right, up
+                        else if (inp.X > 0 && inp.Y < 0)                                  // Move right, up
                         {
-                            if (NE & !SE & !NW)
+                            if (NE && !SE && !NW)
                             {
-                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (NE_CPos * Res.ChunkSize + NE_TPos).ToVector2());
+                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (NE_CPos * Res.ChunkSize + NE_TPos));
                                 if (dist.X > dist.Y) outp.X = -inp.X;
                                 else if (dist.X < dist.Y) outp.Y = -inp.Y;
                                 else outp = -inp;
                             }
-                            else if ((NE | SE) & !NW) outp.X = -inp.X;                  // Move right false, up
-                            else if ((NE | NW) & !SE) outp.Y = -inp.Y;                  // Move righ, up false
-                            else if (NE & NW & SE) outp = -inp;                         // Move right false, up false
+                            else if ((NE || SE) && !NW) outp.X = -inp.X;                  // Move right false, up
+                            else if ((NE || NW) && !SE) outp.Y = -inp.Y;                  // Move righ, up false
+                            else if (NE && NW && SE) outp = -inp;                         // Move right false, up false
                         }
-                        else if (inp.X < 0 & inp.Y > 0)                                 // Move left, down
+                        else if (inp.X < 0 && inp.Y > 0)                                  // Move left, down
                         {
-                            if (SW & !NW & !SE)
+                            if (SW && !NW && !SE)
                             {
-                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (SW_CPos * Res.ChunkSize + SW_TPos).ToVector2());
+                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (SW_CPos * Res.ChunkSize + SW_TPos));
                                 if (dist.X > dist.Y) outp.X = -inp.X;
                                 else if (dist.X < dist.Y) outp.Y = -inp.Y;
                                 else outp = -inp;
                             }
-                            else if ((SW | NW) & !SE) outp.X = -inp.X;                  // Move left false, down
-                            else if ((SE | SW) & !NW) outp.Y = -inp.Y;                  // Move left, down false
-                            else if (SE & SW & NW) outp = -inp;                         // Move left false, down false
+                            else if ((SW || NW) && !SE) outp.X = -inp.X;                  // Move left false, down
+                            else if ((SE || SW) && !NW) outp.Y = -inp.Y;                  // Move left, down false
+                            else if (SE && SW && NW) outp = -inp;                         // Move left false, down false
                         }
-                        else if (inp.X < 0 & inp.Y < 0)                                 // Move left, up
+                        else if (inp.X < 0 && inp.Y < 0)                                  // Move left, up
                         {
-                            if (NW & !SW & !NE)
+                            if (NW && !SW && !NE)
                             {
-                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (NW_CPos * Res.ChunkSize + NW_TPos).ToVector2());
+                                Vector2 dist = MEx.Abs(Chunk.GetTotalPos(chunkPos, tilePos) - (NW_CPos * Res.ChunkSize + NW_TPos));
                                 if (dist.X > dist.Y) outp.X = -inp.X;
                                 else if (dist.X < dist.Y) outp.Y = -inp.Y;
                                 else outp = -inp;
                             }
-                            else if ((NW | SW) & !NE) outp.X = -inp.X;                  // Move left false, up
-                            else if ((NE | NW) & !SW) outp.Y = -inp.Y;                  // Move left, up false
-                            else if (NE & NW & SW) outp = -inp;                         // Move left false, up false
+                            else if ((NW || SW) && !NE) outp.X = -inp.X;                  // Move left false, up
+                            else if ((NE || NW) && !SW) outp.Y = -inp.Y;                  // Move left, up false
+                            else if (NE && NW && SW) outp = -inp;                         // Move left false, up false
                         }
 
                         if (outp != new Vector2())

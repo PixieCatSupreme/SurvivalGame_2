@@ -122,7 +122,7 @@ namespace Mentula.Client
                 client.SendMessage(nom, NetDeliveryMethod.Unreliable);
             }
 
-            if (client.ConnectionStatus == NetConnectionStatus.Connected && timeDiff >= 1f / 30)
+            if (client.ConnectionStatus == NetConnectionStatus.Connected && timeDiff >= Res.FPS30)
             {
                 IntVector2 netChunk = -game.hero.ChunkPos;
                 Vector2 netTile = -game.hero.Pos;
