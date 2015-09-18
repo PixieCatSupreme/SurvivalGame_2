@@ -18,7 +18,7 @@ using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
 {
-    public class VertexGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
+    public class MediumGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
         internal float SCALE = 2f;
         private float ROT = 0;
@@ -50,7 +50,7 @@ namespace Mentula.Client
         public event EventHandler<EventArgs> DrawOrderChanged;
         public event EventHandler<EventArgs> VisibleChanged;
 
-        public VertexGraphics(MainGame game)
+        public MediumGraphics(MainGame game)
             : base(game)
         {
             Camera = new Camera();

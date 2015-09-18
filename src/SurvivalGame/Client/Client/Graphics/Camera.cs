@@ -56,7 +56,7 @@ namespace Mentula.Client
 
         public void Update(Matrix3 lookAt)
         {
-            _view = Matrix3.ApplyScale(Res.ChunkSize);
+            _view = Matrix3.ApplyScale(Res.TileSize);
             _view *= lookAt;
 
             _mv = _model * _view;

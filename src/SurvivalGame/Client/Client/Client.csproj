@@ -86,19 +86,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationHandler.cs" />
-    <Compile Include="Camera.cs" />
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="ClientNetworking.cs" />
     <Compile Include="Destructable.cs" />
-    <Compile Include="FPS.cs" />
+    <Compile Include="Graphics\FastGraphics.cs" />
+    <Compile Include="Graphics\FPS.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainGame.cs" />
-    <Compile Include="TextureCollection.cs" />
-    <Compile Include="VertexGraphics.cs" />
+    <Compile Include="Graphics\TextureCollection.cs" />
+    <Compile Include="Graphics\MediumGraphics.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\Game.ico" />
@@ -142,6 +143,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

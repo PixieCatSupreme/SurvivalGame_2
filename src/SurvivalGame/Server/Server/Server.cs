@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
@@ -32,6 +33,7 @@ namespace Mentula.Server
         private NetServer server;
         private GameLogic logic;
         private float timeDiff;
+        private Thread updateThread;
 
         public Server()
         {
@@ -48,6 +50,7 @@ namespace Mentula.Server
 
         void Server_Load()
         {
+            Window.AllowAltF4 = true;
             WriteLine(NIMT.Data, "Loading Server.");
             server.Start();
         }
@@ -68,6 +71,7 @@ namespace Mentula.Server
 
         private unsafe void Server_Update(GameTime time)
         {
+            SetState(server.Status.ToString());
             NetIncomingMessage msg;
 
             while ((msg = server.ReadMessage()) != null)
@@ -274,6 +278,7 @@ namespace Mentula.Server
                     break;
                 case (NIMT.Data):
                 case (NIMT.UnconnectedData):
+                    lbl_LastMessage.Text = "Last info message: '" + string.Format(format, args) + "'";
                     color = Color.LightBlue;
                     mode = "Data";
                     break;
@@ -352,7 +357,6 @@ namespace Mentula.Server
             this.proBarCPU = new ProgressBar();
             this.btn_Stop = new Button();
             this.btn_Restart = new Button();
-            this.btn_Kill = new Button();
             this.dGrid_Connections = new DataGridView();
             this.coll_Name = new DataGridViewTextBoxColumn();
             this.coll_Ip = new DataGridViewTextBoxColumn();
@@ -391,7 +395,6 @@ namespace Mentula.Server
             this.gBox_Info.Controls.Add(this.proBarCPU);
             this.gBox_Info.Controls.Add(this.btn_Stop);
             this.gBox_Info.Controls.Add(this.btn_Restart);
-            this.gBox_Info.Controls.Add(this.btn_Kill);
             this.gBox_Info.Name = "gBox_Info";
             this.gBox_Info.Text = "Info";
             this.gBox_Info.TabStop = false;
@@ -424,14 +427,6 @@ namespace Mentula.Server
             this.btn_Restart.Location = new Point(7, 62);
             this.btn_Restart.UseVisualStyleBackColor = true;
             this.btn_Restart.Click += new System.EventHandler(this.btn_Restart_Click);
-            // 
-            // btn_Kill
-            // 
-            this.btn_Kill.Name = "btn_Kill";
-            this.btn_Kill.Text = "Kill";
-            this.btn_Kill.Location = new Point(7, 31);
-            this.btn_Kill.UseVisualStyleBackColor = true;
-            this.btn_Kill.Click += new System.EventHandler(this.btn_Kill_Click);
             // 
             // dGrid_Connections
             // 
@@ -505,7 +500,6 @@ namespace Mentula.Server
             Window.PerformLayout();
         }
 
-        public Button btn_Kill;
         public Button btn_Stop;
         public Button btn_Restart;
         private StatusStrip statusStrip;
@@ -524,11 +518,6 @@ namespace Mentula.Server
 
         [DllImport("user32.dll")]
         private static extern int HideCaret(IntPtr hwnd);
-
-        private void btn_Kill_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         private void btn_Restart_Click(object sender, EventArgs e)
         {

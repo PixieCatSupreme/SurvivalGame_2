@@ -16,7 +16,7 @@ namespace Mentula.Client
         internal NPC[] npcs;
         internal Chunk[] chunks;
 
-        internal VertexGraphics vGraphics;
+        internal MediumGraphics vGraphics;
         internal MainMenu mainMenu;
         internal ClientNetworking networking;
 
@@ -24,7 +24,7 @@ namespace Mentula.Client
         {
             Content.RootDirectory = "Content";
 
-            Components.Add(vGraphics = new VertexGraphics(this));
+            Components.Add(vGraphics = new MediumGraphics(this));
             Components.Add(mainMenu = new MainMenu(this));
             Components.Add(networking = new ClientNetworking(this));
             SetState(GameState.MainMenu);
