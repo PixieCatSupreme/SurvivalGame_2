@@ -23,6 +23,7 @@ namespace Mentula.Server
         {
             targetArea = pos + chunkpos * Resc.ChunkSize;
             lastAttackTime = 0;
+            //nextNode = new IntVector2(5, 5);
         }
 
         public void DoStuff(Chunk[] c, float deltaTime, ref Creature[] players, int Index)
@@ -100,26 +101,16 @@ namespace Mentula.Server
                 }
                 IntVector2 sPos = new IntVector2(p0.X, p0.Y);
                 IntVector2 ePos = new IntVector2(p1.X, p1.Y);
+                getpath(ref sPos, ref ePos, ref dist, ref c);
 
-                if (getpath(ref sPos, ref ePos, ref dist, ref c))
-                {
-                    Vect2 gp = new Vect2(nextNode.X, nextNode.Y);
-                    Rotation = Vect2.Angle(p0, gp);
-                    Vect2 newpos = p0 - gp;
-                    newpos.Normalize();
-                    newpos *= delta;
-                    newpos += p0;
-                    if (Vect2.Distance(p0, newpos) < Vect2.Distance(p0, gp))
-                    {
-                        p0 = newpos;
-                    }
-                    else
-                    {
-                        p0 = gp;
-                    }
-                    ChunkPos = new IntVector2(p0.X / Resc.ChunkSize, p0.Y / Resc.ChunkSize);
-                    Pos = new Vector2(p0.X % Resc.ChunkSize, p0.Y % Resc.ChunkSize);
-                }
+                Vect2 gp = new Vect2(nextNode.X, nextNode.Y);
+                Rotation = Vect2.Angle(p0, gp);
+                Vect2 newpos = gp-p0;
+                newpos.Normalize();
+                newpos *= delta;
+                Pos += new Vector2(newpos.X, newpos.Y);
+
+                FormatPos();
 
             }
             return t;
@@ -128,10 +119,12 @@ namespace Mentula.Server
         private bool getpath(ref IntVector2 sPos, ref IntVector2 ePos, ref float dist, ref Chunk[] c)
         {
             bool t = false;
-            if ((startpos != sPos || endpos != ePos) && dist < 20)
+            if ((startpos != sPos || endpos != ePos) && dist < 5)
             {
                 startpos = sPos;
                 endpos = IntVector2.One;
+                IntVector2 p0 = new IntVector2(Math.Min(sPos.X, ePos.X) - 5, Math.Min(sPos.Y, ePos.Y) - 5);
+                IntVector2 p1 = new IntVector2(Math.Max(sPos.X, ePos.X) + 5, Math.Max(sPos.Y, ePos.Y) + 5);
 
                 AStar.Map m = new AStar.Map(startpos, endpos);
                 for (int i = 0; i < c.Length; i++)
@@ -139,7 +132,10 @@ namespace Mentula.Server
                     for (int j = 0; j < c[i].Destructibles.Count; j++)
                     {
                         IntVector2 p = new IntVector2(c[i].Destructibles[j].ChunkPos.X * Resc.ChunkSize + c[i].Destructibles[j].Pos.X, c[i].Destructibles[j].ChunkPos.Y * Resc.ChunkSize + c[i].Destructibles[j].Pos.Y);
-                        m.AddNode(p, 10, false);
+                        if (p.X > p0.X && p.Y > p0.Y && p.X < p1.X && p.Y < p1.Y)
+                        {
+                            m.AddNode(p, 10, false);
+                        }
                     }
                 }
                 m.AddNode(endpos);
@@ -148,7 +144,10 @@ namespace Mentula.Server
                     for (int j = 0; j < Resc.ChunkSize * Resc.ChunkSize; j++)
                     {
                         IntVector2 p = new IntVector2(c[i].ChunkPos.X * Resc.ChunkSize + c[i].Tiles[j].Pos.X, c[i].ChunkPos.Y * Resc.ChunkSize + c[i].Tiles[j].Pos.Y);
-                        m.AddNode(p);
+                        if (p.X > p0.X && p.Y > p0.Y && p.X < p1.X && p.Y < p1.Y)
+                        {
+                            m.AddNode(p);
+                        }
                     }
                 }
 

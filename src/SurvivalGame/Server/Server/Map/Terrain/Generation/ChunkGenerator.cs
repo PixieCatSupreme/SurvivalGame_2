@@ -68,7 +68,7 @@ namespace Mentula.Server
         private static void GenerateWildlife(ref List<NPC> n, ref Chunk c)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Res.Seed + c.ChunkPos.Y));
-            for (int i = 0; i < r.NextDouble() * Res.ChunkSize; )
+            for (int i = 0; i < r.NextDouble() * 10; )
             {
                 bool canplace = true;
                 Vector2 p = new Vector2((int)(r.NextDouble() * Res.ChunkSize), (int)(r.NextDouble() * Res.ChunkSize));
