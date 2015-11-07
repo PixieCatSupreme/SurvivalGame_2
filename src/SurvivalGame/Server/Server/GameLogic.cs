@@ -109,7 +109,7 @@ namespace Mentula.Server
         {
             Creature[] players = Players.Select(p => p.Value).ToArray();
             Creature attacker = GetPlayer(id);
-            Combat.OnAttackPlayer(ref players, ref attacker, 1, 1, Index);
+            Combat.OnAttackPlayer(ref players,ref Map.LoadedNPCs, ref attacker, 1, 1, Index);
             for (int i = 0; i < Index; i++)
             {
                 Players[i].Value.Health = players[i].Health;

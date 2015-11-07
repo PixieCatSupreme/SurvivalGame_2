@@ -13,9 +13,9 @@ namespace Mentula.Server
     public class Map
     {
         public List<Chunk> LoadedChunks;
-        public List<Chunk> ChunkList;
+        private List<Chunk> ChunkList;
         public List<NPC> LoadedNPCs;
-        public List<NPC> NPCList;
+        private List<NPC> NPCList;
 
         public const int Range_S = Res.Range_C + 1;
 

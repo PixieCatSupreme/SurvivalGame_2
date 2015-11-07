@@ -12,20 +12,31 @@ namespace Mentula.Server
     public static class Combat
     {
 
-        public static bool OnAttackPlayer(ref Creature[] creatures, ref Creature attacker, float arc, float range, int index)
+        public static bool OnAttackPlayer(ref Creature[] players,ref List<NPC> NPCs, ref Creature attacker, float arc, float range, int index)
         {
             bool hitSomeone = false;
             Vector2 angle = MathEX.RadiansToVector(attacker.Rotation);
             for (int i = 0; i < index; i++)
             {
-                float dgr = MathEX.VectorToRadians(new Vector2(creatures[i].Pos.X - attacker.Pos.X, creatures[i].Pos.Y - attacker.Pos.Y));
-                float dist = Vector2.Distance(creatures[i].Pos, attacker.Pos);
+                float dgr = MathEX.VectorToRadians(new Vector2(players[i].Pos.X - attacker.Pos.X, players[i].Pos.Y - attacker.Pos.Y));
+                float dist = Vector2.Distance(players[i].Pos, attacker.Pos);
                 if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
                 {
-                    DoDamage(ref creatures[i], ref attacker);
+                    DoDamage(players[i], ref attacker);
                     hitSomeone = true;
                 }
             }
+            for (int i = 0; i < NPCs.Count; i++)
+            {
+                float dgr = MathEX.VectorToRadians(new Vector2(NPCs[i].Pos.X - attacker.Pos.X, NPCs[i].Pos.Y - attacker.Pos.Y));
+                float dist = Vector2.Distance(NPCs[i].Pos, attacker.Pos);
+                if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
+                {
+                    DoDamage(NPCs[i], ref attacker);
+                    hitSomeone = true;
+                }
+            }
+
             return hitSomeone;
         }
 
@@ -37,13 +48,13 @@ namespace Mentula.Server
             float dist = Vector2.Distance(defender.Pos, attacker.Pos);
             if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
             {
-                DoDamage(ref defender, ref attacker);
+                DoDamage(defender, ref attacker);
                 hitSomeone = true;
             }
             return hitSomeone;
         }
 
-        private static void DoDamage(ref Creature defender, ref Creature attacker)
+        private static void DoDamage(Creature defender, ref Creature attacker)
         {
             Random r = new Random();
             if (defender.Health[0] > 0 && defender.Health[1] > 0)
