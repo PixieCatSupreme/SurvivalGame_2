@@ -11,11 +11,8 @@ using Mentula.Content;
 
 namespace Mentula.Server
 {
-    public class NPC : Creature
+    public class NPC
     {
-        public NPC(string n, Stats s, int h, Vector2 pos, IntVector2 chunkpos)
-            : base(n, s, h, pos, chunkpos)
-        {
-        }
+        public Creature creature;
     }
 }

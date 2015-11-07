@@ -29,11 +29,11 @@ namespace Mentula.Server
             }
             for (int i = 0; i < NPCs.Count; i++)
             {
-                float dgr = MathEX.VectorToRadians(new Vector2(NPCs[i].Pos.X - attacker.Pos.X, NPCs[i].Pos.Y - attacker.Pos.Y));
-                float dist = Vector2.Distance(NPCs[i].Pos, attacker.Pos);
+                float dgr = MathEX.VectorToRadians(new Vector2(NPCs[i].creature.Pos.X - attacker.Pos.X, NPCs[i].creature.Pos.Y - attacker.Pos.Y));
+                float dist = Vector2.Distance(NPCs[i].creature.Pos, attacker.Pos);
                 if (MathEX.DifferenceBetweenRadians(attacker.Rotation, dgr) < arc && dist < range)
                 {
-                    DoDamage(NPCs[i], ref attacker);
+                    DoDamage(NPCs[i].creature, ref attacker);
                     hitSomeone = true;
                 }
             }
@@ -58,14 +58,13 @@ namespace Mentula.Server
         private static void DoDamage(Creature defender, ref Creature attacker)
         {
             Random r = new Random();
-            if (defender.Health[0] > 0 && defender.Health[1] > 0)
+            if (defender.Health > 0)
             {
                 while (true)
                 {
-                    int n = (int)(r.NextDouble() * defender.Health.Length);
-                    if (defender.Health[n] > 0)
+                    if (defender.Health > 0)
                     {
-                        defender.Health[n] = Math.Max(defender.Health[n] - attacker.Stats.Strength, 0);
+                        defender.Health = Math.Max(defender.Health - attacker.Stats.Strength, 0);
                         break;
                     }
                 }
