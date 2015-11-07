@@ -30,12 +30,12 @@ namespace Mentula.Server
 
         public static unsafe void Write(this NetBuffer msg, NPC value)
         {
-            fixed (IntVector2* cP = &value.ChunkPos) msg.Write(cP);
-            fixed (Vector2* tP = &value.Pos) msg.Write(tP);
-            msg.WriteHalfPrecision(value.Rotation);
-            msg.WriteHalfPrecision(value.Health);
-            msg.Write(value.Name);
-            msg.Write(value.TextureId);
+            fixed (IntVector2* cP = &value.creature.ChunkPos) msg.Write(cP);
+            fixed (Vector2* tP = &value.creature.Pos) msg.Write(tP);
+            msg.WriteHalfPrecision(value.creature.Rotation);
+            msg.WriteHalfPrecision(value.creature.Health);
+            msg.Write(value.creature.Name);
+            msg.Write(value.creature.TextureId);
         }
 
         public static void Write(this NetBuffer msg, Chunk[] value)

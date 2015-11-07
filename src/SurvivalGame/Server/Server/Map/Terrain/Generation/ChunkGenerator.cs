@@ -75,7 +75,7 @@ namespace Mentula.Server
                 Vector2 p = new Vector2((int)(r.NextDouble() * Res.ChunkSize), (int)(r.NextDouble() * Res.ChunkSize));
                 for (int j = 0; j < n.Count; j++)
                 {
-                    if (p == n[j].Pos)
+                    if (p == n[j].creature.Pos)
                     {
                         canplace = false;
                     }
@@ -92,7 +92,7 @@ namespace Mentula.Server
                 if (canplace)
                 {
                     //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
-                    n[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
+                    n[i].creature.Rotation = (float)(r.NextDouble() * Math.PI * 2);
                     i++;
                 }
 
