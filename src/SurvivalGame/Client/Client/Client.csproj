@@ -85,7 +85,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimationHandler.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Chunk.cs" />
     <Compile Include="ClientNetworking.cs" />

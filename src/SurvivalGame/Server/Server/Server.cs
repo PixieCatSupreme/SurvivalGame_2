@@ -33,7 +33,6 @@ namespace Mentula.Server
         private NetServer server;
         private GameLogic logic;
         private float timeDiff;
-        private Thread updateThread;
 
         public Server()
         {
@@ -48,7 +47,7 @@ namespace Mentula.Server
             Draw += Server_Draw;
         }
 
-        void Server_Load()
+        private void Server_Load()
         {
             Window.AllowAltF4 = true;
             WriteLine(NIMT.Data, "Loading Server.");
@@ -195,13 +194,9 @@ namespace Mentula.Server
                 }
             }
 
-            try { logic.Update(time.DeltaTime); }
-            catch (Exception e)
-            {
-                WriteLine(NIMT.Error, "An error occured wile updating. Innerexception: {0}", e);
-            }
+            logic.Update(time.DeltaTime);
 
-            if (timeDiff >= 1f / 30 && logic.Index > 0)
+            if (timeDiff >= Res.FPS30 && logic.Index > 0)
             {
                 for (int i = 0; i < server.Connections.Count; i++)
                 {

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Mentula.Content
@@ -29,6 +30,7 @@ namespace Mentula.Content
             return Encoding.UTF8.GetString(enc);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CheckProcessorType(string type, string request)
         {
             if (type.ToUpper() != request.ToUpper()) throw new ArgumentException("Wrong processor type selected this= '" + type + "', needed='" + request + "'");

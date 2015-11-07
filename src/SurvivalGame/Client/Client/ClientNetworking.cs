@@ -136,13 +136,6 @@ namespace Mentula.Client
                 timeDiff = 0;
             }
 
-            if (client.ConnectionStatus == NetConnectionStatus.Connected && (gameTime.TotalGameTime - prevMessage).Seconds > Res.ClientDesync)
-            {
-                Disconect();
-                game.mainMenu.SetError("Connection timed out.");
-                game.SetState(GameState.MainMenu);
-            }
-
             timeDiff += delta;
             base.Update(gameTime);
         }
