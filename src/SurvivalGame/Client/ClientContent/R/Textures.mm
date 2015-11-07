@@ -6,6 +6,7 @@
 		[Savana: id=1, name="Grass_Savanna"]
 		[Grassland: id=2, name="Grass_GrassLand"]
 		[Forest: id=3, name="Grass_Forest"]
+		[Water: id=4, name="Water"]
 	}
 
 	[Container: "Destructable"]

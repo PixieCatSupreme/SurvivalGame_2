@@ -20,10 +20,9 @@ namespace Mentula.Server
         public static Chunk Generate(ref Chunk chunk, ref List<NPC> n)
         {
             GenerateTerrain(ref chunk);
+            GenerateLakes(ref chunk);
             GenerateTrees(ref chunk);
             GenerateWildlife(ref n, ref chunk);
-
-
 
             return chunk;
         }
@@ -91,9 +90,13 @@ namespace Mentula.Server
 
                 if (canplace)
                 {
-                    //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
-                    n[i].creature.Rotation = (float)(r.NextDouble() * Math.PI * 2);
-                    i++;
+                    if (c.Tiles[(int)p.X + (int)p.Y * cSize].Tex != 4)
+                    {
+                        //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
+                        //n[i].creature.Rotation = (float)(r.NextDouble() * Math.PI * 2);
+                        i++;
+                    }
+
                 }
 
             }
@@ -120,11 +123,48 @@ namespace Mentula.Server
 
                     if (canplace)
                     {
-                        c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
+                        if (c.Tiles[(int)pos.X + (int)pos.Y * cSize].Tex != 4)
+                        {
+                            c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
+                        }
                     }
                 }
             }
+        }
 
+        private static void GenerateLakes(ref Chunk c)
+        {
+            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
+
+            if (r.NextDouble() < 0.1)
+            {
+                IntVector2 startingPos=new IntVector2(cSize/2-1);
+                c.Tiles[startingPos.X + startingPos.Y * 32].Tex = 4;
+                Vector2 p = startingPos;
+                for (int i = 0; i < 512; i++)
+                {
+
+                    Vector2 a = new Vector2((float)r.NextDouble() - 0.5f, (float)r.NextDouble() - 0.5f);
+                    a.Normalize();
+                    if (Vector2.Distance(p, startingPos) < 15)
+                    {
+                        p += a;
+                        for (int x = 0; x <= 1; x++)
+                        {
+                            for (int y = 0; y <= 1; y++)
+                            {
+                                c.Tiles[(int)p.X + x + (int)(p.Y+y) * 32].Tex = 4;
+                            }
+                        }
+
+
+                    }
+                    else
+                    {
+                        p = startingPos;
+                    }
+                }
+            }
         }
 
     }
