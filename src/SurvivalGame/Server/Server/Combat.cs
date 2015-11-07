@@ -60,14 +60,7 @@ namespace Mentula.Server
             Random r = new Random();
             if (defender.Health > 0)
             {
-                while (true)
-                {
-                    if (defender.Health > 0)
-                    {
                         defender.Health = Math.Max(defender.Health - attacker.Stats.Strength, 0);
-                        break;
-                    }
-                }
             }
             else
             {
