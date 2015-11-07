@@ -1,4 +1,5 @@
-﻿using Mentula.Utilities;
+﻿using Mentula.Content;
+using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Mentula.Server
         {
             if (Index < Players.Length)
             {
-                Players[Index] = new KeyValuePair<long, Creature>(id, new Creature(name, new Vector2(), new IntVector2()));
+                Players[Index] = new KeyValuePair<long, Creature>(id, Creature.CreatePlayer(name));
 
                 Map.Generate(Players[Index].Value.ChunkPos);
                 Index++;

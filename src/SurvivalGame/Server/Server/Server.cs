@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
+using Mentula.Content;
 using Mentula.Engine;
 using Mentula.Engine.Core;
 using Mentula.Server.GUI;

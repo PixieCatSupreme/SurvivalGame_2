@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Mentula.Utilities;
 using Microsoft.Xna.Framework;
-using Resc = Mentula.Utilities.Resources.Res;
+using Mentula.Utilities.Resources;
 
-namespace Mentula.Utilities
+namespace Mentula.Content
 {
     public class Actor
     {
@@ -38,27 +38,27 @@ namespace Mentula.Utilities
 
         public void FormatPos()
         {
-            while (Pos.X < 0 | Pos.Y < 0 | Pos.X > Resc.ChunkSize | Pos.Y > Resc.ChunkSize)
+            while (Pos.X < 0 | Pos.Y < 0 | Pos.X > Res.ChunkSize | Pos.Y > Res.ChunkSize)
             {
                 if (Pos.X < 0)
                 {
-                    Pos.X += Resc.ChunkSize;
+                    Pos.X += Res.ChunkSize;
                     ChunkPos.X--;
                 }
-                else if (Pos.X > Resc.ChunkSize)
+                else if (Pos.X > Res.ChunkSize)
                 {
-                    Pos.X -= Resc.ChunkSize;
+                    Pos.X -= Res.ChunkSize;
                     ChunkPos.X++;
                 }
 
                 if (Pos.Y < 0)
                 {
-                    Pos.Y += Resc.ChunkSize;
+                    Pos.Y += Res.ChunkSize;
                     ChunkPos.Y--;
                 }
-                else if (Pos.Y > Resc.ChunkSize)
+                else if (Pos.Y > Res.ChunkSize)
                 {
-                    Pos.Y -= Resc.ChunkSize;
+                    Pos.Y -= Res.ChunkSize;
                     ChunkPos.Y++;
                 }
             }
@@ -66,13 +66,13 @@ namespace Mentula.Utilities
 
         public static Vector2 FormatPos(Vector2 tilePos)
         {
-            while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)
+            while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Res.ChunkSize | tilePos.Y > Res.ChunkSize)
             {
-                if (tilePos.X < 0) tilePos.X += Resc.ChunkSize;
-                else if (tilePos.X > Resc.ChunkSize) tilePos.X -= Resc.ChunkSize;
+                if (tilePos.X < 0) tilePos.X += Res.ChunkSize;
+                else if (tilePos.X > Res.ChunkSize) tilePos.X -= Res.ChunkSize;
 
-                if (tilePos.Y < 0) tilePos.Y += Resc.ChunkSize;
-                else if (tilePos.Y > Resc.ChunkSize) tilePos.Y -= Resc.ChunkSize;
+                if (tilePos.Y < 0) tilePos.Y += Res.ChunkSize;
+                else if (tilePos.Y > Res.ChunkSize) tilePos.Y -= Res.ChunkSize;
             }
 
             return tilePos;

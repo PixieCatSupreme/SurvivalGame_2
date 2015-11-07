@@ -7,6 +7,7 @@ using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using Mentula.Content;
 
 namespace Mentula.Server
 {
@@ -90,7 +91,7 @@ namespace Mentula.Server
 
                 if (canplace)
                 {
-                    n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
+                    //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
                     n[i].Rotation = (float)(r.NextDouble() * Math.PI * 2);
                     i++;
                 }

@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
+using Mentula.Content;
 using Mentula.Utilities;
 using Mentula.Utilities.Net;
 using Microsoft.Xna.Framework;
@@ -32,7 +33,7 @@ namespace Mentula.Server
             fixed (IntVector2* cP = &value.ChunkPos) msg.Write(cP);
             fixed (Vector2* tP = &value.Pos) msg.Write(tP);
             msg.WriteHalfPrecision(value.Rotation);
-            msg.WriteHalfPrecision(value.GetHealth());
+            msg.WriteHalfPrecision(value.Health);
             msg.Write(value.Name);
             msg.Write(value.TextureId);
         }
@@ -66,7 +67,7 @@ namespace Mentula.Server
                     fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
                     fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
                     msg.WriteHalfPrecision(cur.Value.Rotation);
-                    msg.WriteHalfPrecision(cur.Value.GetHealth());
+                    msg.WriteHalfPrecision(cur.Value.Health);
                     msg.Write(cur.Value.Name);
                     msg.Write(9997);
                 }

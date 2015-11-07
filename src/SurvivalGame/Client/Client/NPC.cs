@@ -1,4 +1,5 @@
-﻿using Mentula.Utilities;
+﻿using Mentula.Content;
+using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Mentula.Client

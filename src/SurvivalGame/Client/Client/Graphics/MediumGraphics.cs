@@ -125,18 +125,6 @@ namespace Mentula.Client
                 }
             }
 
-            for (int i = 0; i < game.chunks.Length; i++)
-            {
-                Chunk chunk = game.chunks[i];
-
-                for (int j = 0; j < chunk.Destrucables.Length; j++)
-                {
-                    Vector2 pos = destrBuffer[destrIndex++];
-                    Texture2D t = textures[chunk.Destrucables[j].Tex];
-                    DrawBatch(t, pos, ROT * Res.DEG2RAD, t.Bounds.Width >> 1, t.Bounds.Height >> 1);
-                }
-            }
-
             for (int i = 0; i < game.npcs.Length; i++)
             {
                 Vector2 pos = actorBuffer[i];
@@ -148,6 +136,18 @@ namespace Mentula.Client
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
             DrawBatch(textures[9997], heroPos, Rot(heroR));
+
+            for (int i = 0; i < game.chunks.Length; i++)
+            {
+                Chunk chunk = game.chunks[i];
+
+                for (int j = 0; j < chunk.Destrucables.Length; j++)
+                {
+                    Vector2 pos = destrBuffer[destrIndex++];
+                    Texture2D t = textures[chunk.Destrucables[j].Tex];
+                    DrawBatch(t, pos, ROT * Res.DEG2RAD, t.Bounds.Width >> 1, t.Bounds.Height >> 1);
+                }
+            }
 
             MouseState mState = Mouse.GetState();
             float adder = 8 * SCALE;
