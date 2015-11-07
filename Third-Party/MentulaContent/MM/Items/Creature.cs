@@ -31,13 +31,13 @@ namespace Mentula.Content
             IsAlive = true;
         }
 
-        internal Creature(string n, Stats s, int h, Vector2 pos, IntVector2 chunkpos)
+        internal Creature(string n, Stats s, int mh, int h, Vector2 pos, IntVector2 chunkpos)
             : base(pos, chunkpos)
         {
             Name = n;
             Stats = s;
             Health = h;
-            MaxHealth = h;
+            MaxHealth = mh;
             IsAlive = true;
         }
 

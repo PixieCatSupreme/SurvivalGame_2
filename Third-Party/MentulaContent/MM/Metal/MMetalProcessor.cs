@@ -14,12 +14,12 @@ namespace Mentula.Content.MM
 
             for (int i = 0; i < result.Length; i++)
             {
-                Container curr = input.Container.Childs[i];
+                Container cur = input.Container.Childs[i];
                 Manifest mani = new Manifest();
                 string rawValue = "";
 
                 const string ID = "Id";
-                if (curr.TryGetValue(ID, out rawValue))
+                if (cur.TryGetValue(ID, out rawValue))
                 {
                     int raw = 0;
 
@@ -29,11 +29,11 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(ID);
 
                 const string NAME = "Name";
-                if (curr.TryGetValue(NAME, out rawValue)) mani.Name = rawValue;
+                if (cur.TryGetValue(NAME, out rawValue)) mani.Name = rawValue;
                 else throw new ParameterNullException(NAME);
 
                 const string UTS = "UTS";
-                if (curr.TryGetValue(UTS, out rawValue))
+                if (cur.TryGetValue(UTS, out rawValue))
                 {
                     float raw = 0;
 
@@ -43,7 +43,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(NAME);
 
                 const string TSAY = "TSAY";
-                if (curr.TryGetValue(TSAY, out rawValue))
+                if (cur.TryGetValue(TSAY, out rawValue))
                 {
                     float raw = 0;
 
@@ -53,7 +53,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(TSAY);
 
                 const string DENS = "Density";
-                if (curr.TryGetValue(DENS, out rawValue))
+                if (cur.TryGetValue(DENS, out rawValue))
                 {
                     float raw = 0;
 
@@ -63,7 +63,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(DENS);
 
                 const string MELT = "MeltingPoint";
-                if (curr.TryGetValue(MELT, out rawValue))
+                if (cur.TryGetValue(MELT, out rawValue))
                 {
                     float raw = 0;
 
@@ -73,7 +73,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(MELT);
 
                 const string VAP = "VaporizationPoint";
-                if (curr.TryGetValue(VAP, out rawValue))
+                if (cur.TryGetValue(VAP, out rawValue))
                 {
                     float raw = 0;
 
@@ -83,7 +83,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(VAP);
 
                 const string ION = "IonizationPoint";
-                if (curr.TryGetValue(ION, out rawValue))
+                if (cur.TryGetValue(ION, out rawValue))
                 {
                     float raw = 0;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Mentula.Utilities;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System;
 using System.Globalization;
@@ -28,6 +29,20 @@ namespace Mentula.Content
             int length = cr.ReadInt32();
             byte[] enc = cr.ReadBytes(length);
             return Encoding.UTF8.GetString(enc);
+        }
+
+        public static void WriteIntVector2(this ContentWriter cw, IntVector2 value)
+        {
+            cw.Write(value.X);
+            cw.Write(value.Y);
+        }
+
+        public static IntVector2 ReadIntVector2(this ContentReader cr)
+        {
+            IntVector2 result;
+            result.X = cr.ReadInt32();
+            result.Y = cr.ReadInt32();
+            return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

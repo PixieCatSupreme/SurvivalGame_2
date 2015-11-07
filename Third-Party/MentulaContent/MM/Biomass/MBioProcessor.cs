@@ -14,12 +14,12 @@ namespace Mentula.Content.MM
 
             for (int i = 0; i < result.Length; i++)
             {
-                Container curr = input.Container.Childs[i];
+                Container cur = input.Container.Childs[i];
                 Manifest mani = new Manifest();
                 string rawValue = "";
 
                 const string ID = "Id";
-                if (curr.TryGetValue(ID, out rawValue))
+                if (cur.TryGetValue(ID, out rawValue))
                 {
                     int raw = 0;
 
@@ -29,11 +29,11 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(ID);
 
                 const string NAME = "Name";
-                if (curr.TryGetValue(NAME, out rawValue)) mani.Name = rawValue;
+                if (cur.TryGetValue(NAME, out rawValue)) mani.Name = rawValue;
                 else throw new ParameterNullException(NAME);
 
                 const string UTS = "UTS";
-                if (curr.TryGetValue(UTS, out rawValue))
+                if (cur.TryGetValue(UTS, out rawValue))
                 {
                     float raw = 0;
 
@@ -43,7 +43,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(NAME);
 
                 const string TSAY = "TSAY";
-                if (curr.TryGetValue(TSAY, out rawValue))
+                if (cur.TryGetValue(TSAY, out rawValue))
                 {
                     float raw = 0;
 
@@ -53,7 +53,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(TSAY);
 
                 const string DENS = "Density";
-                if (curr.TryGetValue(DENS, out rawValue))
+                if (cur.TryGetValue(DENS, out rawValue))
                 {
                     float raw = 0;
 
@@ -63,7 +63,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(DENS);
 
                 const string BURN = "BurnTemperature";
-                if (curr.TryGetValue(BURN, out rawValue))
+                if (cur.TryGetValue(BURN, out rawValue))
                 {
                     float raw = 0;
 
@@ -73,7 +73,7 @@ namespace Mentula.Content.MM
                 else throw new ParameterNullException(BURN);
 
                 const string NUTR = "NutritiousValue";
-                if (curr.TryGetValue(NUTR, out rawValue))
+                if (cur.TryGetValue(NUTR, out rawValue))
                 {
                     float raw = 0;
 
@@ -95,15 +95,6 @@ namespace Mentula.Content.MM
             public Vector3 Values;
             public float Burn;
             public float Nutr;
-
-            public Manifest(int id, string name)
-            {
-                Id = id;
-                Name = name;
-                Values = default(Vector3);
-                Burn = 0;
-                Nutr = 0;
-            }
         }
     }
 }
