@@ -99,14 +99,6 @@ namespace Mentula.Server
 
             Creature[] players = Players.Select(p => p.Value).ToArray();
 
-            for (int i = 0; i < Map.LoadedNPCs.Count; i++)
-            {
-                //server.WriteLine(0, "Start npc AI: {0}", i);
-                Map.LoadedNPCs[i].DoStuff(Map.LoadedChunks.ToArray(), delta, ref players, Index);
-
-                Map.LoadedNPCs[i].FormatPos();
-            }
-
             for (int i = 0; i < Index; i++)
             {
                 Players[i].Value.Health = players[i].Health;
