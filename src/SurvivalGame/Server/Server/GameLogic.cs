@@ -103,6 +103,7 @@ namespace Mentula.Server
             for (int i = 0; i < Index; i++)
             {
                 Players[i].Value.Health = players[i].Health;
+                if (players[i].Health <= 0) server.KickPlayer(Players[i].Key, "Cause ur shite!");
             }
         }
 

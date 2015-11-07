@@ -15,9 +15,9 @@ namespace Mentula.Content
         internal Creature()
         {
             Name = "The Unnameable";
-            Stats = new Stats();
-            Health = 100;
-            MaxHealth = 100;
+            Stats = new Stats(short.MaxValue);
+            Health = int.MaxValue;
+            MaxHealth = int.MaxValue;
             IsAlive = true;
         }
 
@@ -25,7 +25,7 @@ namespace Mentula.Content
             : base(pos, chunkpos)
         {
             Name = n;
-            Stats = new Stats();
+            Stats = new Stats(10);
             Health = 100;
             MaxHealth = 100;
             IsAlive = true;

@@ -48,6 +48,15 @@ namespace Mentula.Server
             Draw += Server_Draw;
         }
 
+        public void KickPlayer(long id, string reason)
+        {
+            NetConnection player = server.Connections.FirstOrDefault(n => n.RemoteUniqueIdentifier == id);
+            player.Disconnect(string.IsNullOrWhiteSpace(reason) ? "You have been kicked!" : reason);
+
+            string name = logic.GetPlayer(id).Name;
+            WriteLine(NIMT.StatusChanged, "{0}({1}) kicked!", NetUtility.ToHexString(id), name);
+        }
+
         private void Server_Load()
         {
             Window.AllowAltF4 = true;
