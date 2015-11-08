@@ -24,7 +24,7 @@ namespace Mentula.Client
         public MainGame()
         {
             Content.RootDirectory = "Content";
-
+            
             Components.Add(vGraphics = new MediumGraphics(this));
             Components.Add(mainMenu = new MainMenu(this));
             Components.Add(networking = new ClientNetworking(this));

@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="AStar.cs" />
     <Compile Include="Combat.cs" />
+    <Compile Include="Content\Resources_Actors.cs" />
+    <Compile Include="Content\Resources_Materials.cs" />
     <Compile Include="CPUUsage.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="NPC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Content\Resources.cs" />
     <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
