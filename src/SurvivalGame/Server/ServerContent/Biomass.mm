@@ -1,6 +1,6 @@
 [Container: "Biomass"]
 {
-	[Item: id=0, name="Bone"]
+	[Bone: 0]
 	{
 		[UTS: 130]
 		[TSAY: 130]
@@ -9,7 +9,7 @@
 		[NutritiousValue: 37]
 	}
 
-	[Item: id=1, name="Flesh"]
+	[Flesh: 1]
 	{
 		[UTS: 40]
 		[TSAY: 30]
@@ -18,7 +18,7 @@
 		[NutritiousValue: 4186]
 	}
 
-	[Item: id=2, name="Skin"]
+	[Skin: 2]
 	{
 		[UTS: 20]
 		[TSAY: 15]

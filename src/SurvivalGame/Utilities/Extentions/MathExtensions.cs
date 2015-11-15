@@ -4,6 +4,7 @@ using math = System.Math;
 using Mentula.Utilities;
 using Mentula.Engine.Core.ExtendedMath;
 using Resc = Mentula.Utilities.Resources.Res;
+using System.Collections.Generic;
 
 namespace Mentula.Utilities.MathExtensions
 {
@@ -106,6 +107,16 @@ namespace Mentula.Utilities.MathExtensions
             }
 
             return tilePos;
+        }
+
+        public static bool FirstIsTrue(this IEnumerable<Tag> source, short key, Func<short, bool> selector)
+        {
+            foreach (Tag cur in source)
+            {
+                if (cur.Key == key) return selector(cur.Value);
+            }
+
+            return false;
         }
     }
 }

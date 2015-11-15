@@ -1,6 +1,6 @@
 [Container: "Metals"]
 {
-	[Item: id=0, name="Iron"]
+	[Iron: 0]
 	{
 		[UTS: 350]
 		[TSAY: 80]
@@ -10,7 +10,7 @@
 		[IonizationPoint: 91290]
 	}
 
-	[Item: id=1, name="Tin"]
+	[Tin: 1]
 	{
 		[UTS: 15]
 		[TSAY: 9]
@@ -20,7 +20,7 @@
 		[IonizationPoint: 85225]
 	}
 
-	[Item: id=2, name="Copper"]
+	[Copper: 2]
 	{
 		[UTS: 210]
 		[TSAY: 117]
@@ -30,7 +30,7 @@
 		[IonizationPoint: 89663]
 	}
 
-	[Item: id=3, name="Gold"]
+	[Gold: 3]
 	{
 		[UTS: 100]
 		[TSAY: 100]
@@ -40,7 +40,7 @@
 		[IonizationPoint: 107055]
 	}
 
-	[Item: id=4, name="Osmium"]
+	[Osmium: 4]
 	{
 		[UTS: 1000]
 		[TSAY: 1000]

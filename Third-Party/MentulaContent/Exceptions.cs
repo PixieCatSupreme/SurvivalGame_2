@@ -6,6 +6,7 @@ namespace Mentula.Content
     public class ParameterNullException : Exception
     {
         public string Parameter;
+        public override string StackTrace { get { return null; } }
 
         public ParameterNullException()
         {
@@ -35,6 +36,7 @@ namespace Mentula.Content
         public Type Type;
         public string Parameter;
         public string Value;
+        public override string StackTrace { get { return null; } }
 
         public ParameterException()
         {
@@ -61,6 +63,29 @@ namespace Mentula.Content
         private static string SetMessage(string parameter, string value, Type type)
         {
             return string.Format("Could not process parameter '{0}' to {1}. Value='{2}'", parameter, type, value);
+        }
+    }
+
+    public class ContainerException : Exception
+    {
+        public string Container;
+        public override string StackTrace { get { return null; } }
+
+        public ContainerException()
+        {
+            Container = "NULL";
+        }
+
+        public ContainerException(string container)
+            :base("An error occured while processing container: " + container)
+        {
+            Container = container;
+        }
+
+        public ContainerException(string container, Exception inner)
+            : base("An error occured while processing container: " + container, inner)
+        {
+            Container = container;
         }
     }
 }
