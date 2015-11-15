@@ -25,7 +25,7 @@ namespace Mentula.Content
             Stats = new Stats(10);
         }
 
-        internal Creature(string n, Stats s, int mh, int h, Vector2 pos, IntVector2 chunkpos)
+        internal Creature(string n, Stats s, Vector2 pos, IntVector2 chunkpos)
             : base(pos, chunkpos)
         {
             Name = n;

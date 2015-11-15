@@ -99,26 +99,10 @@ namespace Mentula.Server
             }
 
             Map.UnloadChunks(posses);
-
-            Creature[] players = Players.Select(p => p.Value).ToArray();
-
-            for (int i = 0; i < Index; i++)
-            {
-                Players[i].Value.Health = players[i].Health;
-                if (players[i].Health <= 0) server.KickPlayer(Players[i].Key, "Cause ur shite!");
-            }
         }
 
         public void PlayerAttack(long id)
         {
-            Creature[] players = Players.Select(p => p.Value).ToArray();
-            Creature attacker = GetPlayer(id);
-            Combat.OnAttackPlayer(ref players,ref Map.LoadedNPCs, ref attacker, 1, 1, Index);
-            for (int i = 0; i < Index; i++)
-            {
-                Players[i].Value.Health = players[i].Health;
-            }
         }
-
     }
 }

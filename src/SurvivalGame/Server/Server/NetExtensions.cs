@@ -33,7 +33,7 @@ namespace Mentula.Server
             fixed (IntVector2* cP = &value.creature.ChunkPos) msg.Write(cP);
             fixed (Vector2* tP = &value.creature.Pos) msg.Write(tP);
             msg.WriteHalfPrecision(value.creature.Rotation);
-            msg.WriteHalfPrecision(value.creature.Health);
+            msg.Write(value.creature.GetHealth());
             msg.Write(value.creature.Name);
             msg.Write(value.creature.TextureId);
         }
@@ -67,7 +67,7 @@ namespace Mentula.Server
                     fixed (IntVector2* cP = &cur.Value.ChunkPos) msg.Write(cP);
                     fixed (Vector2* cT = &cur.Value.Pos) msg.Write(cT);
                     msg.WriteHalfPrecision(cur.Value.Rotation);
-                    msg.WriteHalfPrecision(cur.Value.Health);
+                    msg.Write(cur.Value.GetHealth());
                     msg.Write(cur.Value.Name);
                     msg.Write(9997);
                 }

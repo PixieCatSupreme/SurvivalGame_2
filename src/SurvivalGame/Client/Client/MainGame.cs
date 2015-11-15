@@ -47,17 +47,18 @@ namespace Mentula.Client
                 if (gameState == GameState.Game)
                 {
                     float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    KeyboardState state = Keyboard.GetState();
+                    KeyboardState kState = Keyboard.GetState();
+                    MouseState mState = Mouse.GetState();
 
                     Vector2 inp = new Vector2();
-                    if (state.IsKeyDown(Keys.Escape)) Exit();
-                    if (state.IsKeyDown(Keys.OemMinus)) vGraphics.SCALE *= 1 - 2f * delta;
-                    if (state.IsKeyDown(Keys.OemPlus)) vGraphics.SCALE *= 1 + 2f * delta;
-                    if (state.IsKeyDown(Keys.W)) inp.Y -= 1;
-                    if (state.IsKeyDown(Keys.A)) inp.X -= 1;
-                    if (state.IsKeyDown(Keys.S)) inp.Y += 1;
-                    if (state.IsKeyDown(Keys.D)) inp.X += 1;
-                    if (state.IsKeyDown(Keys.E)) networking.Disconect();
+                    if (kState.IsKeyDown(Keys.Escape)) Exit();
+                    if (kState.IsKeyDown(Keys.OemMinus) || mState.ScrollWheelValue < 0) vGraphics.SCALE *= 1 - 2f * delta;
+                    if (kState.IsKeyDown(Keys.OemPlus) || mState.ScrollWheelValue > 0) vGraphics.SCALE *= 1 + 2f * delta;
+                    if (kState.IsKeyDown(Keys.W)) inp.Y -= 1;
+                    if (kState.IsKeyDown(Keys.A)) inp.X -= 1;
+                    if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
+                    if (kState.IsKeyDown(Keys.D)) inp.X += 1;
+                    if (kState.IsKeyDown(Keys.E)) networking.Disconect();
 
                     if (inp != Vector2.Zero)
                     {
@@ -184,7 +185,6 @@ namespace Mentula.Client
                         }
                     }
 
-                    MouseState mState = Mouse.GetState();
                     Vect2 mousePos = new Vect2(mState.X, mState.Y);
                     hero.Rotation = Vect2.Angle(vGraphics.Camera.Offset, mousePos);
                 }

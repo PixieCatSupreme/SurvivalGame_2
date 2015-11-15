@@ -236,7 +236,7 @@ namespace Mentula.Client
                 IntVector2 chunk = msg.ReadPoint();
                 Vector2 tile = msg.ReadVector2();
                 float rot = msg.ReadHalfPrecisionSingle();
-                float health = msg.ReadHalfPrecisionSingle();
+                byte health = msg.ReadByte();
                 string name = msg.ReadString();
                 int textId = msg.ReadInt32();
 
@@ -257,7 +257,7 @@ namespace Mentula.Client
                 IntVector2 chunkPos = msg.ReadPoint();
                 Vector2 tilePos = msg.ReadVector2();
                 float rot = msg.ReadHalfPrecisionSingle();
-                float healthPerc = msg.ReadHalfPrecisionSingle();
+                byte healthPerc = msg.ReadByte();
                 string name = msg.ReadString();
                 int textId = msg.ReadInt32();
 

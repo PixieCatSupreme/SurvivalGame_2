@@ -8,7 +8,7 @@ namespace Mentula.Client
     {
         public string Name;
         public int TextureId;
-        public float HealthPrec;
+        public byte HealthPrec;
 
         public NPC()
         {
@@ -17,7 +17,7 @@ namespace Mentula.Client
             HealthPrec = 100;
         }
 
-        public NPC(IntVector2 chunk, Vector2 tile, float rotation, float health, string name)
+        public NPC(IntVector2 chunk, Vector2 tile, float rotation, byte health, string name)
             :base(tile, chunk)
         {
             Rotation = rotation;
@@ -25,7 +25,7 @@ namespace Mentula.Client
             Name = name;
         }
 
-        public void Update(IntVector2 chunk, Vector2 tile, float rot, float health)
+        public void Update(IntVector2 chunk, Vector2 tile, float rot, byte health)
         {
             ChunkPos = chunk;
             Pos = tile;

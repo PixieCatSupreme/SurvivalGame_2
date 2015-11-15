@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="AStar.cs" />
     <Compile Include="Body.cs" />
-    <Compile Include="Combat.cs" />
     <Compile Include="Content\Resources_Actors.cs" />
     <Compile Include="Content\Resources_Materials.cs" />
     <Compile Include="CPUUsage.cs" />

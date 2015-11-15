@@ -42,7 +42,7 @@
 
         public override string ToString()
         {
-            return Key.ToString() + ": " + Value.ToString();
+            return Key + ": " + Value.ToString();
         }
     }
 }
