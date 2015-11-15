@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mentula.Content.MM.Items
+namespace Mentula.Content
 {
     public class Item
     {
