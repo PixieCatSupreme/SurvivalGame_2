@@ -14,5 +14,11 @@ namespace Mentula.Utilities.Net
             msg.Write(point->X);
             msg.Write(point->Y);
         }
+
+        public static void Write(this NetBuffer msg, IntVector2 point)
+        {
+            msg.Write(point.X);
+            msg.Write(point.Y);
+        }
     }
 }

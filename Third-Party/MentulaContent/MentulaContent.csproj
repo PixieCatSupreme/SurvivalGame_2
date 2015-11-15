@@ -61,7 +61,6 @@
     <Compile Include="MM\Biomass\MBioReader.cs" />
     <Compile Include="MM\Biomass\MBioWriter.cs" />
     <Compile Include="MM\Container.cs" />
-    <Compile Include="MM\Items\Actor.cs" />
     <Compile Include="MM\Items\Biomass.cs" />
     <Compile Include="MM\Items\Creature.cs" />
     <Compile Include="MM\Items\Item.cs" />

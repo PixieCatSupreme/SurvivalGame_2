@@ -7,6 +7,7 @@ using System.Net;
 using Vect2 = Mentula.Engine.Core.Vect2;
 using MEx = Mentula.Utilities.MathExtensions.MathEX;
 using Mentula.Content;
+using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Client
 {
@@ -62,30 +63,28 @@ namespace Mentula.Client
 
                     if (inp != Vector2.Zero)
                     {
-                        inp = Vector2.Normalize(inp) * Actor.MOVE_SPEED * delta;
+                        inp = Vector2.Normalize(inp) * Res.MOVE_SPEED * delta;
                         Vector2 outp = new Vector2();
                         hero.Pos -= inp;
 
-                        fixed (IntVector2* cP = &hero.ChunkPos)
-                        {
-                            fixed (Vector2* tP = &hero.Pos)
-                            {
-                                Chunk.FormatPos(cP, tP);
-                            }
-                        }
+                        IntVector2 ct = hero.ChunkPos;
+                        Vector2 tt = hero.Pos;
+                        Chunk.FormatPos(ref ct, ref tt);
+                        hero.ChunkPos = ct;
+                        hero.Pos = tt;
 
                         IntVector2 chunkPos = -hero.ChunkPos;
                         Vector2 tilePos = -hero.Pos;
 
                         IntVector2 NW_CPos = chunkPos;
-                        IntVector2 NE_CPos = tilePos.X + Actor.DIFF >= Res.ChunkSize ? chunkPos + IntVector2.UnitX : chunkPos;
-                        IntVector2 SW_CPos = tilePos.Y + Actor.DIFF >= Res.ChunkSize ? chunkPos + IntVector2.UnitY : chunkPos;
+                        IntVector2 NE_CPos = tilePos.X + Res.DIFF >= Res.ChunkSize ? chunkPos + IntVector2.UnitX : chunkPos;
+                        IntVector2 SW_CPos = tilePos.Y + Res.DIFF >= Res.ChunkSize ? chunkPos + IntVector2.UnitY : chunkPos;
                         IntVector2 SE_CPos = new IntVector2(NE_CPos.X, SW_CPos.Y);
 
                         IntVector2 NW_TPos = new IntVector2(tilePos);
-                        IntVector2 NE_TPos = new IntVector2(Actor.FormatPos(tilePos + new Vector2(Actor.DIFF, 0)));
-                        IntVector2 SW_TPos = new IntVector2(Actor.FormatPos(tilePos + new Vector2(0, Actor.DIFF)));
-                        IntVector2 SE_TPos = new IntVector2(Actor.FormatPos(tilePos + new Vector2(Actor.DIFF)));
+                        IntVector2 NE_TPos = new IntVector2(MathEX.FormatPos(tilePos + new Vector2(Res.DIFF, 0)));
+                        IntVector2 SW_TPos = new IntVector2(MathEX.FormatPos(tilePos + new Vector2(0, Res.DIFF)));
+                        IntVector2 SE_TPos = new IntVector2(MathEX.FormatPos(tilePos + new Vector2(Res.DIFF)));
 
                         bool? NW_T = null;
                         bool? NE_T = null;
@@ -175,13 +174,11 @@ namespace Mentula.Client
                         {
                             hero.Pos -= outp;
 
-                            fixed (IntVector2* cP = &hero.ChunkPos)
-                            {
-                                fixed (Vector2* tP = &hero.Pos)
-                                {
-                                    Chunk.FormatPos(cP, tP);
-                                }
-                            }
+                            ct = hero.ChunkPos;
+                            tt = hero.Pos;
+                            Chunk.FormatPos(ref ct, ref tt);
+                            hero.ChunkPos = ct;
+                            hero.Pos = tt;
                         }
                     }
 

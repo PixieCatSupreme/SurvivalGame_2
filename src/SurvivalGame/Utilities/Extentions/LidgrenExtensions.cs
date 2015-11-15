@@ -37,6 +37,15 @@ namespace Lidgren.Network.Xna
 			message.Write(vector->Y);
 		}
 
+        /// <summary>
+        /// Writes a Vector2
+        /// </summary>
+        public static unsafe void Write(this NetBuffer message, Vector2 vector)
+        {
+            message.Write(vector.X);
+            message.Write(vector.Y);
+        }
+
 		/// <summary>
 		/// Reads a Vector2
 		/// </summary>

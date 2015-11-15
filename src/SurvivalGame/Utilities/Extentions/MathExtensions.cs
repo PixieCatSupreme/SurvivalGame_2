@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using math = System.Math;
 using Mentula.Utilities;
 using Mentula.Engine.Core.ExtendedMath;
+using Resc = Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Utilities.MathExtensions
 {
@@ -91,6 +92,20 @@ namespace Mentula.Utilities.MathExtensions
         public static int CeilAtBi(int N, int Base)
         {
             return (int)(math.Ceiling((float)N / Base) * Base);
+        }
+
+        public static Vector2 FormatPos(this Vector2 tilePos)
+        {
+            while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)
+            {
+                if (tilePos.X < 0) tilePos.X += Resc.ChunkSize;
+                else if (tilePos.X > Resc.ChunkSize) tilePos.X -= Resc.ChunkSize;
+
+                if (tilePos.Y < 0) tilePos.Y += Resc.ChunkSize;
+                else if (tilePos.Y > Resc.ChunkSize) tilePos.Y -= Resc.ChunkSize;
+            }
+
+            return tilePos;
         }
     }
 }

@@ -9,6 +9,8 @@
         public const float DEG2RAD = 0.017453f;
         public const float FPS30 = 0.033333f;
         public const float FPS60 = 0.016666f;
+        public const float MOVE_SPEED = 10;
+        public const float DIFF = 0.8f;
 
         public static readonly string AppName;
         public static readonly int ChunkSize;

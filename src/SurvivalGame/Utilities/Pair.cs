@@ -25,16 +25,16 @@
 
     public struct Tag
     {
-        public string Key;
+        public short Key;
         public short Value;
 
-        public Tag(string key)
+        public Tag(short key)
         {
             Key = key;
             Value = 100;
         }
 
-        public Tag(string key, short value)
+        public Tag(short key, short value)
         {
             Key = key;
             Value = value;
@@ -43,6 +43,11 @@
         public override string ToString()
         {
             return Key + ": " + Value.ToString();
+        }
+
+        public static Tag operator +(Tag l, Tag r)
+        {
+            return new Tag(l.Key, (short)(l.Value + r.Value));
         }
     }
 }

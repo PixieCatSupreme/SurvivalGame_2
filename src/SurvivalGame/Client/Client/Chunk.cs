@@ -29,30 +29,30 @@ namespace Mentula.Client
             return new Vector2(tile.X + chunk.X * Res.ChunkSize, tile.Y + chunk.Y * Res.ChunkSize);
         }
 
-        public static unsafe void FormatPos(IntVector2* chunk, Vector2* tile)
+        public static unsafe void FormatPos(ref IntVector2 chunk, ref Vector2 tile)
         {
-            while (-tile->X < 0 || -tile->Y < 0 || -tile->X > Res.ChunkSize || -tile->Y > Res.ChunkSize)
+            while (-tile.X < 0 || -tile.Y < 0 || -tile.X > Res.ChunkSize || -tile.Y > Res.ChunkSize)
             {
-                if (-tile->X < 0)
+                if (-tile.X < 0)
                 {
-                    tile->X -= Res.ChunkSize;
-                    chunk->X++;
+                    tile.X -= Res.ChunkSize;
+                    chunk.X++;
                 }
-                else if (-tile->X > Res.ChunkSize)
+                else if (-tile.X > Res.ChunkSize)
                 {
-                    tile->X += Res.ChunkSize;
-                    chunk->X--;
+                    tile.X += Res.ChunkSize;
+                    chunk.X--;
                 }
 
-                if (-tile->Y < 0)
+                if (-tile.Y < 0)
                 {
-                    tile->Y -= Res.ChunkSize;
-                    chunk->Y++;
+                    tile.Y -= Res.ChunkSize;
+                    chunk.Y++;
                 }
-                else if (-tile->Y > Res.ChunkSize)
+                else if (-tile.Y > Res.ChunkSize)
                 {
-                    tile->Y += Res.ChunkSize;
-                    chunk->Y--;
+                    tile.Y += Res.ChunkSize;
+                    chunk.Y--;
                 }
             }
         }

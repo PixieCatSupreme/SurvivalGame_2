@@ -36,5 +36,35 @@ namespace Mentula.Content
             Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
         }
+
+        public Tag[] GetAllTags()
+        {
+            List<Tag> result = new List<Tag>();
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                Tag[] childTags = Parts[i].GetAllTags();
+
+                for (int j = 0; j < childTags.Length; j++)
+                {
+                    Tag current = childTags[j];
+                    bool found = false;
+
+                    for (int k = 0; k < result.Count; k++)
+                    {
+                        if (result[k].Key == current.Key)
+                        {
+                            result[k] += current;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) result.Add(current);
+                }
+            }
+
+            return result.ToArray();
+        }
     }
 }
