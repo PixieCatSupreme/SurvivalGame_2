@@ -1,10 +1,11 @@
 ﻿using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace Mentula.Content
 {
-    public class Creature : IEntity
+    public class Creature : Item, IEntity
     {
         public Vector2 Pos { get; set; }
         public IntVector2 ChunkPos { get; set; }
@@ -13,8 +14,8 @@ namespace Mentula.Content
         public readonly string Name;
         public readonly Stats Stats;
         public readonly int TextureId;
-        public Item[] Parts;
-        public bool isbio;
+        public bool IsBio;
+        public Tag[] Systems { private set; get; }
         public bool IsAlive { private set; get; }
 
         internal Creature()
@@ -44,14 +45,25 @@ namespace Mentula.Content
             return new Creature(name, Vector2.Zero, IntVector2.Zero);
         }
 
-        public void CalcIsAlive()
+        public Tag[] CalcSystems()
         {
-            IsAlive= true;
+            Systems = GetAllTags();
+            return Systems;
+        }
+
+        public bool CalcIsAlive()
+        {
+            bool alive=true;
+            if (IsBio)
+            {
+                
+            }
+         return alive;
         }
 
         public byte GetHealth()
         {
-            return 0;
+            return Durability;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)
