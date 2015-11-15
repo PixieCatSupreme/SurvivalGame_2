@@ -8,8 +8,9 @@ namespace Mentula.Content
         public readonly string Name;
         public readonly Stats Stats;
         public readonly int TextureId;
+        public Item[] Parts;
         public bool isbio;
-        public bool IsAlive{private set;}
+        public bool IsAlive { private set; get; }
 
         internal Creature()
         {
