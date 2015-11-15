@@ -2,6 +2,7 @@
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Content
 {
@@ -53,12 +54,13 @@ namespace Mentula.Content
 
         public bool CalcIsAlive()
         {
-            bool alive=true;
-            if (IsBio)
+            bool alive = Systems.FirstIsTrue(0, v => v > 0);
+
+            if (IsBio && alive)
             {
-                
+
             }
-         return alive;
+            return alive;
         }
 
         public byte GetHealth()
