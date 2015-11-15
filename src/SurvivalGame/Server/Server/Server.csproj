@@ -83,14 +83,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AStar.cs" />
-    <Compile Include="CreatureBody\BodyPart.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="Content\Resources_Actors.cs" />
     <Compile Include="Content\Resources_Materials.cs" />
     <Compile Include="CPUUsage.cs" />
     <Compile Include="GameLogic.cs" />
-    <Compile Include="CreatureBody\Body.cs" />
-    <Compile Include="CreatureBody\HealthSystems.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\Chunk.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
