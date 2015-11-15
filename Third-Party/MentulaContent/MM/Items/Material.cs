@@ -4,7 +4,7 @@ using System.Linq;
 namespace Mentula.Content
 {
     [DebuggerDisplay("Id={Id}, Name={Name}")]
-    public abstract class Material
+    public abstract class Material : IMaterial
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
@@ -56,5 +56,15 @@ namespace Mentula.Content
         {
             return "Id=" + Id.ToString() + " Name=" + Name + " UTS=" + Ultimate_Tensile_Strength.ToString() + " TSAY=" + Tensile_Strain_At_Yield.ToString() + " Dens=" + Density.ToString();
         }
+    }
+
+    public interface IMaterial
+    {
+        int Id { get; }
+        string Name { get; }
+
+        float Ultimate_Tensile_Strength { get; }
+        float Tensile_Strain_At_Yield { get; }
+        float Density { get; }
     }
 }
