@@ -61,6 +61,7 @@ namespace Mentula.Content
 
         public byte GetHealth()
         {
+            DefaultSystemsVal = GetAllTagsWithDurability();
             byte health = byte.MaxValue;
             for (int i = 0; i < Systems.Length; i++)
             {
