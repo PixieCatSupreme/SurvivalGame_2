@@ -66,5 +66,36 @@ namespace Mentula.Content
 
             return result.ToArray();
         }
+
+        public Tag[] GetAllTagsWithDurability()
+        {
+            List<Tag> result = new List<Tag>();
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                Tag[] childTags = Parts[i].GetAllTagsWithDurability();
+
+                for (int j = 0; j < childTags.Length; j++)
+                {
+                    Tag current = childTags[j];
+                    current.Value *= Durability;
+                    bool found = false;
+
+                    for (int k = 0; k < result.Count; k++)
+                    {
+                        if (result[k].Key == current.Key)
+                        {
+                            result[k] += current;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) result.Add(current);
+                }
+            }
+
+            return result.ToArray();
+        }
     }
 }
