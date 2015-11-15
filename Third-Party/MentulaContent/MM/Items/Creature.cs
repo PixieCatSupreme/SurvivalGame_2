@@ -18,6 +18,7 @@ namespace Mentula.Content
         public bool IsBio;
         public Tag[] Systems { private set; get; }
         public bool IsAlive { private set; get; }
+        private Tag[] DefaultSystemsVal;
 
         internal Creature()
         {
@@ -54,18 +55,22 @@ namespace Mentula.Content
 
         public bool CalcIsAlive()
         {
-            bool alive = Systems.FirstIsTrue(0, v => v > 0);
-
-            if (IsBio && alive)
-            {
-
-            }
-            return alive;
+            IsAlive = IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
+            return IsAlive;
         }
 
         public byte GetHealth()
         {
-            return Durability;
+            byte health = byte.MaxValue;
+            for (int i = 0; i < Systems.Length; i++)
+            {
+                byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
+                if (h < health)
+                {
+                    health = h;
+                }
+            }
+            return health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)
