@@ -396,7 +396,7 @@ namespace Mentula.Server
                 {
                     KeyValuePair<IntVector2, Node> cur = _Nodes[i];
                     IntVector2 manhDist = IntVector2.Abs((inverted ? Start : End) - cur.Key);
-                    cur.Value.Heuristic = manhDist.X + manhDist.Y;
+                    cur.Value.Heuristic = (manhDist.X + manhDist.Y) * 3;
                 }
             }
 
