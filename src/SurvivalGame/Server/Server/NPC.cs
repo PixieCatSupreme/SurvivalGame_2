@@ -77,6 +77,7 @@ namespace Mentula.Server
             int xmax = Math.Max(target.ChunkPos.X, creature.ChunkPos.X) + cRange;
             int ymin = Math.Min(target.ChunkPos.Y, creature.ChunkPos.Y) - cRange;
             int ymax = Math.Max(target.ChunkPos.Y, creature.ChunkPos.Y) + cRange;
+
             for (int i = 0; i < chunks.Count; i++)
             {
                 if (chunks[i].ChunkPos.X <= xmax && chunks[i].ChunkPos.X >= xmin && chunks[i].ChunkPos.Y <= ymax && chunks[i].ChunkPos.Y >= ymin)
@@ -93,6 +94,7 @@ namespace Mentula.Server
             xmax = xmax * csize + tRange;
             ymin = ymin * csize - tRange;
             ymax = ymax * csize + tRange;
+
             for (int i = 0; i < c.Count; i++)
             {
                 for (int j = 0; j < c[i].Tiles.Length; j++)
