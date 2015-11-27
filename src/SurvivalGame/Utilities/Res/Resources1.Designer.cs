@@ -70,7 +70,7 @@ namespace Mentula.Utilities.Res {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 32.
+        ///   Looks up a localized string similar to 16.
         /// </summary>
         public static string ChunkSize {
             get {

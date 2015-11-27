@@ -8,12 +8,12 @@ using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Mentula.Content;
+using static Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
 {
     public static class ChunkGenerator
     {
-        private static int cSize = Res.ChunkSize;
         private static float[] rainArray;
 
 
@@ -29,17 +29,17 @@ namespace Mentula.Server
 
         private static void GenerateTerrain(ref Chunk chunk)
         {
-            chunk.Tiles = new Tile[cSize * cSize];
-            rainArray = new float[cSize * cSize];
-            for (int i = 0; i < cSize * cSize; i++)
+            chunk.Tiles = new Tile[ChunkSize * ChunkSize];
+            rainArray = new float[ChunkSize * ChunkSize];
+            for (int i = 0; i < ChunkSize * ChunkSize; i++)
             {
-                int x = i % cSize + chunk.ChunkPos.X * cSize;
-                int y = i / cSize + chunk.ChunkPos.Y * cSize;
+                int x = i % ChunkSize + chunk.ChunkPos.X * ChunkSize;
+                int y = i / ChunkSize + chunk.ChunkPos.Y * ChunkSize;
                 rainArray[i] =
-                PerlinNoise.Generate(10, cSize / 4, x, y) +
-                PerlinNoise.Generate(30, cSize * 2, x, y) +
-                PerlinNoise.Generate(60, cSize * 16, x, y);
-                chunk.Tiles[i] = new Tile(ChT(rainArray[i]), new IntVector2(i % cSize, i / cSize));
+                PerlinNoise.Generate(10, ChunkSize / 4, x, y) +
+                PerlinNoise.Generate(30, ChunkSize * 2, x, y) +
+                PerlinNoise.Generate(60, ChunkSize * 16, x, y);
+                chunk.Tiles[i] = new Tile(ChT(rainArray[i]), new IntVector2(i % ChunkSize, i / ChunkSize));
             }
         }
 
@@ -67,11 +67,11 @@ namespace Mentula.Server
 
         private static void GenerateWildlife(ref List<NPC> n, ref Chunk c)
         {
-            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Res.Seed + c.ChunkPos.Y));
-            for (int i = 0; i < r.NextDouble() * 10; )
+            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Seed + c.ChunkPos.Y));
+            for (int i = 0; i < r.NextDouble() * 10;)
             {
                 bool canplace = true;
-                Vector2 p = new Vector2((int)(r.NextDouble() * Res.ChunkSize), (int)(r.NextDouble() * Res.ChunkSize));
+                Vector2 p = new Vector2((int)(r.NextDouble() * ChunkSize), (int)(r.NextDouble() * ChunkSize));
                 for (int j = 0; j < n.Count; j++)
                 {
                     if (p == n[j].creature.Pos)
@@ -90,7 +90,7 @@ namespace Mentula.Server
 
                 if (canplace)
                 {
-                    if (c.Tiles[(int)p.X + (int)p.Y * cSize].Tex != 4)
+                    if (c.Tiles[(int)p.X + (int)p.Y * ChunkSize].Tex != 4)
                     {
                         //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
                         //n[i].creature.Rotation = (float)(r.NextDouble() * Math.PI * 2);
@@ -106,12 +106,12 @@ namespace Mentula.Server
         private static void GenerateTrees(ref Chunk c)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
-            for (int i = 0; i < Res.ChunkSize * Res.ChunkSize; i++)
+            for (int i = 0; i < ChunkSize * ChunkSize; i++)
             {
                 float chance = rainArray[i] / 1000;
                 if (r.NextDouble() < chance)
                 {
-                    Vector2 pos = new Vector2(i % Res.ChunkSize, i / Res.ChunkSize);
+                    Vector2 pos = new Vector2(i % ChunkSize, i / ChunkSize);
                     bool canplace = true;
                     for (int j = 0; j < c.Destructibles.Count; j++)
                     {
@@ -123,7 +123,7 @@ namespace Mentula.Server
 
                     if (canplace)
                     {
-                        if (c.Tiles[(int)pos.X + (int)pos.Y * cSize].Tex != 4)
+                        if (c.Tiles[(int)pos.X + (int)pos.Y * ChunkSize].Tex != 4)
                         {
                             c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
                         }
@@ -138,22 +138,23 @@ namespace Mentula.Server
 
             if (r.NextDouble() < 0.1)
             {
-                IntVector2 startingPos=new IntVector2(cSize/2-1);
+                IntVector2 startingPos = new IntVector2(ChunkSize / 2 - 1);
                 c.Tiles[startingPos.X + startingPos.Y * 32].Tex = 4;
                 Vector2 p = startingPos;
-                for (int i = 0; i < 512; i++)
+                for (int i = 0; i < ChunkSize * ChunkSize >> 1; i++)
                 {
 
                     Vector2 a = new Vector2((float)r.NextDouble() - 0.5f, (float)r.NextDouble() - 0.5f);
                     a.Normalize();
-                    if (Vector2.Distance(p, startingPos) < 15)
+                    if (Vector2.Distance(p, startingPos) < ChunkSize /2 - 1)
                     {
                         p += a;
                         for (int x = 0; x <= 1; x++)
                         {
                             for (int y = 0; y <= 1; y++)
                             {
-                                c.Tiles[(int)p.X + x + (int)(p.Y+y) * 32].Tex = 4;
+                                int n = (int)p.X + x + (int)(p.Y + y) * ChunkSize;
+                                c.Tiles[n].Tex = 4;
                             }
                         }
 

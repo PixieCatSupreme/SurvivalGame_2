@@ -121,7 +121,7 @@
     <value>SurvivalGame</value>
   </data>
   <data name="ChunkSize" xml:space="preserve">
-    <value>32</value>
+    <value>16</value>
   </data>
   <data name="ClientTimeOut" xml:space="preserve">
     <value>10</value>
