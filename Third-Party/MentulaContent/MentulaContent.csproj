@@ -71,6 +71,7 @@
     <Compile Include="MM\Metal\MMetalProcessor.cs" />
     <Compile Include="MM\Metal\MMetalReader.cs" />
     <Compile Include="MM\Metal\MMetalWriter.cs" />
+    <Compile Include="MM\Attibutes.cs" />
     <Compile Include="MM\MMImporter.cs" />
     <Compile Include="MM\MMSource.cs" />
     <Compile Include="MM\R\R.cs" />

@@ -2,6 +2,7 @@
 
 namespace Mentula.Content
 {
+    [MMEditable]
     public class Metal : Material
     {
         public readonly StateOfMatter States;

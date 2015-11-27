@@ -2,6 +2,7 @@
 
 namespace Mentula.Content
 {
+    [MMEditable]
     public class Biomass : Material
     {
         public readonly float BurnTemperature;

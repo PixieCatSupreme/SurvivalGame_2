@@ -4,12 +4,15 @@ using System.Linq;
 namespace Mentula.Content
 {
     [DebuggerDisplay("Id={Id}, Name={Name}")]
+    [MMEditable]
     public abstract class Material : IMaterial
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
 
+        [AlternativeName("UTS")]
         public float Ultimate_Tensile_Strength { get; private set; }
+        [AlternativeName("TSAY")]
         public float Tensile_Strain_At_Yield { get; private set; }
         public float Density { get; private set; }
 

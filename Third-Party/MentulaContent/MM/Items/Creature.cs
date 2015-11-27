@@ -6,18 +6,26 @@ using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Content
 {
+    [MMEditable]
     public class Creature : Item, IEntity
     {
+        [MMIgnore]
         public Vector2 Pos { get; set; }
+        [MMIgnore]
         public IntVector2 ChunkPos { get; set; }
+        [MMIgnore]
         public float Rotation { get; set; }
 
         public readonly string Name;
         public readonly Stats Stats;
         public readonly int TextureId;
+        [MMOptional]
         public bool IsBio;
+        [MMIgnore]
         public Tag[] Systems { private set; get; }
+        [MMIgnore]
         public bool IsAlive { private set; get; }
+        [MMIgnore]
         private Tag[] DefaultSystemsVal;
 
         internal Creature()

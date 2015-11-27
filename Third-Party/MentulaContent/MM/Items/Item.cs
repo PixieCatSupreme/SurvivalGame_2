@@ -1,28 +1,28 @@
 ﻿using Mentula.Utilities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mentula.Content
 {
+    [MMEditable]
     public class Item
     {
+        [MMIgnore]
         public readonly byte[] Key;
+        [MMOptional]
         public readonly ulong Volume;
         public readonly ulong Weight;
+        [MMOptional]
         public byte Durability;
 
+        [MMOptional]
         public readonly Tag[] Tags;
+        [MMOptional]
         public readonly Item[] Parts;
+        [MMOptional]
         public readonly IMaterial Material;
 
         internal Item()
         {
-
-
             /* Set Weight */
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
