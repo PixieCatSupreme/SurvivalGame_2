@@ -108,35 +108,5 @@ namespace Mentula.Utilities.MathExtensions
 
             return tilePos;
         }
-
-        public static bool FirstIsFalse(this IEnumerable<Tag> source, short key, Func<short, bool> selector)
-        {
-            foreach (Tag cur in source)
-            {
-                if (cur.Key == key) return selector(cur.Value);
-            }
-
-            return false;
-        }
-
-        public static bool FirstIsFalse(this IEnumerable<Tag> source, Func<short, bool> selector, params short[] keys)
-        {
-            bool[] result = new bool[keys.Length];
-
-            foreach (Tag cur in source)
-            {
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    if (keys[i] == cur.Key) result[i] = selector(cur.Value);
-                }
-            }
-
-            for (int i = 0; i < result.Length; i++)
-            {
-                if (!result[i]) return false;
-            }
-
-            return true;
-        }
     }
 }
