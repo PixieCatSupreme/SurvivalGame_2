@@ -7,7 +7,9 @@ namespace Mentula.Content
     [MMEditable]
     public abstract class Material : IMaterial
     {
+        [MMIsDefault]
         public int Id { get; private set; }
+        [MMIsName]
         public string Name { get; private set; }
 
         [AlternativeName("UTS")]

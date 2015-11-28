@@ -11,7 +11,7 @@ namespace Mentula.Content
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public sealed class MMOptional : Attribute { }
 
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
     public sealed class AlternativeName : Attribute
     {
         public readonly string NewName;
@@ -21,4 +21,10 @@ namespace Mentula.Content
             NewName = name;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    public sealed class MMIsDefault : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    public sealed class MMIsName : Attribute { }
 }

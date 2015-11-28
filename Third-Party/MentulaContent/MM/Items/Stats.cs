@@ -1,5 +1,6 @@
 ﻿namespace Mentula.Content
 {
+    [MMEditable]
     public struct Stats
     {
         public readonly short Strength;

@@ -79,6 +79,7 @@
     <Compile Include="MM\R\MRReader.cs" />
     <Compile Include="MM\R\MRWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tag.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

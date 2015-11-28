@@ -4,6 +4,7 @@ using System.Diagnostics;
 namespace Mentula.Content
 {
     [DebuggerDisplay("{ToString()}")]
+    [MMEditable]
     public struct StateOfMatter
     {
         public readonly float MeltingPoint;
