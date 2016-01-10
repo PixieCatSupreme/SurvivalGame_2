@@ -23,6 +23,8 @@ namespace Mentula.Content
 
         internal Item()
         {
+#warning ENABLE CODE
+#if false
             /* Set Weight */
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
@@ -35,6 +37,7 @@ namespace Mentula.Content
 
             Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
+#endif
         }
 
         public Tag[] GetAllTags()

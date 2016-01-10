@@ -67,12 +67,12 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BytePoint.cs" />
+    <Compile Include="Udp\BytePoint.cs" />
     <Compile Include="Extentions\LidgrenExtensions.cs" />
     <Compile Include="Extentions\MathExtensions.cs" />
     <Compile Include="Extentions\NetExtensions.cs" />
     <Compile Include="IntVector2.cs" />
-    <Compile Include="NetDataType.cs" />
+    <Compile Include="Udp\NetDataType.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res\Ips.cs" />
@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="RNG.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Udp\UdpBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Res\Resources.resx">

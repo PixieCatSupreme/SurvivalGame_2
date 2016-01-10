@@ -7,6 +7,7 @@ using Mentula.Server.GUI;
 using Mentula.Utilities;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
+using Mentula.Utilities.Udp;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,9 @@ namespace Mentula.Server
             cpu = new CPUUsage();
 
             NPConf config = new NPConf(Res.AppName) { Port = Ips.PORT, EnableUPnP = true };
+            config.EnableMessageType(NIMT.WarningMessage);
+            config.EnableMessageType(NIMT.Error);
+            config.EnableMessageType(NIMT.ErrorMessage);
             config.EnableMessageType(NIMT.DiscoveryRequest);
             config.EnableMessageType(NIMT.ConnectionApproval);
             server = new NetServer(config);

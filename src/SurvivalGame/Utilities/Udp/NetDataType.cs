@@ -1,4 +1,4 @@
-﻿namespace Mentula.Utilities.Net
+﻿namespace Mentula.Utilities.Udp
 {
     public enum NDT
     {
