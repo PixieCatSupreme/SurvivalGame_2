@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using Mentula.Content;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Mentula.MMEditor
 {
@@ -37,6 +38,43 @@ namespace Mentula.MMEditor
             Controls.Clear();
             AddComboBox(index);
             AddMembers(index);
+            AddBtnGenerate();
+        }
+
+        public void OnGenerate(object sender, EventArgs e)
+        {
+            ErrorProvider.Clear();
+            int count = (Controls.Count - 2) >> 1;
+
+            KeyValuePair<Control, string>[] values = new KeyValuePair<Control, string>[count];
+
+            for (int i = 0, j = 0; i < values.Length && j < Controls.Count; j++)
+            {
+                TextBox value = Controls[j] as TextBox;
+                if (value == null) continue;
+
+                Label key = Controls[j - 1] as Label;
+                values[i++] = new KeyValuePair<Control, string>(key, value.Text);
+            }
+
+            bool generate = true;
+            for (int i = 0; i < values.Length; i++)
+            {
+                KeyValuePair<Control, string> cur = values[i];
+                string keyName = cur.Key.Text.Replace("*", string.Empty);
+
+                if (cur.Key.Text[cur.Key.Text.Length - 1] == '*' &&
+                    string.IsNullOrWhiteSpace(cur.Value))
+                {
+                    ErrorProvider.SetError(cur.Key, $"{keyName} is required!");
+                    generate = false;
+                    continue;
+                }
+            }
+
+            if (!generate) return;
+
+            //TODO Generate file
         }
 
         private void AddMembers(int index)
@@ -90,6 +128,7 @@ namespace Mentula.MMEditor
             if (hasInput)
             {
                 TextBox input = new TextBox() { Location = new Point(label.Location.X + label.Width, yOffset) };
+                label.AutoSize = true;
                 Controls.Add(input);
             }
         }
@@ -101,6 +140,18 @@ namespace Mentula.MMEditor
             combo.SelectedIndex = index;
             combo.SelectedIndexChanged += OnSelectionChanged;
             Controls.Add(combo);
+        }
+
+        private void AddBtnGenerate()
+        {
+            Button btn = new Button
+            {
+                Location = new Point(xOffset += TAB, yOffset += TAB),
+                Text = "Generate"
+            };
+            btn.Click += OnGenerate;
+
+            Controls.Add(btn);
         }
 
         private void SetItems()

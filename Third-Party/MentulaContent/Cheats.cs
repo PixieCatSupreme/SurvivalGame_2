@@ -1,12 +1,7 @@
 ﻿namespace Mentula.Content
 {
-    public class Cheats
+    public static class Cheats
     {
-        public static Metal Unobtanium;
-
-        static Cheats()
-        {
-            Unobtanium = new Metal();
-        }
+        public static readonly Metal Unobtanium = new Metal();
     }
 }

@@ -11,12 +11,7 @@ namespace Mentula.Content
 {
     internal static class Utils
     {
-        private static readonly CultureInfo usInfo;
-
-        static Utils()
-        {
-            usInfo = CultureInfo.CreateSpecificCulture("en-US");
-        }
+        private static readonly CultureInfo usInfo = CultureInfo.CreateSpecificCulture("en-US");
 
         public static void WriteString(this ContentWriter cw, string value)
         {
