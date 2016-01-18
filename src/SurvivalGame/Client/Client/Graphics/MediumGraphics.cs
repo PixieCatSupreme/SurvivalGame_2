@@ -86,9 +86,9 @@ namespace Mentula.Client
         public void Update(GameTime gametTime)
         {
 #if DRUNK
-            ROT += 10 * delta;
-            if (SCALE > 10 || SCALE < 2) invertScale = !invertScale;
-            SCALE += (invertScale ? -1 : 1) * delta;
+            ROT += 10 * Res.FPS60;
+            if (SCALE > 10 || SCALE < 1) invertScale = !invertScale;
+            SCALE += (invertScale ? -1 : 1) * Res.FPS60;
 #endif
 
             Vector2 pos = Chunk.GetTotalPos(game.hero.ChunkPos, game.hero.Pos);

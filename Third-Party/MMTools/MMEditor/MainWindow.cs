@@ -21,6 +21,8 @@ namespace Mentula.MMEditor
         private Type[] Items;
         private int yOffset;
         private int xOffset;
+        private string name;
+        private string def;
 
         public MainWindow()
         {
@@ -74,7 +76,12 @@ namespace Mentula.MMEditor
 
             if (!generate) return;
 
-            //TODO Generate file
+            KeyValuePair<string, string>[] pairs = new KeyValuePair<string, string>[values.Length];
+            for (int i = 0; i < pairs.Length; i++)
+            {
+                pairs[i] = new KeyValuePair<string, string>(values[i].Key.Text.Replace("*", string.Empty), values[i].Value);
+            }
+            string text = MMGenerator.Generate(pairs, name, def);
         }
 
         private void AddMembers(int index)
@@ -83,7 +90,30 @@ namespace Mentula.MMEditor
 
             MemberInfo[] members = GetMembers(type);
             RemoveIgnore(ref members);
+            SetNameDefault(ref members);
             AddAttributes(CheckMembers(ref members));
+        }
+
+        private void SetNameDefault(ref MemberInfo[] members)
+        {
+            name = string.Empty;
+            def = string.Empty;
+
+            for (int i = 0; i < members.Length; i++)
+            {
+                MemberInfo cur = members[i];
+
+                if (cur.GetCustomAttribute(typeof(MMIsName)) != null)
+                {
+                    if (string.IsNullOrEmpty(name)) name = cur.Name;
+                    else throw new ArgumentException("Class has multiple names!");
+                }
+                else if (cur.GetCustomAttribute(typeof(MMIsDefault)) != null)
+                {
+                    if (string.IsNullOrEmpty(def)) def = cur.Name;
+                    else throw new ArgumentException("Class has multiple defaults!");
+                }
+            }
         }
 
         private void AddAttributes(KeyValuePair<MemberInfo, MemberOptions>[] attributes)
