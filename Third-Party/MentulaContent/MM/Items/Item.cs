@@ -29,13 +29,13 @@ namespace Mentula.Content
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
 
-            for (uint i = 0; i < Parts.Length; i++)
-            {
-                result += Parts[i].Weight;
-                remainingVolume -= Parts[i].Volume;
-            }
+            //for (uint i = 0; i < Parts.Length; i++)
+            //{
+            //    result += Parts[i].Weight;
+            //    remainingVolume -= Parts[i].Volume;
+            //}
 
-            Weight = (ulong)(result + Material.Density * remainingVolume);
+            //Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
 #endif
         }

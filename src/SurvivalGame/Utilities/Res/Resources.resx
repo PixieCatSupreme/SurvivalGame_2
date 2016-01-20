@@ -129,6 +129,9 @@
   <data name="MaxPlayers" xml:space="preserve">
     <value>10</value>
   </data>
+  <data name="MegaChunkSize" xml:space="preserve">
+    <value>256</value>
+  </data>
   <data name="TileSize" xml:space="preserve">
     <value>32</value>
   </data>

@@ -89,9 +89,14 @@
     <Compile Include="CPUUsage.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
+    <Compile Include="Map\Structure\Generation\Building.cs" />
+    <Compile Include="Map\Structure\Generation\City.cs" />
+    <Compile Include="Map\Structure\Generation\Room.cs" />
+    <Compile Include="Map\Structure\Generation\Street.cs" />
     <Compile Include="Map\Terrain\Generation\Chunk.cs" />
     <Compile Include="Map\Terrain\Generation\ChunkGenerator.cs" />
     <Compile Include="Map\Terrain\Generation\Destructible.cs" />
+    <Compile Include="Map\Terrain\Generation\MegaChunk.cs" />
     <Compile Include="Map\Terrain\Generation\PerlinNoise.cs" />
     <Compile Include="Map\Terrain\Map.cs" />
     <Compile Include="NetExtensions.cs" />

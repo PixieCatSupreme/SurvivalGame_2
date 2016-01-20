@@ -97,6 +97,15 @@ namespace Mentula.Utilities.Res {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 256.
+        /// </summary>
+        public static string MegaChunkSize {
+            get {
+                return ResourceManager.GetString("MegaChunkSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 32.
         /// </summary>
         public static string TileSize {

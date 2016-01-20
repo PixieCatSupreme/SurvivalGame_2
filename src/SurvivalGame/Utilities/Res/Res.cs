@@ -14,6 +14,7 @@
 
         public static readonly string AppName;
         public static readonly int ChunkSize;
+        public static readonly int MegaChunkSize;
         public static readonly int ChunkTileLength;
         public static readonly int TileSize;
         public static readonly int ClientDesync;
@@ -24,6 +25,7 @@
         {
             AppName = Resources.AppName;
             ChunkSize = int.Parse(Resources.ChunkSize);
+            MegaChunkSize = int.Parse(Resources.MegaChunkSize);
             ChunkTileLength = ChunkSize * ChunkSize;
             TileSize = int.Parse(Resources.TileSize);
             ClientDesync = int.Parse(Resources.ClientTimeOut);
