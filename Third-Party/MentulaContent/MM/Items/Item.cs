@@ -97,5 +97,82 @@ namespace Mentula.Content
 
             return result.ToArray();
         }
+
+        public ulong GetTotalVolume()
+        {
+            ulong volume = Volume;
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                volume += Parts[i].GetTotalVolume();
+            }
+
+            return volume;
+        }
+
+        public float GetHealth()
+        {
+            return Durability * Material.Ultimate_Tensile_Strength * Volume;
+        }
+
+        public float GetTotalHealth()
+        {
+            float health = Durability * Material.Ultimate_Tensile_Strength * Volume;
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                health += Parts[i].GetTotalHealth();
+            }
+
+            return health;
+        }
+
+        public void DealDamage(float damage)
+        {
+            ulong v = RNG.Next(GetTotalVolume());
+            float remainingDamage = damage;
+
+            if (Volume > 0)
+            {
+                v -= Volume;
+                if (v < 0)
+                {
+                    if (GetHealth() <= remainingDamage)
+                    {
+                        remainingDamage -= GetHealth();
+                        Durability = 0;
+                    }
+                    else
+                    {
+                        Durability -= (byte)(remainingDamage / Material.Ultimate_Tensile_Strength / Volume);
+                        remainingDamage = 0;
+                    }
+                }
+            }
+
+            while (remainingDamage > 0 && GetTotalHealth() > 0)
+            {
+                for (int i = 0; i < Parts.Length; i++)
+                {
+                    v -= Parts[i].GetTotalVolume();
+
+                    if (v < 0)
+                    {
+                        float partHealth = Parts[i].GetTotalHealth();
+                        if (remainingDamage > partHealth)
+                        {
+                            remainingDamage -= partHealth;
+                            Parts[i].DealDamage(partHealth);
+                        }
+                        else
+                        {
+                            Parts[i].DealDamage(remainingDamage);
+                            remainingDamage = 0;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
