@@ -40,6 +40,7 @@ namespace Mentula.Content
             ChunkPos = chunkpos;
             Name = n;
             Stats = new Stats(10);
+            Systems = new Tag[0];
         }
 
         internal Creature(string n, Stats s, Vector2 pos, IntVector2 chunkpos)

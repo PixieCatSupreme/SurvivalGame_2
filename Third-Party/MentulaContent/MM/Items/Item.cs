@@ -24,6 +24,7 @@ namespace Mentula.Content
         internal Item()
         {
             /* Set Weight */
+            Parts = new Item[0];
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
 
