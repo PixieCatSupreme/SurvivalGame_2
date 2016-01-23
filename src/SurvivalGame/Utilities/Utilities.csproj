@@ -72,6 +72,7 @@
     <Compile Include="Extentions\MathExtensions.cs" />
     <Compile Include="Extentions\NetExtensions.cs" />
     <Compile Include="IntVector2.cs" />
+    <Compile Include="Udp\NetBinaryReader.cs" />
     <Compile Include="Udp\NetDataType.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

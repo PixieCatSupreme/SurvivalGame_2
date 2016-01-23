@@ -13,6 +13,18 @@ namespace Mentula.Content
     {
         private static readonly CultureInfo usInfo = CultureInfo.CreateSpecificCulture("en-US");
 
+        public static void WriteKey(this ContentWriter cw, byte[] key)
+        {
+            cw.Write(key.Length);
+            cw.Write(key);
+        }
+
+        public static byte[] ReadKey(this ContentReader cr)
+        {
+            int length = cr.ReadInt32();
+            return cr.ReadBytes(length);
+        }
+
         public static void WriteString(this ContentWriter cw, string value)
         {
             byte[] enc = Encoding.UTF8.GetBytes(value);

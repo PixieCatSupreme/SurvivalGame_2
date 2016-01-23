@@ -1,4 +1,5 @@
 ﻿using Mentula.Utilities;
+using Mentula.Utilities.Udp;
 using System.Collections.Generic;
 
 namespace Mentula.Content
@@ -21,19 +22,22 @@ namespace Mentula.Content
         [MMOptional]
         public readonly IMaterial Material;
 
-        internal Item()
+        internal Item(byte[] key)
         {
+            NetBinaryReader nbr = new NetBinaryReader(key);
+            
+
             /* Set Weight */
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
 
-            //for (uint i = 0; i < Parts.Length; i++)
-            //{
-            //    result += Parts[i].Weight;
-            //    remainingVolume -= Parts[i].Volume;
-            //}
+            for (uint i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].Weight;
+                remainingVolume -= Parts[i].Volume;
+            }
 
-            //Weight = (ulong)(result + Material.Density * remainingVolume);
+            Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
         }
 
