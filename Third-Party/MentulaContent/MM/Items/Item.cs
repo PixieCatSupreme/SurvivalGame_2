@@ -25,7 +25,6 @@ namespace Mentula.Content
         internal Item(byte[] key)
         {
             NetBinaryReader nbr = new NetBinaryReader(key);
-            
 
             /* Set Weight */
             #region SetWeight

@@ -57,8 +57,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Creatures.mm">
-      <Name>Creatures</Name>
+    <None Include="Bones.mm">
+      <Name>Bones</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MBioProcessor</Processor>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BodyParts.mm">
+      <Name>BodyParts</Name>
       <Importer>MMImporter</Importer>
       <Processor>MBioProcessor</Processor>
     </None>

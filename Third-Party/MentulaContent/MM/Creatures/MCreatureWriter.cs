@@ -13,30 +13,6 @@ namespace Mentula.Content.MM
     {
         protected override void Write(ContentWriter output, Creature[] value)
         {
-            output.Write(value.Length); //TODO: ToHeaderKey;
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                Creature cur = value[i];
-                output.WriteString(cur.Name);
-
-                output.Write(cur.Stats.Agility);
-                output.Write(cur.Stats.Endurance);
-                output.Write(cur.Stats.Intelect);
-                output.Write(cur.Stats.Perception);
-                output.Write(cur.Stats.Strength);
-
-                output.Write(cur.TextureId);
-                output.Write(cur.IsBio);
-
-                output.Write(cur.Parts.Length);
-                for (int j = 0; j < cur.Parts.Length; j++)
-                {
-                    Item item = cur.Parts[i];
-                    output.WriteKey(item.Key);
-                    output.Write(item.Volume);
-                }
-            }
         }
 
         public override string GetRuntimeType(TargetPlatform targetPlatform)

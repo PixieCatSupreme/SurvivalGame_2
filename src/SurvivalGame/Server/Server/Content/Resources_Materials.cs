@@ -5,7 +5,7 @@ namespace Mentula.Server
 {
     public partial class Resources : ContentManager
     {
-        public Metal GetMetal(int id)
+        public Metal GetMetal(ulong id)
         {
             if (metals == null)
             {
@@ -22,7 +22,7 @@ namespace Mentula.Server
             return null;
         }
 
-        public Biomass GetBiomass(int id)
+        public Biomass GetBiomass(ulong id)
         {
             if (biomasses == null)
             {

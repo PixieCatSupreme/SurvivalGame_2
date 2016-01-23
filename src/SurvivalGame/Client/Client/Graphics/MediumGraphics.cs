@@ -22,7 +22,9 @@ namespace Mentula.Client
     {
         internal float SCALE = 2f;
         private float ROT = 0;
+#if DRUNK
         private bool invertScale = false;
+#endif
 
         public Camera Camera { get; private set; }
         public bool Enabled { get { return true; } }

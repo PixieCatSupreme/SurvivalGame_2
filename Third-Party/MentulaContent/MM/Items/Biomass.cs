@@ -14,7 +14,7 @@ namespace Mentula.Content
             NutritiousValue = float.PositiveInfinity;
         }
 
-        internal Biomass(float burn, float nutr, int id, string name, Vector3 values)
+        internal Biomass(float burn, float nutr, ulong id, string name, Vector3 values)
             : base(id, name, values.X, values.Y, values.Z)
         {
             BurnTemperature = burn;

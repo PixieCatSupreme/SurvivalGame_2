@@ -36,6 +36,7 @@ namespace Mentula.Content
         }
 
         internal Creature(string n, Stats stats, int textId)
+            :base (new byte[0]) // TODO: Change to propper key.
         {
             Pos = Vector2.Zero;
             ChunkPos = IntVector2.Zero;

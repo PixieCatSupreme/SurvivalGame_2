@@ -13,7 +13,7 @@ namespace Mentula.Content.MM
             {
                 MBioProcessor.Manifest mani = new MBioProcessor.Manifest();
 
-                mani.Id = input.ReadInt32();
+                mani.Id = input.ReadUInt64();
                 mani.Name = input.ReadCString();
                 mani.Values.X = input.ReadSingle();
                 mani.Values.Y = input.ReadSingle();

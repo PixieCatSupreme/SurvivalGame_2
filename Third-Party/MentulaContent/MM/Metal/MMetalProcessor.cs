@@ -25,10 +25,10 @@ namespace Mentula.Content.MM
                     const string ID = "DEFAULT";
                     if (cur.TryGetValue(ID, out rawValue))
                     {
-                        int raw = 0;
+                        ulong raw = 0;
 
-                        if (int.TryParse(rawValue, out raw)) mani.Id = raw;
-                        else throw new ParameterException(ID, rawValue, typeof(int));
+                        if (ulong.TryParse(rawValue, out raw)) mani.Id = raw;
+                        else throw new ParameterException(ID, rawValue, typeof(ulong));
                     }
                     else throw new ParameterNullException(ID);
 
@@ -108,12 +108,12 @@ namespace Mentula.Content.MM
 
         internal struct Manifest
         {
-            public int Id;
+            public ulong Id;
             public string Name;
             public Vector3 Values;
             public Vector3 States;
 
-            public Manifest(int id, string name)
+            public Manifest(ulong id, string name)
             {
                 Id = id;
                 Name = name;
