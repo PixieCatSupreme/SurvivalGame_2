@@ -112,12 +112,23 @@ namespace Mentula.Content
 
         public float GetHealth()
         {
+
+            if (Material == null)
+            {
+                return 0;
+            }
+            else
             return Durability * Material.Ultimate_Tensile_Strength * Volume;
         }
 
         public float GetTotalHealth()
         {
-            float health = Durability * Material.Ultimate_Tensile_Strength * Volume;
+            float health = 0;
+
+            if (Material!=null)
+            {
+                health= Durability * Material.Ultimate_Tensile_Strength * Volume;
+            }
 
             for (int i = 0; i < Parts.Length; i++)
             {
