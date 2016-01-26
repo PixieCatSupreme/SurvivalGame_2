@@ -9,7 +9,7 @@ namespace Mentula.Content.MM
     {
         public override Metal[] Process(MMSource input, ContentProcessorContext context)
         {
-            Utils.CheckProcessorType("Metals", input.Container.Values["DEFAULT"]);
+            Utils.CheckProcessorType("Metals", input);
 
             Metal[] result = new Metal[input.Container.Childs.Length];
 
@@ -20,80 +20,20 @@ namespace Mentula.Content.MM
                 try
                 {
                     Manifest mani = new Manifest();
-                    string rawValue = "";
+                    string rawValue = string.Empty;
 
-                    const string ID = "DEFAULT";
-                    if (cur.TryGetValue(ID, out rawValue))
-                    {
-                        ulong raw = 0;
-
-                        if (ulong.TryParse(rawValue, out raw)) mani.Id = raw;
-                        else throw new ParameterException(ID, rawValue, typeof(ulong));
-                    }
-                    else throw new ParameterNullException(ID);
+                    mani.Id = cur.GetUInt64Value("DEFAULT");
 
                     if (!string.IsNullOrWhiteSpace(cur.Name)) mani.Name = cur.Name;
                     else throw new ArgumentNullException("Container Name");
 
-                    const string UTS = "UTS";
-                    if (cur.TryGetValue(UTS, out rawValue))
-                    {
-                        float raw = 0;
+                    mani.Values.X = cur.GetFloatValue("UTS");
+                    mani.Values.Y = cur.GetFloatValue("TSAY");
+                    mani.Values.Z = cur.GetFloatValue("Density");
 
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.X = raw;
-                        else throw new ParameterException(UTS, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(UTS);
-
-                    const string TSAY = "TSAY";
-                    if (cur.TryGetValue(TSAY, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.Y = raw;
-                        else throw new ParameterException(TSAY, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(TSAY);
-
-                    const string DENS = "Density";
-                    if (cur.TryGetValue(DENS, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.Z = raw;
-                        else throw new ParameterException(DENS, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(DENS);
-
-                    const string MELT = "MeltingPoint";
-                    if (cur.TryGetValue(MELT, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.States.X = raw;
-                        else throw new ParameterException(MELT, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(MELT);
-
-                    const string VAP = "VaporizationPoint";
-                    if (cur.TryGetValue(VAP, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.States.Y = raw;
-                        else throw new ParameterException(VAP, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(VAP);
-
-                    const string ION = "IonizationPoint";
-                    if (cur.TryGetValue(ION, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.States.Z = raw;
-                        else throw new ParameterException(VAP, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(VAP);
+                    mani.States.X = cur.GetFloatValue("MeltingPoint");
+                    mani.States.Y = cur.GetFloatValue("VaporizationPoint");
+                    mani.States.Z = cur.GetFloatValue("IonizationPoint");
 
                     result[i] = new Metal(new StateOfMatter(mani.States), mani.Id, mani.Name, mani.Values);
                 }

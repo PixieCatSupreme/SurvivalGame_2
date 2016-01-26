@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Mentula.Content
 {
@@ -27,7 +26,7 @@ namespace Mentula.Content
 
         private static string SetMessage(string arg)
         {
-            return string.Format("Could not find parameter: '{0}'.", arg);
+            return $"Could not find parameter: '{arg}'.";
         }
     }
 
@@ -62,7 +61,7 @@ namespace Mentula.Content
 
         private static string SetMessage(string parameter, string value, Type type)
         {
-            return string.Format("Could not process parameter '{0}' to {1}. Value='{2}'", parameter, type, value);
+            return $"Could not process parameter '{parameter}' to {type}. Value='{value}'";
         }
     }
 

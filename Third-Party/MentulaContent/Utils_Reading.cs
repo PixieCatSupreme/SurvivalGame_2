@@ -3,16 +3,13 @@ using Mentula.Utilities;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Mentula.Content
 {
-    internal static class Utils
+    internal static partial class Utils
     {
-        private static readonly CultureInfo usInfo = CultureInfo.CreateSpecificCulture("en-US");
-
         public static void WriteKey(this ContentWriter cw, byte[] key)
         {
             cw.Write(key.Length);
@@ -54,14 +51,23 @@ namespace Mentula.Content
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckProcessorType(string type, string request)
+        public static void CheckProcessorType(string type, MMSource source)
         {
-            if (type.ToUpper() != request.ToUpper()) throw new ArgumentException("Wrong processor type selected this= '" + type + "', needed='" + request + "'");
-        }
+            string request;
+            if (!source.Container.TryGetValue("name", out request))
+            {
+                if (!source.Container.TryGetValue("default", out request))
+                {
+                    throw new ArgumentException("No processor type found.")
+                        .AsContainerException(source.Container.Name);
+                }
+            }
 
-        public static bool TryParse(string s, out float result)
-        {
-            return float.TryParse(s, NumberStyles.Number, usInfo, out result);
+            if (type.ToUpper() != request.ToUpper())
+            {
+                throw new ArgumentException($"Wrong processor type selected this= '{type}', needed='{request}'")
+                    .AsContainerException(source.Container.Name);
+            }
         }
     }
 }

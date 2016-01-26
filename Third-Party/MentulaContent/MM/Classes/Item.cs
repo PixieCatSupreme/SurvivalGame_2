@@ -9,6 +9,8 @@ namespace Mentula.Content
     {
         [MMIgnore]
         public readonly byte[] Key;
+        public readonly ulong Id;
+        public readonly string Name;
         [MMOptional]
         public readonly ulong Volume;
         public readonly ulong Weight;
@@ -38,6 +40,31 @@ namespace Mentula.Content
 
             Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
+        }
+
+        internal Item(ulong id, string name, IMaterial material, ulong volume)
+        {
+            Id = id;
+            Volume = volume;
+            Name = name;
+            Material = material;
+        }
+
+        internal Item(ulong id, string name, IMaterial material, ulong volume, Tag[] tags)
+        {
+            Id = id;
+            Volume = volume;
+            Name = name;
+            Material = material;
+            Tags = tags;
+        }
+
+        internal Item(ulong id, string name, Item[] parts, Tag[] tags)
+        {
+            Id = id;
+            Name = name;
+            Parts = parts;
+            Tags = tags;
         }
 
         public Tag[] GetAllTags()

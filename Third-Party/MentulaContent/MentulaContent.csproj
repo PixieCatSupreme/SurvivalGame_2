@@ -64,13 +64,14 @@
     <Compile Include="MM\Creatures\MCreatureProcessor.cs" />
     <Compile Include="MM\Creatures\MCreatureReader.cs" />
     <Compile Include="MM\Creatures\MCreatureWriter.cs" />
-    <Compile Include="MM\Items\Biomass.cs" />
-    <Compile Include="MM\Items\Creature.cs" />
-    <Compile Include="MM\Items\Item.cs" />
-    <Compile Include="MM\Items\Material.cs" />
-    <Compile Include="MM\Items\Metal.cs" />
-    <Compile Include="MM\Items\StateOfMatter.cs" />
-    <Compile Include="MM\Items\Stats.cs" />
+    <Compile Include="MM\Classes\Biomass.cs" />
+    <Compile Include="MM\Classes\Creature.cs" />
+    <Compile Include="MM\Classes\Item.cs" />
+    <Compile Include="MM\Classes\Material.cs" />
+    <Compile Include="MM\Classes\Metal.cs" />
+    <Compile Include="MM\Classes\StateOfMatter.cs" />
+    <Compile Include="MM\Classes\Stats.cs" />
+    <Compile Include="MM\Items\MItemProcessor.cs" />
     <Compile Include="MM\Metal\MMetalProcessor.cs" />
     <Compile Include="MM\Metal\MMetalReader.cs" />
     <Compile Include="MM\Metal\MMetalWriter.cs" />
@@ -83,7 +84,9 @@
     <Compile Include="MM\R\MRWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tag.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Utils_Converting.cs" />
+    <Compile Include="Utils_Processing.cs" />
+    <Compile Include="Utils_Reading.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\SurvivalGame\Utilities\Utilities.csproj">

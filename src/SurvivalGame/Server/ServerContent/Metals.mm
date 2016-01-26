@@ -1,4 +1,4 @@
-[Container: name="Metals", id=0]
+[Database: name="Metals", id=0]
 {
 	[Iron: 0]
 	{

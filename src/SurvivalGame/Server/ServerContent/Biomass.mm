@@ -1,4 +1,4 @@
-[Container: name="Biomass", id=1]
+[Database: name="Biomass", id=1]
 {
 	[Bone: 0]
 	{

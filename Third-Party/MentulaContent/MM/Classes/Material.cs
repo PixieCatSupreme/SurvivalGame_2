@@ -59,7 +59,7 @@ namespace Mentula.Content
 
         public override string ToString()
         {
-            return "Id=" + Id.ToString() + " Name=" + Name + " UTS=" + Ultimate_Tensile_Strength.ToString() + " TSAY=" + Tensile_Strain_At_Yield.ToString() + " Dens=" + Density.ToString();
+            return $"Id={Id} Name={Name} UTS={Ultimate_Tensile_Strength} TSAY={Tensile_Strain_At_Yield} Dens={Density}";
         }
     }
 
