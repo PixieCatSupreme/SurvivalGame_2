@@ -49,15 +49,13 @@ namespace Mentula.Content.MM
                         if (child.Childs.Length < 1) throw new ParameterNullException("Material Pointer");
                         isMat = true;
 
-                        mani.volume = child.GetUInt64Value("Volume");
-                        Container matPtr = child.Childs[0];
                         ulong dbId;
-
-                        if (child.TryGetValue("DEFUALT", out rawValue)) dbId = Utils.ConvertToUInt64("DEFAULT", rawValue);
+                        if (child.TryGetValue("db", out rawValue)) dbId = Utils.ConvertToUInt64("db", rawValue);
                         else dbId = cur.GetUInt64Value("Id");
 
+                        mani.volume = child.GetUInt64Value("Volume");
                         mani.material = new KeyValuePair<ulong, ulong>(
-                            matPtr.GetUInt64Value("Id"),
+                            child.GetUInt64Value("id"),
                             dbId);
                     }
 
