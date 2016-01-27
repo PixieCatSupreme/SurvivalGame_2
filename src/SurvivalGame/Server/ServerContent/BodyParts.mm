@@ -161,10 +161,10 @@
 	{
 		[Items]
 		{
-			[Lung: 11]
-			[Lung: 11]
-			[Kidney: 12]
-			[Kidney: 12]
+			[LeftLung: 11]
+			[RightLung: 11]
+			[LeftKidney: 12]
+			[RightKidney: 12]
 			[Heart: 13]
 			[Liver: 14]
 			[Biomass: 1]
@@ -180,10 +180,10 @@
 		[Items]
 		{
 			[Brain: 7]
-			[Eye: 8]
-			[Eye: 8]
-			[Ear: 9]
-			[Ear: 9]
+			[LeftEye: 8]
+			[RightEye: 8]
+			[LeftEar: 9]
+			[RightEar: 9]
 			[Mouth: 10]
 			[Biomass: 1]
 			{
