@@ -2,7 +2,7 @@
 {
 	[Tibia: 0]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 133]
@@ -11,7 +11,7 @@
 
 	[Fibula: 1]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 44]
@@ -20,7 +20,7 @@
 
 	[Femur: 2]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 172]
@@ -29,7 +29,7 @@
 
 	[Humerus: 4]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 562]
@@ -38,7 +38,7 @@
 
 	[Radius: 5]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 141]
@@ -47,7 +47,7 @@
 
 	[Ulna: 6]
 	{
-		[Material]
+		[Material: 1]
 		{
 			[Bone: 0]
 			[Volume: 141]
@@ -59,7 +59,7 @@
 		{
 			[Consciousness: id=0, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 1130]
@@ -72,7 +72,7 @@
 		{
 			[Sight: id=1, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 6]
@@ -85,7 +85,7 @@
 		{
 			[Hearing: id=2, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 20]
@@ -98,7 +98,7 @@
 		{
 			[Communication: id=5, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 120]
@@ -111,7 +111,7 @@
 		{
 			[Breathing: id=6, value=1]
 		}
-		[Material]
+		[Material : 1]
 		{
 			[Flesh: 1]
 			[Volume: 613]
@@ -124,7 +124,7 @@
 		{
 			[BloodFiltration: id=7, value=1]
 		}
-		[Material]
+		[Material : 1]
 		{
 			[Flesh: 1]
 			[Volume: 132]
@@ -137,7 +137,7 @@
 		{
 			[BloodPumping: id=8, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 283]
@@ -150,7 +150,7 @@
 		{
 			[Metabolism: id=9, value=1]
 		}
-		[Material]
+		[Material: 1]
 		{
 			[Flesh: 1]
 			[Volume: 1462]
