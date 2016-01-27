@@ -2,56 +2,32 @@
 {
 	[Tibia: 0]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 133]
-		}
+		[Material: db=1, id=0,Volume=133]
 	}
 
 	[Fibula: 1]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 44]
-		}
+		[Material: db=1, id=0,Volume=40]
 	}
 
 	[Femur: 2]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 172]
-		}
+		[Material: db=1, id=0,Volume=172]
 	}
 
 	[Humerus: 4]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 562]
-		}
+		[Material: db=1, id=0,Volume=562]
 	}
 
 	[Radius: 5]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 141]
-		}
+		[Material: db=1, id=0,Volume=141]
 	}
 
 	[Ulna: 6]
 	{
-		[Material: 1]
-		{
-			[Bone: 0]
-			[Volume: 141]
-		}
+		[Material: db=1, id=0,Volume=141]
 	}
 	[Brain: 7]
 	{
@@ -59,11 +35,7 @@
 		{
 			[Consciousness: id=0, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 1130]
-		}
+		[Material: db=1, id=1,Volume=1130]
 	}
 
 	[Eye: 8]
@@ -72,11 +44,7 @@
 		{
 			[Sight: id=1, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 6]
-		}
+		[Material: db=1, id=1,Volume=6]
 	}
 
 	[Ear: 9]
@@ -85,11 +53,7 @@
 		{
 			[Hearing: id=2, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 20]
-		}
+		[Material: db=1, id=1,Volume=20]
 	}
 
 	[Mouth: 10]
@@ -98,11 +62,7 @@
 		{
 			[Communication: id=5, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 120]
-		}
+		[Material: db=1, id=1,Volume=120]
 	}
 
 	[Lung: 11]
@@ -111,11 +71,7 @@
 		{
 			[Breathing: id=6, value=1]
 		}
-		[Material : 1]
-		{
-			[Flesh: 1]
-			[Volume: 613]
-		}
+		[Material: db=1, id=1,Volume=613]
 	}
 
 	[Kidney: 12]
@@ -124,11 +80,7 @@
 		{
 			[BloodFiltration: id=7, value=1]
 		}
-		[Material : 1]
-		{
-			[Flesh: 1]
-			[Volume: 132]
-		}
+		[Material: db=1, id=1,Volume=132]
 	}
 
 	[Heart: 13]
@@ -137,11 +89,7 @@
 		{
 			[BloodPumping: id=8, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 283]
-		}
+		[Material: db=1, id=1,Volume=283]
 	}
 
 	[Liver: 14]
@@ -150,11 +98,7 @@
 		{
 			[Metabolism: id=9, value=1]
 		}
-		[Material: 1]
-		{
-			[Flesh: 1]
-			[Volume: 1462]
-		}
+		[Material: db=1, id=1,Volume=1462]
 	}
 
 	[Torso:100]
