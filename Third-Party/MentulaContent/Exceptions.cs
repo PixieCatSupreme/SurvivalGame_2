@@ -101,7 +101,13 @@ namespace Mentula.Content
         { }
 
         public BuildException(string message, Exception inner)
-            :base(message, inner)
+            :base(message, Retro(inner))
         { }
+
+        private static BuildException Retro(Exception e)
+        {
+            if (e != null) return new BuildException(e.Message, Retro(e.InnerException));
+            return null;
+        }
     }
 }

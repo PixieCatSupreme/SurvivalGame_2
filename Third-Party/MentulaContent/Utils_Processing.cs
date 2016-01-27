@@ -6,17 +6,10 @@ namespace Mentula.Content
 {
     internal static partial class Utils
     {
-        public static string GetStringValue_s(this Container cnt, string name)
-        {
-            string rawValue = string.Empty;
-            cnt.TryGetValue(name, out rawValue);
-            return rawValue;
-        }
-
         public static string GetStringValue(this Container cnt, string name)
         {
-            string value = cnt.GetStringValue_s(name);
-            if (!string.IsNullOrWhiteSpace(value)) return value;
+            string rawValue;
+            if (cnt.TryGetValue(name, out rawValue)) return rawValue;
             else throw new ParameterNullException(name);
         }
 

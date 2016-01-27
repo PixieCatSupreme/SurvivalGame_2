@@ -24,7 +24,7 @@ namespace Mentula.Content
 
         public static void WriteString(this ContentWriter cw, string value)
         {
-            byte[] enc = Encoding.UTF8.GetBytes(value);
+            byte[] enc = Encoding.ASCII.GetBytes(value);
             cw.Write(enc.Length);
             cw.Write(enc);
         }
@@ -33,7 +33,7 @@ namespace Mentula.Content
         {
             int length = cr.ReadInt32();
             byte[] enc = cr.ReadBytes(length);
-            return Encoding.UTF8.GetString(enc);
+            return Encoding.ASCII.GetString(enc);
         }
 
         public static void WriteIntVector2(this ContentWriter cw, IntVector2 value)
