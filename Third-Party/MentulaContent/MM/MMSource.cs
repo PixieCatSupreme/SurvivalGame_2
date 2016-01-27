@@ -70,7 +70,7 @@ namespace Mentula.Content.MM
                 }
                 catch (Exception e)
                 {
-                    throw new ArgumentException("An error occured while trying to read line: '" + line + "'", e);
+                    throw new BuildException($"An error occured while trying to read line: '{line}'", e);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to get a child at: '" + string.Join("/", names) + "'", e);
+                throw new BuildException($"An error occured while trying to get a child at: '{string.Join("/", names)}'", e);
             }
         }
 
@@ -124,7 +124,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to construct a child at: '" + string.Join("/", names) + "'", e);
+                throw new BuildException($"An error occured while trying to construct a child at: '{string.Join("/", names)}'", e);
             }
         }
 
@@ -151,7 +151,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to get values from split: '" + string.Join("/", values) + "'", e);
+                throw new BuildException($"An error occured while trying to get values from split: '{string.Join("/", values)}'", e);
             }
         }
 
@@ -174,7 +174,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to split the container: '" + line + "'", e);
+                throw new BuildException($"An error occured while trying to split the container: '{line}'", e);
             }
         }
 

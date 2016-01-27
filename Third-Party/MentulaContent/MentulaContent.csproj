@@ -72,6 +72,8 @@
     <Compile Include="MM\Classes\StateOfMatter.cs" />
     <Compile Include="MM\Classes\Stats.cs" />
     <Compile Include="MM\Items\MItemProcessor.cs" />
+    <Compile Include="MM\Items\MItemReader.cs" />
+    <Compile Include="MM\Items\MItemWriter.cs" />
     <Compile Include="MM\Metal\MMetalProcessor.cs" />
     <Compile Include="MM\Metal\MMetalReader.cs" />
     <Compile Include="MM\Metal\MMetalWriter.cs" />

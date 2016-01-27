@@ -76,7 +76,7 @@ namespace Mentula.Content
         }
 
         public ContainerException(string container)
-            :base("An error occured while processing container: " + container)
+            : base("An error occured while processing container: " + container)
         {
             Container = container;
         }
@@ -86,5 +86,22 @@ namespace Mentula.Content
         {
             Container = container;
         }
+    }
+
+    public class BuildException : Exception
+    {
+        public override string StackTrace { get { return null; } }
+
+        public BuildException()
+            : base("An exception occured while builing content!")
+        { }
+
+        public BuildException(string message)
+            : base(message)
+        { }
+
+        public BuildException(string message, Exception inner)
+            :base(message, inner)
+        { }
     }
 }
