@@ -60,7 +60,7 @@
     <None Include="BodyParts.mm">
       <Name>BodyParts</Name>
       <Importer>MMImporter</Importer>
-      <Processor>MBioProcessor</Processor>
+      <Processor>MItemProcessor</Processor>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
