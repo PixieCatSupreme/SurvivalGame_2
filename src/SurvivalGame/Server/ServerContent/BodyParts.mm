@@ -63,7 +63,11 @@
 	{
 		[Tags]
 		{
-			[Consciousness: id=0, value=1]
+			[Consciousness]
+			{
+				[id=0]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -77,7 +81,11 @@
 	{
 		[Tags]
 		{
-			[Sight: id=1, value=1]
+			[Sight]
+			{
+				[id=1]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -91,7 +99,11 @@
 	{
 		[Tags]
 		{
-			[Hearing: id=2, value=1]
+			[Hearing]
+			{
+				[id=2]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -105,7 +117,11 @@
 	{
 		[Tags]
 		{
-			[Communication: id=5, value=1]
+			[Communication]
+			{
+				[id=5]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -119,7 +135,11 @@
 	{
 		[Tags]
 		{
-			[Breathing: id=6, value=1]
+			[Breathing]
+			{
+				[id=6]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -133,7 +153,11 @@
 	{
 		[Tags]
 		{
-			[BloodFiltration: id=7, value=1]
+			[BloodFiltration]
+			{
+				[id=7]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -147,7 +171,11 @@
 	{
 		[Tags]
 		{
-			[BloodPumping: id=8, value=1]
+			[BloodPumping]
+			{ 
+				[id=8]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -161,7 +189,11 @@
 	{
 		[Tags]
 		{
-			[Metabolism: id=9, value=1]
+			[Metabolism]
+			{
+				[id=9]
+				[value=1]
+			}
 		}
 		[Material]
 		{
@@ -226,7 +258,11 @@
 	{
 		[Tags]
 		{
-			[Manipulation: id=4, value 1]
+			[Manipulation]
+			{
+				[id=4]
+				[value 1]
+			}
 		}
 
 		[Items]
@@ -234,7 +270,6 @@
 			[Humerus: 4]
 			[Radius: 5]
 			[Ulna: 6]
-
 			[Biomass: 1]
 			{
 				[Flesh]
@@ -255,7 +290,11 @@
 	{
 		[Tags]
 		{
-			[Moving: id=3, value=1]
+			[Moving]
+			{
+				[id=3]
+				[value=1]
+			}
 		}
 
 		[Items]
@@ -263,7 +302,6 @@
 			[Tibia: 0]
 			[Fibula: 1]
 			[Femur: 2]
-
 			[Biomass: 1]
 			{
 				[Flesh]
