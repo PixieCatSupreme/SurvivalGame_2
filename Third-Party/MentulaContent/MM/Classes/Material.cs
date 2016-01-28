@@ -8,7 +8,7 @@ namespace Mentula.Content
     public abstract class Material : IMaterial
     {
         [MMIsDefault]
-        public int Id { get; private set; }
+        public ulong Id { get; private set; }
         [MMIsName]
         public string Name { get; private set; }
 
@@ -20,14 +20,14 @@ namespace Mentula.Content
 
         internal Material()
         {
-            Id = -1;
+            Id = 0;
             Name = "Unobtanium";
             Ultimate_Tensile_Strength = float.PositiveInfinity;
             Tensile_Strain_At_Yield = float.PositiveInfinity;
             Density = float.PositiveInfinity;
         }
 
-        internal Material(int id, string name, float UTS, float TSAY, float density)
+        internal Material(ulong id, string name, float UTS, float TSAY, float density)
         {
             Id = id;
             Name = name;
@@ -59,13 +59,13 @@ namespace Mentula.Content
 
         public override string ToString()
         {
-            return "Id=" + Id.ToString() + " Name=" + Name + " UTS=" + Ultimate_Tensile_Strength.ToString() + " TSAY=" + Tensile_Strain_At_Yield.ToString() + " Dens=" + Density.ToString();
+            return $"Id={Id} Name={Name} UTS={Ultimate_Tensile_Strength} TSAY={Tensile_Strain_At_Yield} Dens={Density}";
         }
     }
 
     public interface IMaterial
     {
-        int Id { get; }
+        ulong Id { get; }
         string Name { get; }
 
         float Ultimate_Tensile_Strength { get; }

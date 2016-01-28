@@ -9,7 +9,7 @@ namespace Mentula.Content.MM
     {
         public override Biomass[] Process(MMSource input, ContentProcessorContext context)
         {
-            Utils.CheckProcessorType("Biomass", input.Container.Values["DEFAULT"]);
+            Utils.CheckProcessorType("Biomass", input);
             
             Biomass[] result = new Biomass[input.Container.Childs.Length];
 
@@ -20,70 +20,19 @@ namespace Mentula.Content.MM
                 try
                 {
                     Manifest mani = new Manifest();
-                    string rawValue = "";
+                    string rawValue = string.Empty;
 
-                    const string ID = "DEFAULT";
-                    if (cur.TryGetValue(ID, out rawValue))
-                    {
-                        int raw = 0;
-
-                        if (int.TryParse(rawValue, out raw)) mani.Id = raw;
-                        else throw new ParameterException(ID, rawValue, typeof(int));
-                    }
-                    else throw new ParameterNullException(ID);
+                    mani.Id = cur.GetUInt64Value("DEFAULT");
 
                     if (!string.IsNullOrWhiteSpace(cur.Name)) mani.Name = cur.Name;
                     else throw new ArgumentNullException("Container Name");
 
-                    const string UTS = "UTS";
-                    if (cur.TryGetValue(UTS, out rawValue))
-                    {
-                        float raw = 0;
+                    mani.Values.X = cur.GetFloatValue("UTS");
+                    mani.Values.Y = cur.GetFloatValue("TSAY");
+                    mani.Values.Z = cur.GetFloatValue("Density");
 
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.X = raw;
-                        else throw new ParameterException(UTS, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(UTS);
-
-                    const string TSAY = "TSAY";
-                    if (cur.TryGetValue(TSAY, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.Y = raw;
-                        else throw new ParameterException(TSAY, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(TSAY);
-
-                    const string DENS = "Density";
-                    if (cur.TryGetValue(DENS, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Values.Z = raw;
-                        else throw new ParameterException(DENS, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(DENS);
-
-                    const string BURN = "BurnTemperature";
-                    if (cur.TryGetValue(BURN, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Burn = raw;
-                        else throw new ParameterException(BURN, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(BURN);
-
-                    const string NUTR = "NutritiousValue";
-                    if (cur.TryGetValue(NUTR, out rawValue))
-                    {
-                        float raw = 0;
-
-                        if (Utils.TryParse(rawValue, out raw)) mani.Nutr = raw;
-                        else throw new ParameterException(NUTR, rawValue, typeof(float));
-                    }
-                    else throw new ParameterNullException(NUTR);
+                    mani.Burn = cur.GetFloatValue("BurnTemperature");
+                    mani.Nutr = cur.GetFloatValue("NutritiousValue");
 
                     result[i] = new Biomass(mani.Burn, mani.Nutr, mani.Id, mani.Name, mani.Values);
                 }
@@ -98,7 +47,7 @@ namespace Mentula.Content.MM
 
         internal struct Manifest
         {
-            public int Id;
+            public ulong Id;
             public string Name;
             public Vector3 Values;
             public float Burn;

@@ -1,5 +1,4 @@
-﻿using Mentula.Content.MM;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +20,12 @@ namespace Mentula.Content.MM
             Source = source;
             Container = new Container();
 
-            string[] newLineSplit = source.Replace("\t", "").Replace("\r", "").Split('\n').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            string[] newLineSplit = source
+                .Replace("\t", string.Empty)
+                .Replace("\r", string.Empty)
+                .Split('\n')
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToArray();
 
             Dictionary<string, string> valueLines = new Dictionary<string, string>();
             Stack<string> containers = new Stack<string>();
@@ -71,7 +75,7 @@ namespace Mentula.Content.MM
                 }
                 catch (Exception e)
                 {
-                    throw new ArgumentException("An error occured while trying to read line: '" + line + "'", e);
+                    throw new BuildException($"An error occured while trying to read line: '{line}'", e);
                 }
             }
         }
@@ -95,7 +99,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to get a child at: '" + string.Join("/", names) + "'", e);
+                throw new BuildException($"An error occured while trying to get a child at: '{string.Join("/", names)}'", e);
             }
         }
 
@@ -125,7 +129,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to construct a child at: '" + string.Join("/", names) + "'", e);
+                throw new BuildException($"An error occured while trying to construct a child at: '{string.Join("/", names)}'", e);
             }
         }
 
@@ -140,10 +144,10 @@ namespace Mentula.Content.MM
                     string line = RemoveSpecials(values[i]);
                     string[] split = line.Split('=', ':', ',');
 
-                    string baseName = split.Length % 2 == 0 ? "" : split[0];
-                    for (int j = baseName == "" ? 0 : 1; j < split.Length; j += 2)
+                    string baseName = split.Length % 2 == 0 ? string.Empty : split[0];
+                    for (int j = baseName == string.Empty ? 0 : 1; j < split.Length; j += 2)
                     {
-                        if (baseName != "") result.Add(baseName + "." + split[j], split[j + 1]);
+                        if (baseName != string.Empty) result.Add(baseName + "." + split[j], split[j + 1]);
                         else result.Add(split[j], split[j + 1]);
                     }
                 }
@@ -152,7 +156,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to get values from split: '" + string.Join("/", values) + "'", e);
+                throw new BuildException($"An error occured while trying to get values from split: '{string.Join("/", values)}'", e);
             }
         }
 
@@ -175,7 +179,7 @@ namespace Mentula.Content.MM
             }
             catch (Exception e)
             {
-                throw new ArgumentException("An error occured while trying to split the container: '" + line + "'", e);
+                throw new BuildException($"An error occured while trying to split the container: '{line}'", e);
             }
         }
 
@@ -187,7 +191,16 @@ namespace Mentula.Content.MM
             {
                 char curr = line[i];
 
-                if (curr != ' ' & curr != '"' & curr != '\'' & curr != '{' & curr != '}' & curr != '[' & curr != ']') sb.Append(curr);
+                if (curr != ' ' &&
+                    curr != '"' &&
+                    curr != '\'' &&
+                    curr != '{' &&
+                    curr != '}' &&
+                    curr != '[' &&
+                    curr != ']')
+                {
+                    sb.Append(curr);
+                }
             }
 
             return sb.ToString();

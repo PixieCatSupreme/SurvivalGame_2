@@ -41,7 +41,7 @@ namespace Mentula.Content.MM
 
         public override string ToString()
         {
-            return "Name=" + Name + ", NumValues=" + Values.Count + ", NumChilds=" + Childs.Length;
+            return $"Name={Name}, NumValues={Values.Count}, NumChilds={Childs.Length}";
         }
     }
 }

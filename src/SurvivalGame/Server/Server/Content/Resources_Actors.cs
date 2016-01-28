@@ -1,22 +1,74 @@
 ﻿using Mentula.Content;
+using Mentula.Content.MM;
 using Microsoft.Xna.Framework.Content;
+using System.Collections.Generic;
 
 namespace Mentula.Server
 {
     public partial class Resources : ContentManager
     {
-        public Creature GetCreature(string name)
+        public Item GetItem(ulong id, ulong volumeModifier = 1)   //TODO: Replace woth propper loading
         {
-            if (creatures == null)
+            if (items == null)
             {
-                if ((creatures = Load<Creature[]>("Creatures")) == null) return null;
+                Manifest[] manifests = Load<Manifest[]>("BodyParts");
+                items = new Item[manifests.Length];
+
+                for (int i = 0; i < manifests.Length; i++)
+                {
+                    Manifest cur = manifests[i];
+
+                    if (cur.IsBase)
+                    {
+                        IMaterial material = null;
+                        if (cur.material.Value == 1)    // Biomass
+                        {
+                            material = GetBiomass(cur.material.Key);
+                        }
+
+                        items[i] = new Item(
+                            cur.id,
+                            cur.name,
+                            material,
+                            cur.volume * volumeModifier,
+                            cur.tags.ToArray());
+                    }
+                    else
+                    {
+                        int prtsCount = 0;
+                        foreach (var database in cur.parts)
+                        {
+                            prtsCount += database.Value.Length;
+                        }
+
+                        Item[] parts = new Item[prtsCount];
+                        int index = 0;
+                        foreach (var database in cur.parts)
+                        {
+                            if (database.Key == 3) // BodyPart
+                            {
+                                for (int j = 0; j < database.Value.Length; j++)
+                                {
+                                    KeyValuePair<ulong, ulong> part = database.Value[j];
+                                    parts[index++] = GetItem(part.Key, part.Value * volumeModifier);
+                                }
+                            }
+                        }
+
+                        items[i] = new Item(
+                            cur.id,
+                            cur.name,
+                            parts,
+                            cur.tags.ToArray());
+                    }
+                }
             }
 
-            for (uint i = 0; i < creatures.Length; i++)
+            for (int i = 0; i < items.Length; i++)
             {
-                Creature cur = creatures[i];
-
-                if (cur.Name.ToUpper() == name.ToUpper()) return cur;
+                Item cur = items[i];
+                if (cur == null) continue;
+                if (cur.Id == id) return cur;
             }
 
             return null;

@@ -29,31 +29,25 @@ namespace Mentula.Content
         private Tag[] DefaultSystemsVal;
 
         internal Creature()
+            : base()
         {
             Name = "The Unnameable";
             Stats = new Stats(short.MaxValue);
         }
 
-        internal Creature(string n, Vector2 pos, IntVector2 chunkpos)
+        internal Creature(string n, Stats stats, int textId)
+            :base () // TODO: Change to propper key.
         {
-            Pos = pos;
-            ChunkPos = chunkpos;
+            Pos = Vector2.Zero;
+            ChunkPos = IntVector2.Zero;
             Name = n;
-            Stats = new Stats(10);
-            Systems = new Tag[0];
-        }
-
-        internal Creature(string n, Stats s, Vector2 pos, IntVector2 chunkpos)
-        {
-            Pos = pos;
-            ChunkPos = chunkpos;
-            Name = n;
-            Stats = s;
+            Stats = stats;
+            TextureId = textId;
         }
 
         public static Creature CreatePlayer(string name)
         {
-            return new Creature(name, Vector2.Zero, IntVector2.Zero);
+            return new Creature(name, new Stats(6), 9997);
         }
 
         public Tag[] CalcSystems()

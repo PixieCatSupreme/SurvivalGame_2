@@ -1,10 +1,10 @@
-[Container: "Metals"]
+[Database: name="Metals", id=0]
 {
 	[Iron: 0]
 	{
 		[UTS: 350]
 		[TSAY: 80]
-		[Density: 7900]
+		[Density: 7.9]
 		[MeltingPoint: 1808]
 		[VaporizationPoint: 3023]
 		[IonizationPoint: 91290]
@@ -14,7 +14,7 @@
 	{
 		[UTS: 15]
 		[TSAY: 9]
-		[Density: 7300]
+		[Density: 7.3]
 		[MeltingPoint: 505]
 		[VaporizationPoint: 2875]
 		[IonizationPoint: 85225]
@@ -24,7 +24,7 @@
 	{
 		[UTS: 210]
 		[TSAY: 117]
-		[Density: 8900]
+		[Density: 8.9]
 		[MeltingPoint: 1357]
 		[VaporizationPoint: 2835]
 		[IonizationPoint: 89663]
@@ -34,7 +34,7 @@
 	{
 		[UTS: 100]
 		[TSAY: 100]
-		[Density: 19300]
+		[Density: 19.3]
 		[MeltingPoint: 1337]
 		[VaporizationPoint: 3243]
 		[IonizationPoint: 107055]
@@ -44,7 +44,7 @@
 	{
 		[UTS: 1000]
 		[TSAY: 1000]
-		[Density: 22590]
+		[Density: 22.59]
 		[MeltingPoint: 3306]
 		[VaporizationPoint: 5285]
 		[IonizationPoint: 101000]
