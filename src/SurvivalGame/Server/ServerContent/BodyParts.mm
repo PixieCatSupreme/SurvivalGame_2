@@ -203,6 +203,86 @@
 		}
 	}
 
+	[TorsoFlesh:15]
+	{
+		[Material]
+		{
+			[db=1]
+			[id=1]
+			[volume=1711]
+		}
+	}
+
+	[TorsoSkin:16]
+	{
+		[Material]
+		{
+		[db=1]
+		[Id=2]
+		[volume=400]
+		}
+	}
+
+	[Skull: 17]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=0]
+			[volume=2220]
+		}
+	}
+
+	[HeadSkin:18]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=2]
+			[volume=75]
+		}
+	}
+
+	[ArmFlesh:19]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=1]
+			[volume=1950]
+		}
+	}
+
+	[ArmSkin:20]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=2]
+			[volume=152]
+		}
+	}
+
+	[LegFlesh:21]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=1]
+			[volume=6776]
+		}
+	}
+
+	[LegSkin:22]
+	{
+		[Material]
+		{
+			[db=1]
+			[Id=2]
+			[volume=552]
+		}
+	}
+
 	[Torso:100]
 	{
 		[Items]
@@ -213,19 +293,8 @@
 			[RightKidney: 12]
 			[Heart: 13]
 			[Liver: 14]
-			[Biomass: 1]
-			{
-				[Flesh]
-				{
-					[Id=1]
-					[volume=1711]
-				}
-				[Skin]
-				{
-					[Id=2]
-					[volume=400]
-				}
-			}
+			[Flesh: 15]
+			[Skin: 16]
 		}
 	}
 
@@ -239,19 +308,8 @@
 			[LeftEar: 9]
 			[RightEar: 9]
 			[Mouth: 10]
-			[Biomass: 1]
-			{
-				[Bone]
-				{
-					[id=0]
-					[volume=2220]
-				}
-				[Skin]
-				{
-					[id=2]
-					[volume=75]
-				}
-			}
+			[Skull: 17]
+			[HeadSkin:18]
 		}
 	}
 	[Arm:102]
@@ -270,19 +328,8 @@
 			[Humerus: 4]
 			[Radius: 5]
 			[Ulna: 6]
-			[Biomass: 1]
-			{
-				[Flesh]
-				{
-					[id=1]
-					[volume=1950]
-				}
-				[Skin]
-				{
-					[id=2]
-					[volume=152]
-				}
-			}
+			[ArmFlesh: 19]
+			[ArmSkin: 20]
 		}
 	}
 
@@ -302,19 +349,8 @@
 			[Tibia: 0]
 			[Fibula: 1]
 			[Femur: 2]
-			[Biomass: 1]
-			{
-				[Flesh]
-				{
-					[id=1]
-					[volume=6776]
-				}
-				[Skin]
-				{
-					[id=2]
-					[volume=552]
-				}
-			}
+			[LegFlesh:21]
+			[LegSkin:22]
 		}
 	}	
 }
