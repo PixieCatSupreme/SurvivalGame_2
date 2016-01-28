@@ -43,15 +43,15 @@ namespace Mentula.Content.MM
                         }
                     }
 
-                    bool isMat = false;
+                    bool set = false;
                     if (cur.TryGetChild("Material", out child))
                     {
                         if (child.Childs.Length < 1) throw new ParameterNullException("Material Pointer");
-                        isMat = true;
+                        set = true;
 
                         ulong dbId;
                         if (child.TryGetValue("db", out rawValue)) dbId = Utils.ConvertToUInt64("db", rawValue);
-                        else dbId = cur.GetUInt64Value("Id");
+                        else dbId = input.Container.GetUInt64Value("Id");
 
                         mani.volume = child.GetUInt64Value("Volume");
                         mani.material = new KeyValuePair<ulong, ulong>(
@@ -61,22 +61,21 @@ namespace Mentula.Content.MM
 
                     if (cur.TryGetChild("Items", out child))                                                // Read Items
                     {
-                        if (isMat) throw new ArgumentException("An item cannot contain a material and parts!");
+                        if (set) throw new ArgumentException("An item cannot contain a material and parts!");
+                        set = true;
                         mani.parts = new Dictionary<ulong, KeyValuePair<ulong, ulong>[]>();
 
-                        ulong dbId = cur.GetUInt64Value("Id");                                              // Get current dbId.
-
-                        KeyValuePair<ulong, ulong>[] databank = new KeyValuePair<ulong, ulong>[child.Values.Count];
-                        for (int j = 0; j < databank.Length; j++)                                           // Read databank for local non volume pointers.
-                        {
-                            databank[j] = new KeyValuePair<ulong, ulong>(
-                                Utils.ConvertToUInt64("Id", child.Values.ElementAt(j).Value),               // Get id from local non volume pointer.
-                                0);                                                                         // Volume for non specified.
-                        }
-
-                        mani.parts.Add(dbId, databank);
+                        ulong dbId = input.Container.GetUInt64Value("Id");                                  // Get current dbId.
 
                         List<KeyValuePair<ulong, ulong>> localVolSpecParts = new List<KeyValuePair<ulong, ulong>>();
+
+                        for (int j = 0; j < child.Values.Count; j++)                                           // Read databank for local non volume pointers.
+                        {
+                            localVolSpecParts.Add(new KeyValuePair<ulong, ulong>(
+                                Utils.ConvertToUInt64("Id", child.Values.ElementAt(j).Value),               // Get id from local non volume pointer.
+                                0));                                                                        // Volume for non specified.
+                        }
+
                         for (int j = 0; j < child.Childs.Length; j++)                                       // Read (Local volume specified pointers) && (non local pointers).
                         {
                             if (child.Childs[j].Childs.Length > 0)                                          // If current child is database pointer.
@@ -84,7 +83,7 @@ namespace Mentula.Content.MM
                                 Container database = child.Childs[j];
                                 dbId = database.GetUInt64Value("DEFAULT");                                  // Get specified dbId.
 
-                                databank = new KeyValuePair<ulong, ulong>[database.Values.Count];
+                                KeyValuePair<ulong, ulong>[] databank = new KeyValuePair<ulong, ulong>[database.Values.Count];
                                 for (int k = 0; k < databank.Length; k++)                                   // Read non volume pointers.
                                 {
                                     databank[k] = new KeyValuePair<ulong, ulong>(
@@ -103,7 +102,8 @@ namespace Mentula.Content.MM
                             }
                         }
 
-                        mani.parts.Add(cur.GetUInt64Value("Id"), localVolSpecParts.ToArray());
+                        if (!set) throw new BuildException($"Item found with no base material or base items: {cur.Name}!");
+                        mani.parts.Add(input.Container.GetUInt64Value("Id"), localVolSpecParts.ToArray());
                     }
 
                     result[i] = mani;

@@ -20,7 +20,12 @@ namespace Mentula.Content.MM
             Source = source;
             Container = new Container();
 
-            string[] newLineSplit = source.Replace("\t", "").Replace("\r", "").Split('\n').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            string[] newLineSplit = source
+                .Replace("\t", string.Empty)
+                .Replace("\r", string.Empty)
+                .Split('\n')
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToArray();
 
             Dictionary<string, string> valueLines = new Dictionary<string, string>();
             Stack<string> containers = new Stack<string>();
@@ -139,10 +144,10 @@ namespace Mentula.Content.MM
                     string line = RemoveSpecials(values[i]);
                     string[] split = line.Split('=', ':', ',');
 
-                    string baseName = split.Length % 2 == 0 ? "" : split[0];
-                    for (int j = baseName == "" ? 0 : 1; j < split.Length; j += 2)
+                    string baseName = split.Length % 2 == 0 ? string.Empty : split[0];
+                    for (int j = baseName == string.Empty ? 0 : 1; j < split.Length; j += 2)
                     {
-                        if (baseName != "") result.Add(baseName + "." + split[j], split[j + 1]);
+                        if (baseName != string.Empty) result.Add(baseName + "." + split[j], split[j + 1]);
                         else result.Add(split[j], split[j + 1]);
                     }
                 }
@@ -186,7 +191,16 @@ namespace Mentula.Content.MM
             {
                 char curr = line[i];
 
-                if (curr != ' ' & curr != '"' & curr != '\'' & curr != '{' & curr != '}' & curr != '[' & curr != ']') sb.Append(curr);
+                if (curr != ' ' &&
+                    curr != '"' &&
+                    curr != '\'' &&
+                    curr != '{' &&
+                    curr != '}' &&
+                    curr != '[' &&
+                    curr != ']')
+                {
+                    sb.Append(curr);
+                }
             }
 
             return sb.ToString();
