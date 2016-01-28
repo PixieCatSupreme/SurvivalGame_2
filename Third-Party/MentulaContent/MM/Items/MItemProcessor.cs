@@ -46,12 +46,12 @@ namespace Mentula.Content.MM
                     bool isMat = false;
                     if (cur.TryGetChild("Material", out child))
                     {
-                        if (child.Childs.Length < 1) throw new ParameterNullException("Material Pointer");
+                        if (child.Values.Count < 1) throw new ParameterNullException("Material Pointer");
                         isMat = true;
 
                         ulong dbId;
                         if (child.TryGetValue("db", out rawValue)) dbId = Utils.ConvertToUInt64("db", rawValue);
-                        else dbId = cur.GetUInt64Value("Id");
+                        else dbId = input.Container.GetUInt64Value("Id");
 
                         mani.volume = child.GetUInt64Value("Volume");
                         mani.material = new KeyValuePair<ulong, ulong>(
@@ -64,7 +64,7 @@ namespace Mentula.Content.MM
                         if (isMat) throw new ArgumentException("An item cannot contain a material and parts!");
                         mani.parts = new Dictionary<ulong, KeyValuePair<ulong, ulong>[]>();
 
-                        ulong dbId = cur.GetUInt64Value("Id");                                              // Get current dbId.
+                        ulong dbId = input.Container.GetUInt64Value("Id");                                              // Get current dbId.
 
                         KeyValuePair<ulong, ulong>[] databank = new KeyValuePair<ulong, ulong>[child.Values.Count];
                         for (int j = 0; j < databank.Length; j++)                                           // Read databank for local non volume pointers.
@@ -103,7 +103,7 @@ namespace Mentula.Content.MM
                             }
                         }
 
-                        mani.parts.Add(cur.GetUInt64Value("Id"), localVolSpecParts.ToArray());
+                        mani.parts.Add(input.Container.GetUInt64Value("Id"), localVolSpecParts.ToArray());
                     }
 
                     result[i] = mani;
