@@ -29,14 +29,14 @@ namespace Mentula.Content
         private Tag[] DefaultSystemsVal;
 
         internal Creature()
-            : base(new byte[0])
+            : base()
         {
             Name = "The Unnameable";
             Stats = new Stats(short.MaxValue);
         }
 
         internal Creature(string n, Stats stats, int textId)
-            :base (new byte[0]) // TODO: Change to propper key.
+            :base () // TODO: Change to propper key.
         {
             Pos = Vector2.Zero;
             ChunkPos = IntVector2.Zero;

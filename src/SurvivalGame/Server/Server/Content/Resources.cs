@@ -9,7 +9,7 @@ namespace Mentula.Server
     {
         private Metal[] metals;
         private Biomass[] biomasses;
-        private Creature[] creatures;
+        private Item[] items; // TODO: Remove (to retrogen)
 
         public Resources()
             : base(new ServiceContainer(), "Content")

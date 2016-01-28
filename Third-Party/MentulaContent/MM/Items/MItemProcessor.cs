@@ -8,7 +8,7 @@ using System.Text;
 namespace Mentula.Content.MM
 {
     [ContentProcessor(DisplayName = "Mentula Item Processor")]
-    internal class MItemProcessor : ContentProcessor<MMSource, MItemProcessor.Manifest[]>
+    internal class MItemProcessor : ContentProcessor<MMSource, Manifest[]>
     {
         public override Manifest[] Process(MMSource input, ContentProcessorContext context)
         {
@@ -116,44 +116,44 @@ namespace Mentula.Content.MM
 
             return result;
         }
+    }
 
-        [DebuggerDisplay("[{id}] {name}")]
-        internal struct Manifest
+    [DebuggerDisplay("[{id}] {name}")]
+    public struct Manifest
+    {
+        public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }
+        public bool IsBase { get { return parts == null || parts.Count < 1; } }
+
+        public ulong id;                                                // Item Id
+        public string name;                                             // Item Name
+        public ulong volume;                                            // Item Volume
+        public KeyValuePair<ulong, ulong> material;                     // (matId, dbId)
+        public List<Tag> tags;                                          // (key, value)
+        public Dictionary<ulong, KeyValuePair<ulong, ulong>[]> parts;   // (dbId, (partId, volume))
+
+        public ulong GetByteCount()
         {
-            public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }
-            public bool IsBase { get { return parts == null || parts.Count < 1; } }
+            ulong result = (ulong)Encoding.UTF8.GetBytes(name).LongLength;          // Name Byte count
+            result += sizeof(int);                                                  // Name Length specifier
 
-            public ulong id;                                                // Item Id
-            public string name;                                             // Item Name
-            public ulong volume;                                            // Item Volume
-            public KeyValuePair<ulong, ulong> material;                     // (matId, dbId)
-            public List<Tag> tags;                                          // (key, value)
-            public Dictionary<ulong, KeyValuePair<ulong, ulong>[]> parts;   // (dbId, (partId, volume))
+            result += sizeof(byte);                                                 // Tag length (octet)       
+            if (tags != null) result += (ulong)((sizeof(short) << 1) * tags.Count); // Tags
 
-            public ulong GetByteCount()
+            result += sizeof(ulong);                                                // Volume
+            result += sizeof(byte);                                                 // If has item / Length or padbits
+
+            if (IsBase) result += sizeof(ulong) << 1;                               // If Mat add dbId + ItemId
+            else
             {
-                ulong result = (ulong)Encoding.UTF8.GetBytes(name).LongLength;          // Name Byte count
-                result += sizeof(int);                                                  // Name Length specifier
-
-                result += sizeof(byte);                                                 // Tag length (octet)       
-                if (tags != null) result += (ulong)((sizeof(short) << 1) * tags.Count); // Tags
-
-                result += sizeof(ulong);                                                // Volume
-                result += sizeof(byte);                                                 // If has item / Length or padbits
-
-                if (IsBase) result += sizeof(ulong) << 1;                               // If Mat add dbId + ItemId
-                else
+                foreach (KeyValuePair<ulong, KeyValuePair<ulong, ulong>[]> dataBank in parts)
                 {
-                    foreach (KeyValuePair<ulong, KeyValuePair<ulong, ulong>[]> dataBank in parts)
-                    {
-                        result += sizeof(ulong);                                        // Database id
-                        result += sizeof(int);                                          // DataBank length
-                        result += (ulong)((sizeof(ulong) << 1) * dataBank.Value.Length);// DataBank
-                    }
+                    result += sizeof(ulong);                                        // Database id
+                    result += sizeof(int);                                          // DataBank length
+                    result += (ulong)((sizeof(ulong) << 1) * dataBank.Value.Length);// DataBank
                 }
-
-                return result;
             }
+
+            return result;
         }
     }
 }

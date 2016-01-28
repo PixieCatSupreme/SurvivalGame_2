@@ -8,7 +8,6 @@ namespace Mentula.Content
     public class Item
     {
         [MMIgnore]
-        public readonly byte[] Key;
         public readonly ulong Id;
         public readonly string Name;
         [MMOptional]
@@ -24,27 +23,13 @@ namespace Mentula.Content
         [MMOptional]
         public readonly IMaterial Material;
 
-        internal Item(byte[] key)
+        internal Item()
         {
-            NetBinaryReader nbr = new NetBinaryReader(key);
-
-            /* Set Weight */
-            /*
-            #region SetWeight
-            ulong result = 0, remainingVolume = Volume;
-
-            for (uint i = 0; i < Parts.Length; i++)
-            {
-                result += Parts[i].Weight;
-                remainingVolume -= Parts[i].Volume;
-            }
-
-            Weight = (ulong)(result + Material.Density * remainingVolume);
-            #endregion
-            */
+            Durability = 100;
         }
 
-        internal Item(ulong id, string name, IMaterial material, ulong volume)
+        public Item(ulong id, string name, IMaterial material, ulong volume)
+            :this()
         {
             Id = id;
             Volume = volume;
@@ -52,7 +37,8 @@ namespace Mentula.Content
             Material = material;
         }
 
-        internal Item(ulong id, string name, IMaterial material, ulong volume, Tag[] tags)
+        public Item(ulong id, string name, IMaterial material, ulong volume, Tag[] tags)
+            :this()
         {
             Id = id;
             Volume = volume;
@@ -61,7 +47,8 @@ namespace Mentula.Content
             Tags = tags;
         }
 
-        internal Item(ulong id, string name, Item[] parts, Tag[] tags)
+        public Item(ulong id, string name, Item[] parts, Tag[] tags)
+            :this()
         {
             Id = id;
             Name = name;
