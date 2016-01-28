@@ -69,7 +69,7 @@ namespace Mentula.Content.MM
 
                         List<KeyValuePair<ulong, ulong>> localVolSpecParts = new List<KeyValuePair<ulong, ulong>>();
 
-                        for (int j = 0; j < child.Values.Count; j++)                                           // Read databank for local non volume pointers.
+                        for (int j = 0; j < child.Values.Count; j++)                                        // Read databank for local non volume pointers.
                         {
                             localVolSpecParts.Add(new KeyValuePair<ulong, ulong>(
                                 Utils.ConvertToUInt64("Id", child.Values.ElementAt(j).Value),               // Get id from local non volume pointer.
