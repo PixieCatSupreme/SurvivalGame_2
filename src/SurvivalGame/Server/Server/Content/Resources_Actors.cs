@@ -54,6 +54,12 @@ namespace Mentula.Server
                                 }
                             }
                         }
+
+                        items[i] = new Item(
+                            cur.id,
+                            cur.name,
+                            parts,
+                            cur.tags.ToArray());
                     }
                 }
             }
@@ -61,6 +67,7 @@ namespace Mentula.Server
             for (int i = 0; i < items.Length; i++)
             {
                 Item cur = items[i];
+                if (cur == null) continue;
                 if (cur.Id == id) return cur;
             }
 
