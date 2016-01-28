@@ -29,6 +29,7 @@ namespace Mentula.Content
             NetBinaryReader nbr = new NetBinaryReader(key);
 
             /* Set Weight */
+            /*
             #region SetWeight
             ulong result = 0, remainingVolume = Volume;
 
@@ -40,6 +41,7 @@ namespace Mentula.Content
 
             Weight = (ulong)(result + Material.Density * remainingVolume);
             #endregion
+            */
         }
 
         internal Item(ulong id, string name, IMaterial material, ulong volume)

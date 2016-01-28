@@ -30,7 +30,7 @@ namespace Mentula.Content.MM
 
                 Dictionary<ulong, KeyValuePair<ulong, ulong>[]> parts = new Dictionary<ulong, KeyValuePair<ulong, ulong>[]>();
                 KeyValuePair<ulong, ulong> material = new KeyValuePair<ulong, ulong>();
-                if (Convert.ToBoolean(flags & 0x80))    
+                if ((flags & 0x80) == 0x80)    
                 {
                     byte partLength = (byte)(flags & 0x7F);
                     for (int j = 0; j < partLength; j++)

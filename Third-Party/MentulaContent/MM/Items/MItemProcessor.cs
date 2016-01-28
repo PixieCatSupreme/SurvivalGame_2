@@ -46,7 +46,6 @@ namespace Mentula.Content.MM
                     bool set = false;
                     if (cur.TryGetChild("Material", out child))
                     {
-                        if (child.Childs.Length < 1) throw new ParameterNullException("Material Pointer");
                         set = true;
 
                         ulong dbId;
@@ -120,7 +119,7 @@ namespace Mentula.Content.MM
         internal struct Manifest
         {
             public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }
-            public bool IsBase { get { return parts == null; } }
+            public bool IsBase { get { return parts == null || parts.Count < 1; } }
 
             public ulong id;                                                // Item Id
             public string name;                                             // Item Name

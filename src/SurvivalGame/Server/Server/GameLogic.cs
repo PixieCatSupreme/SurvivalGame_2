@@ -55,6 +55,8 @@ namespace Mentula.Server
                 Map.Generate(Players[Index].Value.ChunkPos);
                 Index++;
             }
+
+            Cheats.Test(content); //TODO: Remove line.
         }
 
         public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile, float rotation)

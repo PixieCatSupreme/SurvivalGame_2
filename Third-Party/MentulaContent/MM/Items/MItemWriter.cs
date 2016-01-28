@@ -33,7 +33,7 @@ namespace Mentula.Content.MM
                     }
                 }
 
-                byte flags = (byte)(cur.IsBase ? 0x80 : 0x0);
+                byte flags = (byte)(cur.IsBase ? 0x0 : 0x80);
                 if (!cur.IsBase)
                 {
                     flags |= (byte)cur.parts.Count;
