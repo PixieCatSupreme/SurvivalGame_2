@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -61,11 +62,10 @@ namespace Mentula.Content.MM
                     if (cur.TryGetChild("Items", out child))                                                // Read Items
                     {
                         if (set) throw new ArgumentException("An item cannot contain a material and parts!");
-                        set = true;
                         mani.parts = new Dictionary<ulong, KeyValuePair<ulong, ulong>[]>();
+                        set = true;
 
                         ulong dbId = input.Container.GetUInt64Value("Id");                                  // Get current dbId.
-
                         List<KeyValuePair<ulong, ulong>> localVolSpecParts = new List<KeyValuePair<ulong, ulong>>();
 
                         for (int j = 0; j < child.Values.Count; j++)                                        // Read databank for local non volume pointers.
@@ -82,12 +82,13 @@ namespace Mentula.Content.MM
                                 Container database = child.Childs[j];
                                 dbId = database.GetUInt64Value("DEFAULT");                                  // Get specified dbId.
 
-                                KeyValuePair<ulong, ulong>[] databank = new KeyValuePair<ulong, ulong>[database.Values.Count];
+                                KeyValuePair<ulong, ulong>[] databank = new KeyValuePair<ulong, ulong>[database.Childs.Length];
                                 for (int k = 0; k < databank.Length; k++)                                   // Read non volume pointers.
                                 {
+                                    Container part = database.Childs[k];
                                     databank[k] = new KeyValuePair<ulong, ulong>(
-                                        Utils.ConvertToUInt64("Id", database.Values.ElementAt(k).Value),    // Get id from non volume pointer.
-                                        0);                                                                 // Volume for non specified.
+                                        part.GetUInt64Value("Id"),                                          // Get id from non volume pointer.
+                                        part.GetUInt64Value("Volume"));
                                 }
 
                                 mani.parts.Add(dbId, databank);
@@ -116,6 +117,7 @@ namespace Mentula.Content.MM
             return result;
         }
 
+        [DebuggerDisplay("[{id}] {name}")]
         internal struct Manifest
         {
             public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }

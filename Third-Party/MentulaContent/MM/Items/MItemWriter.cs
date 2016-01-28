@@ -20,6 +20,7 @@ namespace Mentula.Content.MM
                 output.Write(cur.id);
                 output.Write(cur.GetByteCount());
                 output.WriteString(cur.name);
+                output.Write(cur.volume);
 
                 if (cur.tags == null) output.Write((byte)0);
                 else

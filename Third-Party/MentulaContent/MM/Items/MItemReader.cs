@@ -18,6 +18,7 @@ namespace Mentula.Content.MM
                 ulong id = input.ReadUInt64();
                 input.ReadUInt64();                     // Read byte count, only used for retro loading.
                 string name = input.ReadCString();
+                ulong volume = input.ReadUInt64();
 
                 byte tagLength = input.ReadByte();
                 Tag[] tags = new Tag[tagLength];
@@ -60,7 +61,7 @@ namespace Mentula.Content.MM
                 {
                     id = id,
                     name = name,
-                    volume = 0,
+                    volume = volume,
                     tags = tags.ToList(),
                     material = material,
                     parts = parts

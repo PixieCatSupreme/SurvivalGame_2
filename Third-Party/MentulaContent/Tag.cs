@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Mentula.Content
 {
     [MMEditable]
+    [DebuggerDisplay("{ToString()}")]
     public struct Tag
     {
         [MMIsName]
@@ -25,7 +27,7 @@ namespace Mentula.Content
 
         public override string ToString()
         {
-            return Key + ": " + Value.ToString();
+            return Key + " : " + Value.ToString();
         }
 
         public static Tag operator +(Tag l, Tag r)
