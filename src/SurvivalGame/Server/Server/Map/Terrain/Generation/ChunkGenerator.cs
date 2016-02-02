@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Mentula.Utilities;
-using Mentula.Utilities.MathExtensions;
-using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using Mentula.Content;
 using static Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
@@ -20,10 +14,9 @@ namespace Mentula.Server
         public static Chunk Generate(ref Chunk chunk, ref List<NPC> n)
         {
             GenerateTerrain(ref chunk);
-            GenerateLakes(ref chunk);
             GenerateTrees(ref chunk);
             GenerateWildlife(ref n, ref chunk);
-
+            
             return chunk;
         }
 
@@ -127,42 +120,6 @@ namespace Mentula.Server
                         {
                             c.Destructibles.Add(new Destructible(c.ChunkPos, pos, 500));
                         }
-                    }
-                }
-            }
-        }
-
-        private static void GenerateLakes(ref Chunk c)
-        {
-            Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
-
-            if (r.NextDouble() < 0.1)
-            {
-                IntVector2 startingPos = new IntVector2(ChunkSize / 2 - 1);
-                c.Tiles[startingPos.X + startingPos.Y * 32].Tex = 4;
-                Vector2 p = startingPos;
-                for (int i = 0; i < ChunkSize * ChunkSize >> 1; i++)
-                {
-
-                    Vector2 a = new Vector2((float)r.NextDouble() - 0.5f, (float)r.NextDouble() - 0.5f);
-                    a.Normalize();
-                    if (Vector2.Distance(p, startingPos) < ChunkSize /2 - 1)
-                    {
-                        p += a;
-                        for (int x = 0; x <= 1; x++)
-                        {
-                            for (int y = 0; y <= 1; y++)
-                            {
-                                int n = (int)p.X + x + (int)(p.Y + y) * ChunkSize;
-                                c.Tiles[n].Tex = 4;
-                            }
-                        }
-
-
-                    }
-                    else
-                    {
-                        p = startingPos;
                     }
                 }
             }

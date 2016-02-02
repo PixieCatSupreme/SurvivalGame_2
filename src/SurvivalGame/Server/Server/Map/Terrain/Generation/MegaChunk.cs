@@ -24,14 +24,14 @@ namespace Mentula.Server
             Cities = new List<City>();
             Structures = new List<Structure>();
             Pos = pos;
-            //GenerateCities();
+            GenerateCities();
         }
         private void GenerateCities()
         {
             Random r = new Random(RNG.RIntFromString(Pos.X + Seed + Pos.Y));
             int citynums = (int)(maxCities * r.NextDouble());
             for (int i = 0; i < citynums; i++)
-            {
+            {               
                 Rectangle rect = new Rectangle();
                 while (true)
                 {
@@ -53,6 +53,7 @@ namespace Mentula.Server
                     if (canplace)
                     {
                         Cities.Add(new City() { Space = rect });
+                        Cities[i].Streets = new List<Street>();               
                         List<Rectangle> streets = BinarySplitGenerator.GenerateBinarySplitMap2(new IntVector2(rect.Width, rect.Height), new IntVector2(minStreetSize), r.NextDouble().ToString());
                         Vector2 citymiddle = new Vector2(size / 2, size / 2);
                         for (int j = 0; j < streets.Count; j++)
@@ -66,12 +67,15 @@ namespace Mentula.Server
 
                         for (int j = 0; j < streets.Count; j++)
                         {
+
                             Cities[i].Streets.Add(new Street() { Space = streets[j] });
+                            Cities[i].Streets[j].Buildings = new List<Building>();
                             List<Rectangle> buildings = BinarySplitGenerator.GenerateBinarySplitMap1(new IntVector2(streets[j].Width, streets[j].Height), new IntVector2(minBuildingSize), r.NextDouble().ToString());
                             for (int k = 0; k < buildings.Count; k++)
                             {
                                 Cities[i].Streets[j].Buildings.Add(new Building() { Space = buildings[k] });
                                 List<Rectangle> rooms = BinarySplitGenerator.GenerateBinarySplitMap1(new IntVector2(buildings[k].Width, buildings[k].Height), new IntVector2(minRoomSize), r.NextDouble().ToString());
+                                Cities[i].Streets[j].Buildings[k].Rooms = new List<Room>();
                                 for (int l = 0; l < rooms.Count; l++)
                                 {
                                     Cities[i].Streets[j].Buildings[k].Rooms.Add(new Room() { Space = rooms[l] });

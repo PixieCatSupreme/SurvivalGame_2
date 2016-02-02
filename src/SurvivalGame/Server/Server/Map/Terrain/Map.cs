@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mentula.Server;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using static Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
 {
@@ -18,7 +15,7 @@ namespace Mentula.Server
         public List<NPC> LoadedNPCs;
         private List<NPC> NPCList;
         private List<MegaChunk> MegaChunks;
-
+        
 
         public const int Range_S = Res.Range_C + 1;
 
@@ -238,52 +235,59 @@ namespace Mentula.Server
 
         private void GenerateStructures(ref Chunk c)
         {
-            IntVector2 cp = new IntVector2(c.ChunkPos.X / 16, c.ChunkPos.Y / 16);
+            IntVector2 mcp = new IntVector2(c.ChunkPos.X / MegaChunkSize, c.ChunkPos.Y / MegaChunkSize);
             MegaChunk m = null;
-            Rectangle chunkSpace = new Rectangle(c.ChunkPos.X * 16, c.ChunkPos.Y * 16, 16, 16);
-            int cx= c.ChunkPos.X * 16;
-            int cy = c.ChunkPos.Y * 16;
+            Rectangle chunkSpace = new Rectangle(c.ChunkPos.X * ChunkSize, c.ChunkPos.Y * ChunkSize, ChunkSize, ChunkSize);
+            int cx= c.ChunkPos.X * ChunkSize;
+            int cy = c.ChunkPos.Y * ChunkSize;
+
             for (int i = 0; i < MegaChunks.Count; i++)
             {
-                if (cp == MegaChunks[i].Pos)
+                if (mcp == MegaChunks[i].Pos)
                 {
                     m = MegaChunks[i];
                 }
             }
+
             if (m == null)
             {
-
-                m = new MegaChunk(cp);
+                m = new MegaChunk(mcp);
                 MegaChunks.Add(m);
             }
+
             for (int i = 0; i < m.Structures.Count; i++)
             {
                 if (Rectangle.Intersect(m.Structures[i].Space, chunkSpace) != Rectangle.Empty)
                 {
                     Structure s = m.Structures[i];
-                    int sx = s.Space.X;
-                    int sy = s.Space.Y;
+                    int sx = s.Space.X+m.Pos.X*MegaChunkSize;
+                    int sy = s.Space.Y + m.Pos.Y * MegaChunkSize;
+
                     for (int j = 0; j < s.Tiles.Count; j++)
                     {
                         int x = sx + s.Tiles[j].Pos.X - cx;
                         int y = sy + s.Tiles[j].Pos.Y - cy;
-                        int indexv = x + y * 16;
-                        if (x >= 0 && x < 16 && y >= 0 && y < 16)
+                        int indexv = x + y * ChunkSize;
+
+                        if (x >= 0 && x < ChunkSize && y >= 0 && y < ChunkSize)
                         {
 
                             c.Tiles[indexv] = new Tile(s.Tiles[j].Tex, new IntVector2(x, y));
                         }
                     }
+
                     for (int j = 0; j < s.Destructibles.Count; j++)
                     {
                         int x = sx + (int)s.Destructibles[j].Pos.X - cx;
                         int y = sy + (int)s.Destructibles[j].Pos.Y - cy;
-                        int indexv = x + y * 16;
-                        if (x >= 0 && x < 16 && y >= 0 && y < 16)
+                        int indexv = x + y * ChunkSize;
+
+                        if (x >= 0 && x < ChunkSize && y >= 0 && y < ChunkSize)
                         {
                             c.Destructibles.Add(new Destructible(c.ChunkPos, new Vector2(x, y), s.Destructibles[j].Id) );
                         }
                     }
+
                 }
             }
         }
