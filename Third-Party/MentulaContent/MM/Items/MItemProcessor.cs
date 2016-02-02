@@ -119,7 +119,7 @@ namespace Mentula.Content.MM
     }
 
     [DebuggerDisplay("[{id}] {name}")]
-    public struct Manifest
+    public struct Manifest : IEquatable<Manifest>
     {
         public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }
         public bool IsBase { get { return parts == null || parts.Count < 1; } }
@@ -130,6 +130,9 @@ namespace Mentula.Content.MM
         public KeyValuePair<ulong, ulong> material;                     // (matId, dbId)
         public List<Tag> tags;                                          // (key, value)
         public Dictionary<ulong, KeyValuePair<ulong, ulong>[]> parts;   // (dbId, (partId, volume))
+
+        public static bool operator ==(Manifest obj1, Manifest obj2) { return obj1.Equals(obj2); }
+        public static bool operator !=(Manifest obj1, Manifest obj2) { return !obj1.Equals(obj2); }
 
         public ulong GetByteCount()
         {
@@ -154,6 +157,30 @@ namespace Mentula.Content.MM
             }
 
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = unchecked((int)2166136261);
+
+                hash = hash * 16777619 ^ id.GetHashCode();
+                hash = hash * 16777619 ^ volume.GetHashCode();
+
+                return hash;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Manifest) return Equals((Manifest)obj);
+            return false;
+        }
+
+        public bool Equals(Manifest other)
+        {
+            return other.id == id;
         }
     }
 }
