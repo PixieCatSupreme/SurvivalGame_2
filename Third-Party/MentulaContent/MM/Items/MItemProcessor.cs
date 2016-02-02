@@ -8,11 +8,11 @@ using System.Text;
 namespace Mentula.Content.MM
 {
     [ContentProcessor(DisplayName = "Mentula Item Processor")]
-    internal class MItemProcessor : ContentProcessor<MMSource, Manifest[]>
+    internal class MItemProcessor : ContentProcessor<MMSource, ItemManifest[]>
     {
-        public override Manifest[] Process(MMSource input, ContentProcessorContext context)
+        public override ItemManifest[] Process(MMSource input, ContentProcessorContext context)
         {
-            Manifest[] result = new Manifest[input.Container.Childs.Length];
+            ItemManifest[] result = new ItemManifest[input.Container.Childs.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -20,7 +20,7 @@ namespace Mentula.Content.MM
 
                 try
                 {
-                    Manifest mani = new Manifest();
+                    ItemManifest mani = new ItemManifest();
                     string rawValue = string.Empty;
 
                     mani.id = cur.GetUInt64Value("DEFAULT");
@@ -72,7 +72,7 @@ namespace Mentula.Content.MM
                         {
                             localVolSpecParts.Add(new KeyValuePair<ulong, ulong>(
                                 Utils.ConvertToUInt64("Id", child.Values.ElementAt(j).Value),               // Get id from local non volume pointer.
-                                0));                                                                        // Volume for non specified.
+                                1));                                                                        // Volume for non specified.
                         }
 
                         for (int j = 0; j < child.Childs.Length; j++)                                       // Read (Local volume specified pointers) && (non local pointers).
@@ -119,7 +119,7 @@ namespace Mentula.Content.MM
     }
 
     [DebuggerDisplay("[{id}] {name}")]
-    public struct Manifest : IEquatable<Manifest>
+    public struct ItemManifest
     {
         public bool IsValid { get { return !default(KeyValuePair<ulong, ulong>).Equals(material) || (parts != null && parts.Count > 0); } }
         public bool IsBase { get { return parts == null || parts.Count < 1; } }
@@ -131,12 +131,9 @@ namespace Mentula.Content.MM
         public List<Tag> tags;                                          // (key, value)
         public Dictionary<ulong, KeyValuePair<ulong, ulong>[]> parts;   // (dbId, (partId, volume))
 
-        public static bool operator ==(Manifest obj1, Manifest obj2) { return obj1.Equals(obj2); }
-        public static bool operator !=(Manifest obj1, Manifest obj2) { return !obj1.Equals(obj2); }
-
         public ulong GetByteCount()
         {
-            ulong result = (ulong)Encoding.UTF8.GetBytes(name).LongLength;          // Name Byte count
+            ulong result = (ulong)Encoding.ASCII.GetBytes(name).LongLength;          // Name Byte count
             result += sizeof(int);                                                  // Name Length specifier
 
             result += sizeof(byte);                                                 // Tag length (octet)       
@@ -157,30 +154,6 @@ namespace Mentula.Content.MM
             }
 
             return result;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = unchecked((int)2166136261);
-
-                hash = hash * 16777619 ^ id.GetHashCode();
-                hash = hash * 16777619 ^ volume.GetHashCode();
-
-                return hash;
-            }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is Manifest) return Equals((Manifest)obj);
-            return false;
-        }
-
-        public bool Equals(Manifest other)
-        {
-            return other.id == id;
         }
     }
 }

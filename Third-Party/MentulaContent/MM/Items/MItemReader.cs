@@ -9,9 +9,9 @@ namespace Mentula.Content.MM
         public static Stack<ulong> IdBuffer = new Stack<ulong>();
     }
 
-    internal class MItemReader : ContentTypeReader<Manifest>
+    internal class MItemReader : ContentTypeReader<ItemManifest>
     {
-        protected override Manifest Read(ContentReader input, Manifest existingInstance)
+        protected override ItemManifest Read(ContentReader input, ItemManifest existingInstance)
         {
             int length = input.ReadInt32();
             ulong toFind = Variables.IdBuffer.Pop();
@@ -63,7 +63,7 @@ namespace Mentula.Content.MM
                             input.ReadUInt64());
                     }
 
-                    return new Manifest
+                    return new ItemManifest
                     {
                         id = id,
                         name = name,

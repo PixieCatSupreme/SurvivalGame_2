@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Mentula.Utilities
@@ -8,6 +9,8 @@ namespace Mentula.Utilities
     /// <summary>
     /// Defines a vector with two components.
     /// </summary>
+    [DebuggerStepThrough]
+    [DebuggerDisplay("{ToString()}")]
     public struct IntVector2 : IEquatable<IntVector2>, IEquatable<Vector2>
     {
         /// <summary> Returns a IntVector2 with both of its components set to one. </summary>
@@ -32,11 +35,11 @@ namespace Mentula.Utilities
         /// <summary> Gets or sets the y-component of the vector. </summary>
         public int Y;
 
-        private static IntVector2 pOne;
-        private static IntVector2 pUnitX;
-        private static IntVector2 pUnitY;
-        private static IntVector2 pZero;
-        private static IntVector2 pInvOne;
+        private static IntVector2 pOne = new IntVector2(1);
+        private static IntVector2 pUnitX = new IntVector2(1, 0);
+        private static IntVector2 pUnitY = new IntVector2(0, 1);
+        private static IntVector2 pZero = new IntVector2(0);
+        private static IntVector2 pInvOne = new IntVector2(-1);
 
         /// <summary> Creates a new instance of IntVector2 </summary>
         /// <param name="value"> Value to initialize both componets to. </param>
@@ -70,15 +73,6 @@ namespace Mentula.Utilities
         {
             X = (int)vector.X;
             Y = (int)vector.Y;
-        }
-
-        static IntVector2()
-        {
-            pOne = new IntVector2(1);
-            pUnitX = new IntVector2(1, 0);
-            pUnitY = new IntVector2(0, 1);
-            pZero = new IntVector2(0);
-            pInvOne = new IntVector2(-1);
         }
 
         public static IntVector2 operator +(IntVector2 sender, IntVector2 caller) { return new IntVector2(sender.X + caller.X, sender.Y + caller.Y); }

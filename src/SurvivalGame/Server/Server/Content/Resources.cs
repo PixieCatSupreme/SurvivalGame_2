@@ -29,7 +29,7 @@ namespace Mentula.Server
         public Item GetItem(string dataBase, ulong id, ulong volumeModifier = 1)
         {
             Variables.IdBuffer.Push(id);
-            Manifest mani = Load<Manifest>(dataBase);
+            ItemManifest mani = Load<ItemManifest>(dataBase);
 
             if (mani.IsBase)
             {
