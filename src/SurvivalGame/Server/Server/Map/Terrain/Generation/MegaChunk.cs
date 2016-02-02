@@ -12,6 +12,7 @@ namespace Mentula.Server
     public class MegaChunk
     {
         public List<City> Cities;
+        public List<Structure> Structures;
         public IntVector2 Pos;
         private const int citySize = 1024;
         private const int maxCities = 6;
@@ -20,8 +21,10 @@ namespace Mentula.Server
         private const int minRoomSize = 2;
         public MegaChunk(IntVector2 pos)
         {
+            Cities = new List<City>();
+            Structures = new List<Structure>();
             Pos = pos;
-            GenerateCities();
+            //GenerateCities();
         }
         private void GenerateCities()
         {

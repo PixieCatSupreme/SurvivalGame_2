@@ -7,6 +7,7 @@ using Mentula.Server;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
+using Microsoft.Xna.Framework;
 
 namespace Mentula.Server
 {
@@ -16,6 +17,8 @@ namespace Mentula.Server
         private List<Chunk> ChunkList;
         public List<NPC> LoadedNPCs;
         private List<NPC> NPCList;
+        private List<MegaChunk> MegaChunks;
+
 
         public const int Range_S = Res.Range_C + 1;
 
@@ -25,6 +28,16 @@ namespace Mentula.Server
             ChunkList = new List<Chunk>();
             LoadedNPCs = new List<NPC>();
             NPCList = new List<NPC>();
+            MegaChunks = new List<MegaChunk>();
+            MegaChunks.Add(new MegaChunk(new IntVector2(0, 0)));
+            Structure s = new Structure();
+            for (int i = 0; i < 35; i++)
+            {
+                s.Tiles.Add(new Tile(9999, new IntVector2(i, 5)));
+                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(5, i), 9999));
+            }
+            s.RescaleSpace();
+            MegaChunks[0].Structures.Add(s);
         }
 
         public bool Generate(IntVector2 pos)
@@ -50,6 +63,7 @@ namespace Mentula.Server
                         List<NPC> n = new List<NPC>();
                         Chunk c = new Chunk(pos + new IntVector2(x, y));
                         ChunkGenerator.Generate(ref c, ref n);
+                        GenerateStructures(ref c);
                         LoadedChunks.Add(c);
                         ChunkList.Add(c);
                         LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
@@ -189,7 +203,7 @@ namespace Mentula.Server
 
         public void UnloadChunks(IntVector2 pos)
         {
-            for (int i = 0; i < LoadedChunks.Count; )
+            for (int i = 0; i < LoadedChunks.Count;)
             {
                 if (Math.Abs(LoadedChunks[i].ChunkPos.X - pos.X) > Range_S | Math.Abs(LoadedChunks[i].ChunkPos.Y - pos.Y) > Range_S) LoadedChunks.RemoveAt(i);
                 else i++;
@@ -198,7 +212,7 @@ namespace Mentula.Server
 
         public void UnloadChunks(IntVector2[] pos)
         {
-            for (int i = 0; i < LoadedChunks.Count; )
+            for (int i = 0; i < LoadedChunks.Count;)
             {
                 bool isnearplayer = false;
                 for (int p = 0; p < pos.Length; p++)
@@ -209,7 +223,7 @@ namespace Mentula.Server
                 if (!isnearplayer) LoadedChunks.RemoveAt(i);
                 else i++;
             }
-            for (int i = 0; i < LoadedNPCs.Count; )
+            for (int i = 0; i < LoadedNPCs.Count;)
             {
                 bool isnearplayer = false;
                 for (int p = 0; p < pos.Length; p++)
@@ -219,6 +233,58 @@ namespace Mentula.Server
 
                 if (!isnearplayer) LoadedNPCs.RemoveAt(i);
                 else i++;
+            }
+        }
+
+        private void GenerateStructures(ref Chunk c)
+        {
+            IntVector2 cp = new IntVector2(c.ChunkPos.X / 16, c.ChunkPos.Y / 16);
+            MegaChunk m = null;
+            Rectangle chunkSpace = new Rectangle(c.ChunkPos.X * 16, c.ChunkPos.Y * 16, 16, 16);
+            int cx= c.ChunkPos.X * 16;
+            int cy = c.ChunkPos.Y * 16;
+            for (int i = 0; i < MegaChunks.Count; i++)
+            {
+                if (cp == MegaChunks[i].Pos)
+                {
+                    m = MegaChunks[i];
+                }
+            }
+            if (m == null)
+            {
+
+                m = new MegaChunk(cp);
+                MegaChunks.Add(m);
+            }
+            for (int i = 0; i < m.Structures.Count; i++)
+            {
+                if (Rectangle.Intersect(m.Structures[i].Space, chunkSpace) != Rectangle.Empty)
+                {
+                    Structure s = m.Structures[i];
+                    int sx = s.Space.X;
+                    int sy = s.Space.Y;
+                    for (int j = 0; j < s.Tiles.Count; j++)
+                    {
+                        int x = sx + s.Tiles[j].Pos.X - cx;
+                        int y = sy + s.Tiles[j].Pos.Y - cy;
+                        int indexv = x + y * 16;
+                        if (x >= 0 && x < 16 && y >= 0 && y < 16)
+                        {
+
+                            c.Tiles[indexv] = new Tile(s.Tiles[j].Tex, new IntVector2(x, y));
+                        }
+                    }
+                    for (int j = 0; j < s.Destructibles.Count; j++)
+                    {
+                        int x = sx + (int)s.Destructibles[j].Pos.X - cx;
+                        int y = sy + (int)s.Destructibles[j].Pos.Y - cy;
+                        int indexv = x + y * 16;
+                        if (x >= 0 && x < 16 && y >= 0 && y < 16)
+                        {
+                            c.Destructibles.Add(new Destructible(c.ChunkPos, new Vector2(x, y), s.Destructibles[j].Id) );
+                        }
+                    }
+                }
             }
         }
 
