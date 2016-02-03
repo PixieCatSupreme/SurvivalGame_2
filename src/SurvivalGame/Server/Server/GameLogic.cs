@@ -3,7 +3,6 @@ using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mentula.Server
 {
@@ -50,8 +49,7 @@ namespace Mentula.Server
         {
             if (Index < Players.Length)
             {
-                Players[Index] = new KeyValuePair<long, Creature>(id, Creature.CreatePlayer(name));
-
+                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
                 Map.Generate(Players[Index].Value.ChunkPos);
                 Index++;
             }

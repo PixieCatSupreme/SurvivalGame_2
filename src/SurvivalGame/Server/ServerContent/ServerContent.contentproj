@@ -36,14 +36,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Biomass.mm">
+    <Compile Include="Databases\Biomass.mm">
       <Name>Biomass</Name>
       <Importer>MMImporter</Importer>
       <Processor>MBioProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Metals.mm">
+    <Compile Include="Databases\Metals.mm">
       <Name>Metals</Name>
       <Importer>MMImporter</Importer>
       <Processor>MMetalProcessor</Processor>
@@ -57,10 +57,24 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BodyParts.mm">
+    <Compile Include="Databases\BodyParts.mm">
       <Name>BodyParts</Name>
       <Importer>MMImporter</Importer>
       <Processor>MItemProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBKeys.mm">
+      <Name>DBKeys</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MRProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Databases\Creatures.mm">
+      <Name>Creatures</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MCreatureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

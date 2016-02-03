@@ -16,7 +16,6 @@ namespace Mentula.Content
         [MMIgnore]
         public float Rotation { get; set; }
 
-        public readonly string Name;
         public readonly Stats Stats;
         public readonly int TextureId;
         [MMOptional]
@@ -29,25 +28,17 @@ namespace Mentula.Content
         private Tag[] DefaultSystemsVal;
 
         internal Creature()
-            : base()
+            : base(0, "The Unnameable", Cheats.Unobtanium, ulong.MaxValue)
         {
-            Name = "The Unnameable";
             Stats = new Stats(short.MaxValue);
         }
 
-        internal Creature(string n, Stats stats, int textId)
-            :base () // TODO: Change to propper key.
+        public Creature(ulong id, string name, int tex, bool isBio, Stats stats, Item[] parts)
+            : base(id, name, parts)
         {
-            Pos = Vector2.Zero;
-            ChunkPos = IntVector2.Zero;
-            Name = n;
+            TextureId = tex;
+            IsBio = isBio;
             Stats = stats;
-            TextureId = textId;
-        }
-
-        public static Creature CreatePlayer(string name)
-        {
-            return new Creature(name, new Stats(6), 9997);
         }
 
         public Tag[] CalcSystems()

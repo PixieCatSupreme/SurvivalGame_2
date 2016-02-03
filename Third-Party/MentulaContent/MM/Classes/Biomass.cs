@@ -23,7 +23,7 @@ namespace Mentula.Content
 
         public override string ToString()
         {
-            return "BurnT=" + BurnTemperature.ToString() + " NutrV=" + NutritiousValue.ToString() + " Material=" + base.ToString();
+            return $"BurnT={BurnTemperature} NutrV={NutritiousValue} Material={base.ToString()}";
         }
     }
 }

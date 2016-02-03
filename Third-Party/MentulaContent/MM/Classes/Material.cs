@@ -5,7 +5,7 @@ namespace Mentula.Content
 {
     [DebuggerDisplay("Id={Id}, Name={Name}")]
     [MMEditable]
-    public abstract class Material : IMaterial
+    public abstract class Material
     {
         [MMIsDefault]
         public ulong Id { get; private set; }
@@ -61,15 +61,5 @@ namespace Mentula.Content
         {
             return $"Id={Id} Name={Name} UTS={Ultimate_Tensile_Strength} TSAY={Tensile_Strain_At_Yield} Dens={Density}";
         }
-    }
-
-    public interface IMaterial
-    {
-        ulong Id { get; }
-        string Name { get; }
-
-        float Ultimate_Tensile_Strength { get; }
-        float Tensile_Strain_At_Yield { get; }
-        float Density { get; }
     }
 }
