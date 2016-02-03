@@ -27,14 +27,14 @@ namespace Mentula.Server
             NPCList = new List<NPC>();
             MegaChunks = new List<MegaChunk>();
             MegaChunks.Add(new MegaChunk(new IntVector2(0, 0)));
-            Structure s = new Structure();
-            for (int i = 0; i < 35; i++)
-            {
-                s.Tiles.Add(new Tile(9999, new IntVector2(i, 5)));
-                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(5, i), 9999));
-            }
-            s.RescaleSpace();
-            MegaChunks[0].Structures.Add(s);
+            //Structure s = new Structure();
+            //for (int i = 0; i < 35; i++)
+            //{
+            //    s.Tiles.Add(new Tile(9999, new IntVector2(i, 5)));
+            //    s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(5, i), 9999));
+            //}
+            //s.RescaleSpace();
+            //MegaChunks[0].Structures.Add(s);
         }
 
         public bool Generate(IntVector2 pos)

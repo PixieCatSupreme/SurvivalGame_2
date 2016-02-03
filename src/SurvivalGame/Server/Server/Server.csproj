@@ -90,7 +90,6 @@
     <Compile Include="Map\Structure\Generation\BinarySplitGenerator.cs" />
     <Compile Include="Map\Structure\Generation\Building.cs" />
     <Compile Include="Map\Structure\Generation\City.cs" />
-    <Compile Include="Map\Structure\Generation\Room.cs" />
     <Compile Include="Map\Structure\Generation\Street.cs" />
     <Compile Include="Map\Structure\Generation\Structure.cs" />
     <Compile Include="Map\Terrain\Generation\Chunk.cs" />

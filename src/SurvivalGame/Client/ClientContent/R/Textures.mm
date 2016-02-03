@@ -7,6 +7,10 @@
 		[Grassland: id=2, name="Grass_GrassLand"]
 		[Forest: id=3, name="Grass_Forest"]
 		[Water: id=4, name="Water"]
+		[Floor: id=5, name="Floor"]
+		[Floor2: id=6, name="Floor2"]
+		[Wall_Brick1: id=7, name="Wall_Brick1"]
+		[Wall_Brick2: id=8, name="Wall_Brick2"]
 	}
 
 	[Container: "Destructable"]

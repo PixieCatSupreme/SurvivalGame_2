@@ -34,7 +34,7 @@ namespace Mentula.Client
 
         protected override void Initialize()
         {
-            hero = new NPC();
+            hero = new NPC() { Pos=new Vector2(-1524,-2166)};
             chunks = new Chunk[0];
             npcs = new NPC[0];
             mainMenu.DiscoverCalled += OnConnect;
