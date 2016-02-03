@@ -1,8 +1,6 @@
 ﻿using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System.Linq;
-using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Content
 {
