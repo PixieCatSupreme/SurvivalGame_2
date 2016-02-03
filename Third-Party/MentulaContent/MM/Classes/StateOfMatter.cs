@@ -32,7 +32,7 @@ namespace Mentula.Content
 
         public override string ToString()
         {
-            return "Melt=" + MeltingPoint.ToString() + " Vap=" + VaporizationPoint.ToString() + " Ion=" + IonizationPoint.ToString();
+            return $"Melt={MeltingPoint} Vap={VaporizationPoint} Ion={IonizationPoint}";
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Mentula.Server
 
             if (mani.IsBase)
             {
-                IMaterial material = null;
+                Material material = null;
 
                 switch (mani.material.Value)
                 {

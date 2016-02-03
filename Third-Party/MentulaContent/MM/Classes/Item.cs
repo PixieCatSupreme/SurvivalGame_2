@@ -14,7 +14,6 @@ namespace Mentula.Content
         public readonly string Name;
         [MMOptional]
         public readonly ulong Volume;
-        public readonly ulong Weight;
         [MMOptional]
         public byte Durability;
 
@@ -23,7 +22,7 @@ namespace Mentula.Content
         [MMOptional]
         public readonly Item[] Parts;
         [MMOptional]
-        public readonly IMaterial Material;
+        public readonly Material Material;
 
         internal Item()
         {
@@ -32,7 +31,7 @@ namespace Mentula.Content
             Parts = new Item[0];
         }
 
-        public Item(ulong id, string name, IMaterial material, ulong volume)
+        public Item(ulong id, string name, Material material, ulong volume)
             : this()
         {
             Id = id;
@@ -41,7 +40,7 @@ namespace Mentula.Content
             Material = material;
         }
 
-        public Item(ulong id, string name, IMaterial material, ulong volume, Tag[] tags)
+        public Item(ulong id, string name, Material material, ulong volume, Tag[] tags)
             : this()
         {
             Id = id;
@@ -132,14 +131,17 @@ namespace Mentula.Content
         public float CalcWeight()
         {
             float weight = 0;
+
             if (Material != null)
             {
                 weight = Material.Density * Volume;
             }
+
             for (int i = 0; i < Parts.Length; i++)
             {
                 weight += Parts[i].CalcWeight();
             }
+
             return weight;
         }
     }

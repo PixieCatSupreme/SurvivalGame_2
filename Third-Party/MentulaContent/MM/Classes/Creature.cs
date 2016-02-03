@@ -28,7 +28,7 @@ namespace Mentula.Content
         private Tag[] DefaultSystemsVal;
 
         internal Creature()
-            : base(0, "The Unnameable", new Item[0])
+            : base(0, "The Unnameable", Cheats.Unobtanium, ulong.MaxValue)
         {
             Stats = new Stats(short.MaxValue);
         }
