@@ -11,16 +11,9 @@ namespace Mentula.Server
         private static float[] rainArray;
 
 
-        public static Chunk Generate(ref Chunk chunk, ref List<NPC> n)
-        {
-            GenerateTerrain(ref chunk);
-            GenerateTrees(ref chunk);
-            GenerateWildlife(ref n, ref chunk);
-            
-            return chunk;
-        }
 
-        private static void GenerateTerrain(ref Chunk chunk)
+
+        public static void GenerateTerrain(ref Chunk chunk)
         {
             chunk.Tiles = new Tile[ChunkSize * ChunkSize];
             rainArray = new float[ChunkSize * ChunkSize];
@@ -96,7 +89,7 @@ namespace Mentula.Server
 
         }
 
-        private static void GenerateTrees(ref Chunk c)
+        public static void GenerateTrees(ref Chunk c, List<Structure> s)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
             for (int i = 0; i < ChunkSize * ChunkSize; i++)
@@ -106,14 +99,24 @@ namespace Mentula.Server
                 {
                     Vector2 pos = new Vector2(i % ChunkSize, i / ChunkSize);
                     bool canplace = true;
-                    for (int j = 0; j < c.Destructibles.Count; j++)
+                    for (int j = 0; j < s.Count; j++)
                     {
-                        if (c.Destructibles[j].Pos == pos)
+                        Rectangle rect = new Rectangle(s[j].Space.X - c.ChunkPos.X * ChunkSize, s[j].Space.Y - c.ChunkPos.Y * ChunkSize, s[j].Space.Width, s[j].Space.Height);
+                        if (!Rectangle.Intersect(rect, new Rectangle((int)pos.X, (int)pos.Y, 1, 1)).IsEmpty)
                         {
                             canplace = false;
                         }
                     }
-
+                    if (canplace)
+                    {
+                        for (int j = 0; j < c.Destructibles.Count; j++)
+                        {
+                            if (c.Destructibles[j].Pos == pos)
+                            {
+                                canplace = false;
+                            }
+                        }
+                    }
                     if (canplace)
                     {
                         if (c.Tiles[(int)pos.X + (int)pos.Y * ChunkSize].Tex != 4)

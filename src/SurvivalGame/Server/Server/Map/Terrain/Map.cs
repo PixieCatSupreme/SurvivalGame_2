@@ -15,7 +15,7 @@ namespace Mentula.Server
         public List<NPC> LoadedNPCs;
         private List<NPC> NPCList;
         private List<MegaChunk> MegaChunks;
-        
+
 
         public const int Range_S = Res.Range_C + 1;
 
@@ -59,8 +59,9 @@ namespace Mentula.Server
                     {
                         List<NPC> n = new List<NPC>();
                         Chunk c = new Chunk(pos + new IntVector2(x, y));
-                        ChunkGenerator.Generate(ref c, ref n);
-                        GenerateStructures(ref c);
+                        ChunkGenerator.GenerateTerrain(ref c);
+                        List<Structure> s = GenerateStructures(ref c);
+                        ChunkGenerator.GenerateTrees(ref c, s);
                         LoadedChunks.Add(c);
                         ChunkList.Add(c);
                         LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
@@ -233,12 +234,13 @@ namespace Mentula.Server
             }
         }
 
-        private void GenerateStructures(ref Chunk c)
+        private List<Structure> GenerateStructures(ref Chunk c)
         {
+            List<Structure> result = new List<Structure>();
             IntVector2 mcp = new IntVector2(c.ChunkPos.X / MegaChunkSize, c.ChunkPos.Y / MegaChunkSize);
             MegaChunk m = null;
             Rectangle chunkSpace = new Rectangle(c.ChunkPos.X * ChunkSize, c.ChunkPos.Y * ChunkSize, ChunkSize, ChunkSize);
-            int cx= c.ChunkPos.X * ChunkSize;
+            int cx = c.ChunkPos.X * ChunkSize;
             int cy = c.ChunkPos.Y * ChunkSize;
 
             for (int i = 0; i < MegaChunks.Count; i++)
@@ -257,10 +259,11 @@ namespace Mentula.Server
 
             for (int i = 0; i < m.Structures.Count; i++)
             {
-                if (Rectangle.Intersect(m.Structures[i].Space, chunkSpace) != Rectangle.Empty)
+                if (!Rectangle.Intersect(m.Structures[i].Space, chunkSpace).IsEmpty)
                 {
                     Structure s = m.Structures[i];
-                    int sx = s.Space.X+m.Pos.X*MegaChunkSize;
+                    result.Add(s);
+                    int sx = s.Space.X + m.Pos.X * MegaChunkSize;
                     int sy = s.Space.Y + m.Pos.Y * MegaChunkSize;
 
                     for (int j = 0; j < s.Tiles.Count; j++)
@@ -284,12 +287,12 @@ namespace Mentula.Server
 
                         if (x >= 0 && x < ChunkSize && y >= 0 && y < ChunkSize)
                         {
-                            c.Destructibles.Add(new Destructible(c.ChunkPos, new Vector2(x, y), s.Destructibles[j].Id) );
+                            c.Destructibles.Add(new Destructible(c.ChunkPos, new Vector2(x, y), s.Destructibles[j].Id));
                         }
                     }
-
                 }
             }
+            return result;
         }
 
     }
