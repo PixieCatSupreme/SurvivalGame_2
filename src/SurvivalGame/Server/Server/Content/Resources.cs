@@ -1,5 +1,6 @@
 ﻿using Mentula.Content;
 using Mentula.Content.MM;
+using Mentula.Utilities.MathExtensions;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -26,7 +27,7 @@ namespace Mentula.Server
             catch (ContentLoadException) { return default(T); }
         }
 
-        public Item GetItem(string dataBase, ulong id, ulong volumeModifier = 1)
+        public Item GetItem(string dataBase, ulong id, ulong volumeModifier = 100)
         {
             Variables.IdBuffer.Push(id);
             ItemManifest mani = Load<ItemManifest>(dataBase);
@@ -49,7 +50,7 @@ namespace Mentula.Server
                     id,
                     mani.name,
                     material,
-                    mani.volume * volumeModifier,
+                    MathEX.ApplyPercentage(mani.volume, volumeModifier),
                     mani.tags.ToArray());
             }
             else
@@ -71,7 +72,7 @@ namespace Mentula.Server
                             for (int j = 0; j < database.Value.Length; j++)
                             {
                                 KeyValuePair<ulong, ulong> part = database.Value[j];
-                                parts[index++] = GetItem(db.Value, part.Key, part.Value * volumeModifier);
+                                parts[index++] = GetItem(db.Value, part.Key, MathEX.ApplyPercentage(part.Value, volumeModifier));
                             }
                         }
                     }

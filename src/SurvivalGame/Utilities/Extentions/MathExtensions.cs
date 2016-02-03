@@ -95,6 +95,16 @@ namespace Mentula.Utilities.MathExtensions
             return (int)(math.Ceiling((float)N / Base) * Base);
         }
 
+        public static ulong ApplyPercentage(ulong value, ulong percentage)
+        {
+            long lV = (long)value;
+            float mltp = percentage / 100f;
+            long result = (long)(lV * mltp);
+
+            if (result < 0) return 0;
+            return (ulong)result;
+        }
+
         public static Vector2 FormatPos(this Vector2 tilePos)
         {
             while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)

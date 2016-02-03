@@ -72,7 +72,7 @@ namespace Mentula.Content.MM
                         {
                             localVolSpecParts.Add(new KeyValuePair<ulong, ulong>(
                                 Utils.ConvertToUInt64("Id", child.Values.ElementAt(j).Value),               // Get id from local non volume pointer.
-                                1));                                                                        // Volume for non specified.
+                                100));                                                                        // Volume for non specified.
                         }
 
                         for (int j = 0; j < child.Childs.Length; j++)                                       // Read (Local volume specified pointers) && (non local pointers).

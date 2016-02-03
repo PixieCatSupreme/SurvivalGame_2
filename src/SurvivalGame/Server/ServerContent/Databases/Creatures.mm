@@ -22,33 +22,62 @@
 				[Head]
 				{
 					[Id: 101]
-					[Volume: 2]
+					[Volume: 200]
 				}
 				[Torso]
 				{
 					[Id: 100]
-					[Volume: 2]
+					[Volume: 200]
 				}
 				[LeftArm]
 				{ 
 					[Id: 102]
-					[Volume: 2]
+					[Volume: 200]
 				}
 				[RightArm]
 				{
 					[Id: 102]
-					[Volume: 2]
+					[Volume: 200]
 				}
 				[LeftLeg]
 				{
 					[Id: 103]
-					[Volume: 2]
+					[Volume: 200]
 				}
 				[RightLeg]
 				{
 					[Id: 103]
-					[Volume: 2]
+					[Volume: 200]
 				}
+			}
+		}
+	}
+
+	[Wolf: 1]
+	{
+		[Name: "Dolfje Weerwolfje"]
+		[TextureId: 9995]
+		[IsBio: 1]
+
+		[Stats]
+		{
+			[Strength: 10]
+			[Intelect: 2]
+			[Endurance: 8]
+			[Agility: 12]
+			[Perception: 8]
+		}
+
+		[Parts]
+		{
+			[BodyParts: 2]
+			{
+				[Head: 101]
+				[Torso: 100]
+				[LeftArm: 102]
+				[RightArm: 102]
+				[LeftLeg: 103]
+				[RightLeg: 103]
 			}
 		}
 	}

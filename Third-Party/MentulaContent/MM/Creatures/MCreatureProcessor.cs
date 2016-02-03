@@ -50,7 +50,7 @@ namespace Mentula.Content.MM
                         {
                             items[index++] = new KeyValuePair<ulong, ulong>(
                                 Utils.ConvertToUInt64("DEFAULT", nonVolumePart.Value),
-                                1);
+                                100);
                         }
 
                         for (int k = 0; k < db.Childs.Length; k++)
