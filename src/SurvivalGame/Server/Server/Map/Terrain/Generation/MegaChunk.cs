@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using static Mentula.Utilities.Resources.Res;
-
 namespace Mentula.Server
 {
     public class MegaChunk
@@ -13,15 +12,16 @@ namespace Mentula.Server
         public IntVector2 Pos;
         private const int citySize = 1024;
         private const int maxCities = 6;
-        private const int minStreetSize =32;
+        private const int minStreetSize = 32;
         private const int minBuildingSize = 16;
-        private const int minRoomSize = 2;
+        private const int minRoomSize = 3;
         public MegaChunk(IntVector2 pos)
         {
             Cities = new List<City>();
             Structures = new List<Structure>();
             Pos = pos;
             GenerateCities();
+            int o = 0;
         }
         private void GenerateCities()
         {
@@ -32,7 +32,7 @@ namespace Mentula.Server
                 Rectangle rect = new Rectangle();
                 while (true)
                 {
-                    int size = (int)(citySize * r.NextDouble());
+                    int size = (int)(citySize * r.NextDouble()) + citySize / 4;
                     rect.Height = size;
                     rect.Width = size;
                     rect.X = (int)((ChunkSize * MegaChunkSize - size) * r.NextDouble()) + Pos.X * MegaChunkSize;
@@ -41,7 +41,7 @@ namespace Mentula.Server
 
                     for (int j = 0; j < Cities.Count; j++)
                     {
-                        if (Rectangle.Intersect(rect, Cities[j].Space) == Rectangle.Empty)
+                        if (!Rectangle.Intersect(rect, Cities[j].Space).IsEmpty)
                         {
                             canplace = false;
                         }
@@ -82,7 +82,7 @@ namespace Mentula.Server
                                 bs.Width -= 2;
                                 bs.Height -= 2;
                                 Cities[i].Streets[j].Buildings.Add(new Building() { Space = bs });
-                                GenerateHouse(Cities[i].Streets[j].Buildings[k], r);
+                                GenerateHouse(Cities[i].Streets[j], Cities[i].Streets[j].Buildings[k], r);
                             }
                         }
                         break;
@@ -91,9 +91,9 @@ namespace Mentula.Server
             }
         }
 
-        private void GenerateHouse(Building b, Random r)
+        private void GenerateHouse(Street str, Building b, Random r)
         {
-            //List<Rectangle> rooms = BinarySplitGenerator.GenerateBinarySplitMap1(new IntVector2(b.Space.Width, b.Space.Height), new IntVector2(minRoomSize), r.NextDouble().ToString());
+            List<Rectangle> rooms = BinarySplitGenerator.GenerateBinarySplitMap1(new Rectangle(0, 0, b.Space.Width - 1, b.Space.Height - 1), new IntVector2(minRoomSize), r.NextDouble().ToString());
             Structure s = new Structure();
             s.Space = b.Space;
             for (int i = 0; i < b.Space.Width; i++)
@@ -105,12 +105,48 @@ namespace Mentula.Server
             }
             for (int i = 0; i < s.Space.Width; i++)
             {
-                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(i,s.Space.Height-1), 8));
+                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(i, s.Space.Height - 1), 8));
             }
 
             for (int i = 0; i < s.Space.Height; i++)
             {
                 s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(s.Space.Width - 1, i), 8));
+            }
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                for (int j = 0; j < rooms[i].Width; j++)
+                {
+                    s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(rooms[i].X + j, rooms[i].Y), 8));
+                }
+                for (int j = 0; j < rooms[i].Height; j++)
+                {
+                    s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(rooms[i].X, rooms[i].Y + j), 8));
+                }
+            }
+            IntVector2 startpos = IntVector2.Zero;
+            Vector2 dir = new Vector2(str.Space.Center.X, str.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
+            dir.Normalize();
+            if (Math.Abs(dir.X) > Math.Abs(dir.Y))
+            {
+                if (dir.X < 0)
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                if (dir.Y < 0)
+                {
+
+                }
+                else
+                {
+
+                }
             }
             Structures.Add(s);
         }
