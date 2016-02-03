@@ -23,14 +23,13 @@ namespace Mentula.Content
         [MMIgnore]
         public Tag[] Systems { private set; get; }
         [MMIgnore]
-        public bool IsAlive { private set; get; }
-        [MMIgnore]
-        private Tag[] DefaultSystemsVal;
+        private readonly Tag[] DefaultSystemsVal;
 
         internal Creature()
             : base(0, "The Unnameable", Cheats.Unobtanium, ulong.MaxValue)
         {
             Stats = new Stats(short.MaxValue);
+            DefaultSystemsVal = CalcSystems();
         }
 
         public Creature(ulong id, string name, int tex, bool isBio, Stats stats, Item[] parts)
@@ -39,6 +38,7 @@ namespace Mentula.Content
             TextureId = tex;
             IsBio = isBio;
             Stats = stats;
+            DefaultSystemsVal = CalcSystems();
         }
 
         public Tag[] CalcSystems()
@@ -49,13 +49,11 @@ namespace Mentula.Content
 
         public bool CalcIsAlive()
         {
-            IsAlive = IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
-            return IsAlive;
+            return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
         }
 
         public byte GetHealth()
         {
-            DefaultSystemsVal = GetAllTagsWithDurability();
             byte health = byte.MaxValue;
             for (int i = 0; i < Systems.Length; i++)
             {

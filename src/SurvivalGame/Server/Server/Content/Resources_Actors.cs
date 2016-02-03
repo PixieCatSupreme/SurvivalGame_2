@@ -36,7 +36,7 @@ namespace Mentula.Server
                 }
             }
 
-            return new Creature(mani.id, string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
+            return new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
         }
     }
 }

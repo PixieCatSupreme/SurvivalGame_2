@@ -8,6 +8,7 @@ namespace Mentula.Content
         public readonly StateOfMatter States;
 
         internal Metal()
+            :base()
         {
             States = new StateOfMatter(new Vector3(float.PositiveInfinity));
         }

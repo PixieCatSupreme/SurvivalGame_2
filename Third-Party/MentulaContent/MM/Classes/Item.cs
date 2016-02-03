@@ -1,6 +1,4 @@
-﻿using Mentula.Utilities;
-using Mentula.Utilities.Udp;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mentula.Content
@@ -69,7 +67,7 @@ namespace Mentula.Content
 
         public Tag[] GetAllTags()
         {
-            List<Tag> result = new List<Tag>();
+            List<Tag> result = new List<Tag>(Tags);
 
             for (int i = 0; i < Parts.Length; i++)
             {

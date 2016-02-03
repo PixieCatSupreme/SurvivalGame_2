@@ -1,6 +1,4 @@
 ﻿using Mentula.Content.MM;
-using System;
-using System.Globalization;
 
 namespace Mentula.Content
 {

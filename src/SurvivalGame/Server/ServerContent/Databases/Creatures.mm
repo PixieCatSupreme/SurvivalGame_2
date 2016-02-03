@@ -53,10 +53,39 @@
 		}
 	}
 
-	[Wolf: 1]
+	[BrownWolf: 1]
 	{
 		[Name: "Dolfje Weerwolfje"]
 		[TextureId: 9995]
+		[IsBio: 1]
+
+		[Stats]
+		{
+			[Strength: 10]
+			[Intelect: 2]
+			[Endurance: 8]
+			[Agility: 12]
+			[Perception: 8]
+		}
+
+		[Parts]
+		{
+			[BodyParts: 2]
+			{
+				[Head: 101]
+				[Torso: 100]
+				[LeftArm: 102]
+				[RightArm: 102]
+				[LeftLeg: 103]
+				[RightLeg: 103]
+			}
+		}
+	}
+
+	[GrayWolf: 2]
+	{
+		[Name: "Fenrir"]
+		[TextureId: 9996]
 		[IsBio: 1]
 
 		[Stats]
