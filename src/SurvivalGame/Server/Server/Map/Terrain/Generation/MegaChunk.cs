@@ -103,6 +103,15 @@ namespace Mentula.Server
                     s.Tiles.Add(new Tile(5, new IntVector2(i, j)));
                 }
             }
+            for (int i = 0; i < s.Space.Width; i++)
+            {
+                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(i,s.Space.Height-1), 8));
+            }
+
+            for (int i = 0; i < s.Space.Height; i++)
+            {
+                s.Destructibles.Add(new Destructible(IntVector2.Zero, new Vector2(s.Space.Width - 1, i), 8));
+            }
             Structures.Add(s);
         }
     }
