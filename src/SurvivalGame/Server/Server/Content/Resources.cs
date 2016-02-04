@@ -10,6 +10,8 @@ namespace Mentula.Server
     public partial class Resources : ContentManager
     {
         private R dbKeys;
+        public R Tags;
+        public R Slots;
 
         private Metal[] metals;
         private Biomass[] biomasses;
@@ -18,6 +20,8 @@ namespace Mentula.Server
             : base(new ServiceContainer(), "Content")
         {
             dbKeys = Load<R>("DBKeys");
+            Tags = Load<R>("Tags");
+            Slots = Load<R>("Slots");
         }
 
         public override T Load<T>(string assetName)
@@ -66,7 +70,7 @@ namespace Mentula.Server
                 int index = 0;
                 foreach (var database in mani.parts)
                 {
-                    foreach (KeyValuePair<int, string> db in dbKeys.Values)
+                    foreach (KeyValuePair<int, string> db in dbKeys)
                     {
                         if (database.Key == (ulong)db.Key)
                         {

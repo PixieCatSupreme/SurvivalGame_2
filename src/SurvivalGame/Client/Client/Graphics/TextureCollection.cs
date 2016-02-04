@@ -27,7 +27,7 @@ namespace Mentula.Client
 
             for (int i = 0; i < config.Values.Count; i++)
             {
-                KeyValuePair<int, string> cur = config.Values.ElementAt(i);
+                KeyValuePair<int, string> cur = config.ElementAt(i);
                 Add(cur.Key, cur.Value);
             }
         }

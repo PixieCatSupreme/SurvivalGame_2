@@ -23,7 +23,7 @@ namespace Mentula.Server
             int index = 0;
             foreach (var database in mani.parts)
             {
-                foreach (KeyValuePair<int, string> db in dbKeys.Values)
+                foreach (KeyValuePair<int, string> db in dbKeys)
                 {
                     if (database.Key == (ulong)db.Key)
                     {

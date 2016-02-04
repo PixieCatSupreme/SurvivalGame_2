@@ -1,6 +1,9 @@
-﻿using Mentula.Utilities;
+﻿using Mentula.Content.MM;
+using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Mentula.Content
 {
@@ -15,6 +18,9 @@ namespace Mentula.Content
         public readonly int TextureId;
         public readonly bool IsBio;
 
+        private Dictionary<int, Item> equipment;
+        private List<Item> inventory;
+
         public Tag[] Systems { get; private set; }
         private readonly Tag[] DefaultSystemsVal;
 
@@ -23,6 +29,8 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
+            equipment = new Dictionary<int, Item>();
+            inventory = new List<Item>();
         }
 
         public Creature(ulong id, string name, int tex, bool isBio, Stats stats, Item[] parts)
@@ -32,6 +40,8 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
+            equipment = new Dictionary<int, Item>();
+            inventory = new List<Item>();
         }
 
         public Tag[] CalcSystems()
@@ -91,6 +101,53 @@ namespace Mentula.Content
                     ChunkPos = new IntVector2(ChunkPos.X, ChunkPos.Y + 1);
                 }
             }
+        }
+
+        public long CalcMaxStorage(R tags)
+        {
+            int storageId = tags.GetTagId("Items/Storage");
+
+            long result = 0;
+            foreach (KeyValuePair<int, Item> item in equipment)
+            {
+                Tag storage = item.Value.Tags.FirstOrDefault(t => t.Key == storageId);
+                result += storage.Value;
+            }
+
+            return result;
+        }
+
+        public void EquipItem(R slots, int slot, Item item)
+        {
+            if (slots.ContainsKey(slot))
+            {
+                if (!equipment.ContainsKey(slot))
+                {
+                    equipment.Add(slot, item);
+                }
+            }
+        }
+
+        public Item GetEquipment(int slot)
+        {
+            if (equipment.ContainsKey(slot))
+            {
+                return equipment[slot];
+            }
+
+            return null;
+        }
+
+        public Item UnequipItem(int slot)
+        {
+            if (equipment.ContainsKey(slot))
+            {
+                Item item = equipment[slot];
+                equipment.Remove(slot);
+                return item;
+            }
+
+            return null;
         }
     }
 

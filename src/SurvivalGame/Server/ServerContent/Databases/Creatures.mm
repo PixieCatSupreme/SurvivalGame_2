@@ -2,7 +2,7 @@
 {
 	[Player: 0]
 	{
-		[Name: "Player"]
+		[Name: "Charles Le Sorcier"]
 		[TextureId: 9997]
 		[IsBio: 1]
 
