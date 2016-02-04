@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Mentula.Content.MM
@@ -19,6 +18,11 @@ namespace Mentula.Content.MM
                 for (int j = 0; j < iA.Value.Length; j++)
                 {
                     KeyValuePair<int, string> item = iA.Value[j];
+
+                    if (Values.ContainsKey(item.Key))
+                    {
+                        throw new ContainerException(iA.Key,  new BuildException($"{item.Key} has already been added!"));
+                    }
                     Values.Add(item.Key, iA.Key + "/" + item.Value);
                 }
             }

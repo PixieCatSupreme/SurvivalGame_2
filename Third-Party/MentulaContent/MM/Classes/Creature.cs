@@ -14,8 +14,8 @@ namespace Mentula.Content
         public readonly Stats Stats;
         public readonly int TextureId;
         public readonly bool IsBio;
-        public Tag[] Systems { private set; get; }
 
+        public Tag[] Systems { get; private set; }
         private readonly Tag[] DefaultSystemsVal;
 
         internal Creature()
