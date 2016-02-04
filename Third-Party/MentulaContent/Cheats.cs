@@ -1,7 +1,4 @@
-﻿using Mentula.Content.MM;
-using Microsoft.Xna.Framework.Content;
-
-namespace Mentula.Content
+﻿namespace Mentula.Content
 {
     public static class Cheats
     {

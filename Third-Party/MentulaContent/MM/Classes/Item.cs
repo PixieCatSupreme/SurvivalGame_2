@@ -7,19 +7,14 @@ namespace Mentula.Content
     [DebuggerDisplay("{Name}")]
     public class Item
     {
-        [MMIgnore]
         public readonly ulong Id;
         public readonly string Name;
-        [MMOptional]
+
         public readonly ulong Volume;
-        [MMOptional]
         public byte Durability;
 
-        [MMOptional]
         public readonly Tag[] Tags;
-        [MMOptional]
         public readonly Item[] Parts;
-        [MMOptional]
         public readonly Material Material;
 
         internal Item()

@@ -7,20 +7,15 @@ namespace Mentula.Content
     [MMEditable]
     public class Creature : Item, IEntity
     {
-        [MMIgnore]
         public Vector2 Pos { get; set; }
-        [MMIgnore]
         public IntVector2 ChunkPos { get; set; }
-        [MMIgnore]
         public float Rotation { get; set; }
 
         public readonly Stats Stats;
         public readonly int TextureId;
-        [MMOptional]
-        public bool IsBio;
-        [MMIgnore]
+        public readonly bool IsBio;
         public Tag[] Systems { private set; get; }
-        [MMIgnore]
+
         private readonly Tag[] DefaultSystemsVal;
 
         internal Creature()
