@@ -10,6 +10,7 @@ namespace Mentula.Server
     public partial class Resources : ContentManager
     {
         private R dbKeys;
+
         private Metal[] metals;
         private Biomass[] biomasses;
 

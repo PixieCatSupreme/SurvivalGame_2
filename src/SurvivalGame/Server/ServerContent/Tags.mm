@@ -13,4 +13,10 @@
 		[BloodPumping: 8]
 		[Metabolism: 9]
 	}
+
+	[Items]
+	{
+		[Equipable: 10]
+		[Storage: 11]
+	}
 }

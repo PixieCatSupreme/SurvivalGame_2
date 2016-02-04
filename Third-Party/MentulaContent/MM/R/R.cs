@@ -23,7 +23,7 @@ namespace Mentula.Content.MM
                     {
                         throw new ContainerException(iA.Key,  new BuildException($"{item.Key} has already been added!"));
                     }
-                    Values.Add(item.Key, iA.Key + "/" + item.Value);
+                    Values.Add(item.Key, $"{iA.Key}/{item.Value}");
                 }
             }
         }

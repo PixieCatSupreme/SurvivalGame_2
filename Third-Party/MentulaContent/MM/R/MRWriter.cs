@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mentula.Content.MM
 {

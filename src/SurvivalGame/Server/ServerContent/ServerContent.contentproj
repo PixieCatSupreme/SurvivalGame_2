@@ -50,8 +50,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="R.mm">
-      <Name>R</Name>
+    <Compile Include="Tags.mm">
+      <Name>Tags</Name>
       <Importer>MMImporter</Importer>
       <Processor>MRProcessor</Processor>
     </Compile>
