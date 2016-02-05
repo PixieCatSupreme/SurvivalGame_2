@@ -23,7 +23,6 @@ namespace Mentula.Server
             Structures = new List<Structure>();
             Pos = pos;
             GenerateCities();
-            int o = 0;
         }
         private void GenerateCities()
         {
