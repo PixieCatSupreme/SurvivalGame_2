@@ -79,6 +79,11 @@ namespace Mentula.Utilities.MathExtensions
             return new Vector2((float)math.Cos(rad), (float)math.Sin(rad));
         }
 
+        public static Vector2 DegreesToVector(float deg)
+        {
+            return new Vector2((float)math.Cos(deg / 180 * math.PI), (float)math.Sin(deg / 180 * math.PI));
+        }
+
         public static Vector2 Abs(Vector2 vec)
         {
             if (vec.X < 0) vec.X *= -1;
