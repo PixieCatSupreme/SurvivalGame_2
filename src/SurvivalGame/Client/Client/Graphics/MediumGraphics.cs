@@ -157,7 +157,8 @@ namespace Mentula.Client
             DrawBatch(textures[9998], mousePos, 0);
 
 #if DEBUG
-            batch.DrawString(fonts["ConsoleFont"], fpsCounter.Avarage.ToString(), Vector2.Zero, Color.Red);
+            batch.DrawString(fonts["ConsoleFont"], $"FPS: {fpsCounter.Avarage}", Vector2.Zero, Color.Red);
+            batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}" , new Vector2(0, 16), Color.Red);
 #endif
             batch.End();
         }
