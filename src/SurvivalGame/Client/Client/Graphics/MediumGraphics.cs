@@ -3,14 +3,11 @@
 
 #pragma warning disable 67
 
-using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Matrix3 = Mentula.Engine.Core.Matrix3;
@@ -22,9 +19,6 @@ namespace Mentula.Client
     {
         internal float SCALE = 2f;
         private float ROT = 0;
-#if DRUNK
-        private bool invertScale = false;
-#endif
 
         public Camera Camera { get; private set; }
         public bool Enabled { get { return true; } }
@@ -88,9 +82,7 @@ namespace Mentula.Client
         public void Update(GameTime gametTime)
         {
 #if DRUNK
-            ROT += 10 * Res.FPS60;
-            if (SCALE > 10 || SCALE < 1) invertScale = !invertScale;
-            SCALE += (invertScale ? -1 : 1) * Res.FPS60;
+            ROT += 1 * Res.FPS60;
 #endif
 
             Vector2 pos = Chunk.GetTotalPos(game.hero.ChunkPos, game.hero.Pos);
