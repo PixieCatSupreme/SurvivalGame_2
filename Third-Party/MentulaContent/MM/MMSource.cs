@@ -47,7 +47,7 @@ namespace Mentula.Content.MM
                         if (prvCCount > 0) name += prvCCount;
                         containers.Push(name);
 
-                        valueLines.Remove(valueLines.ElementAt(valueLines.Count - 1).Key);
+                        valueLines.Remove(newLineSplit[i - 1]);
 
                         if (Container.IsUseless)
                         {
