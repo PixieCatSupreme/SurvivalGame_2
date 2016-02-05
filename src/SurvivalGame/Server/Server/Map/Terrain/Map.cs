@@ -29,7 +29,7 @@ namespace Mentula.Server
             MegaChunks.Add(new MegaChunk(new IntVector2(0, 0)));
         }
 
-        public bool Generate(IntVector2 pos)
+        public bool Generate(IntVector2 pos, Resources content)
         {
             bool gen = false;
 
@@ -54,8 +54,10 @@ namespace Mentula.Server
                         ChunkGenerator.GenerateTerrain(ref c);
                         List<Structure> s = GenerateStructures(ref c);
                         ChunkGenerator.GenerateTrees(ref c, s);
+                        ChunkGenerator.GenerateWildlife(ref n, ref c, s, content);
                         LoadedChunks.Add(c);
                         ChunkList.Add(c);
+
                         LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
                         NPCList.InsertRange(NPCList.Count, n);
                         gen = true;

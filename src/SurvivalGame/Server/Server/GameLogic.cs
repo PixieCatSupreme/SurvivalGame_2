@@ -49,8 +49,8 @@ namespace Mentula.Server
         {
             if (Index < Players.Length)
             {
-                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
-                Map.Generate(Players[Index].Value.ChunkPos);
+                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, false, name));
+                Map.Generate(Players[Index].Value.ChunkPos, content);
                 Index++;
             }
         }
@@ -92,7 +92,7 @@ namespace Mentula.Server
             for (int i = 0; i < Index; i++)
             {
                 posses[i] = Players[i].Value.ChunkPos;
-                Map.Generate(posses[i]);
+                Map.Generate(posses[i], content);
                 Map.LoadChunks(posses[i]);
             }
 

@@ -44,6 +44,17 @@ namespace Mentula.Content
             inventory = new List<Item>();
         }
 
+        public Creature(Creature copy)
+            :base (copy.Id, copy.Name, copy.Parts)
+        {
+            TextureId = copy.TextureId;
+            IsBio = copy.IsBio;
+            Stats = copy.Stats;
+            DefaultSystemsVal = CalcSystems();
+            equipment = copy.equipment;
+            inventory = copy.inventory;
+        }
+
         public Tag[] CalcSystems()
         {
             Systems = GetAllTags();

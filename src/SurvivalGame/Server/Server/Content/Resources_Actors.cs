@@ -1,6 +1,5 @@
 ﻿using Mentula.Content;
 using Mentula.Content.MM;
-using Mentula.Utilities.MathExtensions;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
 
@@ -8,8 +7,16 @@ namespace Mentula.Server
 {
     public partial class Resources : ContentManager
     {
-        public Creature GetCreature(string dataBase, ulong id, string name = null)
+        private List<Creature> cachesCreatures = new List<Creature>();
+
+        public Creature GetCreature(string dataBase, ulong id, bool cache, string name = null)
         {
+            for (int i = 0; i < cachesCreatures.Count; i++)
+            {
+                Creature cur = cachesCreatures[i];
+                if (cur.Id == id) return new Creature(cur);
+            }
+
             Variables.IdBuffer.Push(id);
             CreatureManifest mani = Load<CreatureManifest>(dataBase);
 
@@ -36,7 +43,11 @@ namespace Mentula.Server
                 }
             }
 
-            return new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
+
+            Creature c = new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
+            if (cache) cachesCreatures.Add(c);
+
+            return new Creature(c);
         }
     }
 }

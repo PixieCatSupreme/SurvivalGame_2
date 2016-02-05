@@ -121,5 +121,10 @@ namespace Mentula.Server
             path = AStar.Route4(ref m);
         }
 
+
+        public static implicit operator NPC(Creature c)
+        {
+            return new NPC() { creature = c };
+        }
     }
 }

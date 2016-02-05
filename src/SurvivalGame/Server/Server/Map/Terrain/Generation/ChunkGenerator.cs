@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 using static Mentula.Utilities.Resources.Res;
+using Mentula.Content;
 
 namespace Mentula.Server
 {
     public static class ChunkGenerator
     {
         private static float[] rainArray;
-
-
 
 
         public static void GenerateTerrain(ref Chunk chunk)
@@ -51,18 +50,20 @@ namespace Mentula.Server
             return n;
         }
 
-        private static void GenerateWildlife(ref List<NPC> n, ref Chunk c)
+        public static void GenerateWildlife(ref List<NPC> n, ref Chunk c, List<Structure> structures, Resources content)
         {
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + Seed + c.ChunkPos.Y));
-            for (int i = 0; i < r.NextDouble() * 10;)
+            for (int i = 0; i < r.NextDouble() * 10; i++)
             {
                 bool canplace = true;
                 Vector2 p = new Vector2((int)(r.NextDouble() * ChunkSize), (int)(r.NextDouble() * ChunkSize));
+                Rectangle rp = new Rectangle((int)p.X, (int)p.Y, 1, 1);
                 for (int j = 0; j < n.Count; j++)
                 {
                     if (p == n[j].creature.Pos)
                     {
                         canplace = false;
+                        break;
                     }
                 }
                 for (int j = 0; j < c.Destructibles.Count; j++)
@@ -70,17 +71,29 @@ namespace Mentula.Server
                     if (p == c.Destructibles[j].Pos)
                     {
                         canplace = false;
+                        break;
                     }
                 }
 
+                for (int j = 0; j < structures.Count; j++)
+                {
+                    Rectangle structurespace = new Rectangle(structures[j].Space.X - c.ChunkPos.X * ChunkSize, structures[j].Space.Y - c.ChunkPos.Y * ChunkSize, structures[j].Space.Width, structures[j].Space.Height);
+                    if (!Rectangle.Intersect(rp, structurespace).IsEmpty)
+                    {
+                        canplace = false;
+                        break;
+                    }
+                }
 
                 if (canplace)
                 {
                     if (c.Tiles[(int)p.X + (int)p.Y * ChunkSize].Tex != 4)
                     {
-                        //n.Add(new NPC("Wolf", new Stats(7), 35, p, c.ChunkPos) { TextureId = 9996 });
-                        //n[i].creature.Rotation = (float)(r.NextDouble() * Math.PI * 2);
-                        i++;
+                        Creature crea = content.GetCreature("Databases/Creatures", 1, true);
+                        crea.Rotation = (float)(r.NextDouble() * Math.PI * 2);
+                        crea.Pos = p;
+                        crea.ChunkPos = c.ChunkPos;
+                        n.Add(crea);
                     }
 
                 }

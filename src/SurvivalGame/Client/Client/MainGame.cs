@@ -1,13 +1,14 @@
+#define COLLISION
+
 using Mentula.Utilities;
+using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Net;
-using Vect2 = Mentula.Engine.Core.Vect2;
 using MEx = Mentula.Utilities.MathExtensions.MathEX;
-using Mentula.Content;
-using Mentula.Utilities.MathExtensions;
+using Vect2 = Mentula.Engine.Core.Vect2;
 
 namespace Mentula.Client
 {
@@ -66,13 +67,13 @@ namespace Mentula.Client
                         inp = Vector2.Normalize(inp) * Res.MOVE_SPEED * delta;
                         Vector2 outp = new Vector2();
                         hero.Pos -= inp;
-
                         IntVector2 ct = hero.ChunkPos;
                         Vector2 tt = hero.Pos;
                         Chunk.FormatPos(ref ct, ref tt);
                         hero.ChunkPos = ct;
                         hero.Pos = tt;
 
+#if COLLISION
                         IntVector2 chunkPos = -hero.ChunkPos;
                         Vector2 tilePos = -hero.Pos;
 
@@ -180,6 +181,7 @@ namespace Mentula.Client
                             hero.ChunkPos = ct;
                             hero.Pos = tt;
                         }
+#endif
                     }
 
                     Vect2 mousePos = new Vect2(mState.X, mState.Y);
