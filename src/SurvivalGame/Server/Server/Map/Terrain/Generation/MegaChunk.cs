@@ -124,28 +124,95 @@ namespace Mentula.Server
                 }
             }
             IntVector2 startpos = IntVector2.Zero;
-            Vector2 dir = new Vector2(str.Space.Center.X, str.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
-            dir.Normalize();
-            if (Math.Abs(dir.X) > Math.Abs(dir.Y))
+            Vector2 dir = new Vector2(b.Space.Center.X, b.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
+            int dist = int.MaxValue;
+            if (str.Space.Width > str.Space.Height)
             {
-                if (dir.X < 0)
-                {
-
-                }
-                else
-                {
-
-                }
+                dir.X *= 1000;
             }
             else
             {
+                dir.Y *= 1000;
+            }
+            if (Math.Abs(dir.X) > Math.Abs(dir.Y))
+            {
+                startpos.X = b.Space.Width / 2;
+                int x = startpos.X;
                 if (dir.Y < 0)
                 {
-
+                    for (int i = 0; i < rooms.Count; i++)
+                    {
+                        if (rooms[i].Y == 0)
+                        {
+                            int dist2 = Math.Abs(rooms[i].Center.X - startpos.X);
+                            if (dist2 < dist)
+                            {
+                                dist = dist2;
+                                x = rooms[i].Center.X;
+                            }
+                        }
+                    }
                 }
                 else
                 {
-
+                    startpos.Y = b.Space.Height - 1;
+                    for (int i = 0; i < rooms.Count; i++)
+                    {
+                        if (rooms[i].Y + rooms[i].Height == b.Space.Height - 1)
+                        {
+                            int dist2 = Math.Abs(rooms[i].Center.X - startpos.X);
+                            if (dist2 < dist)
+                            {
+                                dist = dist2;
+                                x = rooms[i].Center.X;
+                            }
+                        }
+                    }
+                }
+                startpos.X = x;
+            }
+            else
+            {
+                startpos.Y = b.Space.Height / 2;
+                int y = startpos.Y;
+                if (dir.X < 0)
+                {
+                    for (int i = 0; i < rooms.Count; i++)
+                    {
+                        if (rooms[i].X == 0)
+                        {
+                            int dist2 = Math.Abs(rooms[i].Center.Y - startpos.Y);
+                            if (dist2 < dist)
+                            {
+                                dist = dist2;
+                                y = rooms[i].Center.Y;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    startpos.X = b.Space.Width - 1;
+                    for (int i = 0; i < rooms.Count; i++)
+                    {
+                        if (rooms[i].X + rooms[i].Width == b.Space.Width - 1)
+                        {
+                            int dist2 = Math.Abs(rooms[i].Center.Y - startpos.Y);
+                            if (dist2 < dist)
+                            {
+                                dist = dist2;
+                                y = rooms[i].Center.Y;
+                            }
+                        }
+                    }
+                }
+                startpos.Y = y;
+            }
+            for (int i = 0; i < s.Destructibles.Count; i++)
+            {
+                if (s.Destructibles[i].Pos == startpos)
+                {
+                    s.Destructibles.RemoveAt(i);
                 }
             }
             Structures.Add(s);
