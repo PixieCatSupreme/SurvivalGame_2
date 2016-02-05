@@ -14,7 +14,7 @@ namespace Mentula.Server
             for (int i = 0; i < cachesCreatures.Count; i++)
             {
                 Creature cur = cachesCreatures[i];
-                if (cur.Id == id) return cur;
+                if (cur.Id == id) return new Creature(cur);
             }
 
             Variables.IdBuffer.Push(id);
@@ -47,7 +47,7 @@ namespace Mentula.Server
             Creature c = new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
             if (cache) cachesCreatures.Add(c);
 
-            return c;
+            return new Creature(c);
         }
     }
 }

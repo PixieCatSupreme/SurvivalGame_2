@@ -77,7 +77,7 @@ namespace Mentula.Server
 
                 for (int j = 0; j < structures.Count; j++)
                 {
-                    Rectangle structurespace = new Rectangle(structures[j].Space.X-c.ChunkPos.X*ChunkSize, structures[j].Space.Y - c.ChunkPos.Y * ChunkSize, structures[j].Space.Width, structures[j].Space.Height);
+                    Rectangle structurespace = new Rectangle(structures[j].Space.X - c.ChunkPos.X * ChunkSize, structures[j].Space.Y - c.ChunkPos.Y * ChunkSize, structures[j].Space.Width, structures[j].Space.Height);
                     if (!Rectangle.Intersect(rp, structurespace).IsEmpty)
                     {
                         canplace = false;
@@ -89,7 +89,7 @@ namespace Mentula.Server
                 {
                     if (c.Tiles[(int)p.X + (int)p.Y * ChunkSize].Tex != 4)
                     {
-                        Creature crea = content.GetCreature("Databases/Creatures", 1,true);
+                        Creature crea = content.GetCreature("Databases/Creatures", 1, true);
                         crea.Rotation = (float)(r.NextDouble() * Math.PI * 2);
                         crea.Pos = p;
                         crea.ChunkPos = c.ChunkPos;
