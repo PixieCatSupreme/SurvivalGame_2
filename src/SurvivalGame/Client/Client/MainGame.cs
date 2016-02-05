@@ -25,7 +25,7 @@ namespace Mentula.Client
         public MainGame()
         {
             Content.RootDirectory = "Content";
-            
+
             Components.Add(vGraphics = new MediumGraphics(this));
             Components.Add(mainMenu = new MainMenu(this));
             Components.Add(networking = new ClientNetworking(this));
@@ -34,7 +34,7 @@ namespace Mentula.Client
 
         protected override void Initialize()
         {
-            hero = new NPC();
+            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
             chunks = new Chunk[0];
             npcs = new NPC[0];
             mainMenu.DiscoverCalled += OnConnect;

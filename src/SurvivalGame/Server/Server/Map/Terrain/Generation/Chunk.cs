@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Mentula.Utilities;
-using Microsoft.Xna.Framework;
-using System.Runtime.CompilerServices;
-using Resc = Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
 {

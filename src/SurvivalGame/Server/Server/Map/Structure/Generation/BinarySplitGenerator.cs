@@ -10,11 +10,11 @@ namespace Mentula.Server
 {
     public static class BinarySplitGenerator
     {
-        public static List<Rectangle> GenerateBinarySplitMap1(IntVector2 bounds, IntVector2 minSize, string seed)
+        public static List<Rectangle> GenerateBinarySplitMap1(Rectangle space, IntVector2 minSize, string seed)
         {
             Random r = new Random(RNG.RIntFromString(seed));
             List<Rectangle> rectangles = new List<Rectangle>();
-            rectangles.Add(new Rectangle(0, 0, bounds.X, bounds.Y));
+            rectangles.Add(new Rectangle(space.X, space.Y, space.Width, space.Height));
 
             while (true)
             {
@@ -77,11 +77,11 @@ namespace Mentula.Server
             return rectangles;
         }
 
-        public static List<Rectangle> GenerateBinarySplitMap2(IntVector2 bounds, IntVector2 minSize, string seed)
+        public static List<Rectangle> GenerateBinarySplitMap2(Rectangle space, IntVector2 minSize, string seed)
         {
             Random r = new Random(RNG.RIntFromString(seed));
             List<Rectangle> rectangles = new List<Rectangle>();
-            rectangles.Add(new Rectangle(0, 0, bounds.X, bounds.Y));
+            rectangles.Add(new Rectangle(space.X, space.Y, space.Width, space.Height));
 
             while (true)
             {
