@@ -50,11 +50,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tags.mm">
+    <None Include="Tags.mm">
       <Name>Tags</Name>
       <Importer>MMImporter</Importer>
       <Processor>MRProcessor</Processor>
-    </Compile>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Databases\BodyParts.mm">
@@ -78,11 +78,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Slots.mm">
+    <Compile Include="Slots.mm">
       <Name>Slots</Name>
       <Importer>MMImporter</Importer>
       <Processor>MRProcessor</Processor>
-    </None>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -103,18 +103,52 @@ namespace Mentula.Content
             }
         }
 
-        public long CalcMaxStorage(R tags)
+        public ulong CalcMaxStorage()
         {
-            int storageId = tags.GetTagId("Items/Storage");
+            const int STORAGE_ID = 11;
 
-            long result = 0;
+            ulong result = 0;
             foreach (KeyValuePair<int, Item> item in equipment)
             {
-                Tag storage = item.Value.Tags.FirstOrDefault(t => t.Key == storageId);
-                result += storage.Value;
+                Tag storage = item.Value.Tags.FirstOrDefault(t => t.Key == STORAGE_ID);
+                result += (ulong)storage.Value;
             }
 
             return result;
+        }
+
+        public ulong CalcOccupiedStorage()
+        {
+            ulong result = 0;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                result += inventory[i].CalcVolume();
+            }
+
+            return result;
+        }
+
+        public bool AddItem(Item item)
+        {
+            ulong max = CalcMaxStorage();
+            ulong cur = CalcOccupiedStorage();
+
+            if ((cur + item.CalcVolume()) <= max)
+            {
+                inventory.Add(item);
+                return true;
+            }
+
+            return false;
+        }
+
+        public Item RemoveItem(string name)
+        {
+            Item item = inventory.FirstOrDefault(i => i.Name == name);
+
+            if (item != null) inventory.Remove(item);
+            return item;
         }
 
         public void EquipItem(R slots, int slot, Item item)

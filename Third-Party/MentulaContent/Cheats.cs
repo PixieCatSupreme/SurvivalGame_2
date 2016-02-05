@@ -1,4 +1,6 @@
-﻿namespace Mentula.Content
+﻿using Mentula.Content.MM;
+
+namespace Mentula.Content
 {
     public static class Cheats
     {

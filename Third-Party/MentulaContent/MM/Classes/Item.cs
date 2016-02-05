@@ -123,19 +123,31 @@ namespace Mentula.Content
 
         public float CalcWeight()
         {
-            float weight = 0;
+            float result = 0;
 
             if (Material != null)
             {
-                weight = Material.Density * Volume;
+                result = Material.Density * Volume;
             }
 
             for (int i = 0; i < Parts.Length; i++)
             {
-                weight += Parts[i].CalcWeight();
+                result += Parts[i].CalcWeight();
             }
 
-            return weight;
+            return result;
+        }
+
+        public ulong CalcVolume()
+        {
+            ulong result = Volume;
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].CalcVolume();
+            }
+
+            return result;
         }
     }
 }
