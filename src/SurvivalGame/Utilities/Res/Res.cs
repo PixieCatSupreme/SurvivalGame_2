@@ -31,6 +31,7 @@
             ClientDesync = int.Parse(Resources.ClientTimeOut);
             MaxPlayers = int.Parse(Resources.MaxPlayers);
             Seed = DateTime.Now.ToString();
+            Seed = "1";
         }
     }
 }

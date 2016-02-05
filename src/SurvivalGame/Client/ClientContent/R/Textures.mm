@@ -19,6 +19,10 @@
 			[Name: "Grass_Forest"]
 		}
 		[Water: 4]
+		[Floor: 5]
+		[Floor2: 6]
+		[Wall_Brick1: 7]
+		[Wall_Brick2: 8]
 	}
 
 	[Destructable]
