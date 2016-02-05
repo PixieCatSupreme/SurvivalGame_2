@@ -324,6 +324,9 @@ namespace Mentula.Server
 
             InvokeIfRequired(txt_Console, () =>
             {
+                int lines = txt_Console.Text.Count(c => c == '\n') + 1;
+                if (lines > 500) txt_Console.ResetText();
+
                 txt_Console.SelectionColor = color;
                 txt_Console.AppendText(line);
                 txt_Console.Find(line);

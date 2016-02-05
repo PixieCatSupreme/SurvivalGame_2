@@ -1,6 +1,4 @@
-﻿using Mentula.Utilities;
-using Mentula.Utilities.Udp;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mentula.Content
@@ -9,19 +7,14 @@ namespace Mentula.Content
     [DebuggerDisplay("{Name}")]
     public class Item
     {
-        [MMIgnore]
         public readonly ulong Id;
         public readonly string Name;
-        [MMOptional]
+
         public readonly ulong Volume;
-        [MMOptional]
         public byte Durability;
 
-        [MMOptional]
         public readonly Tag[] Tags;
-        [MMOptional]
         public readonly Item[] Parts;
-        [MMOptional]
         public readonly Material Material;
 
         internal Item()
@@ -69,7 +62,7 @@ namespace Mentula.Content
 
         public Tag[] GetAllTags()
         {
-            List<Tag> result = new List<Tag>();
+            List<Tag> result = new List<Tag>(Tags);
 
             for (int i = 0; i < Parts.Length; i++)
             {
@@ -130,19 +123,31 @@ namespace Mentula.Content
 
         public float CalcWeight()
         {
-            float weight = 0;
+            float result = 0;
 
             if (Material != null)
             {
-                weight = Material.Density * Volume;
+                result = Material.Density * Volume;
             }
 
             for (int i = 0; i < Parts.Length; i++)
             {
-                weight += Parts[i].CalcWeight();
+                result += Parts[i].CalcWeight();
             }
 
-            return weight;
+            return result;
+        }
+
+        public ulong CalcVolume()
+        {
+            ulong result = Volume;
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].CalcVolume();
+            }
+
+            return result;
         }
     }
 }

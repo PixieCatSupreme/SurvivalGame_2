@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content.Pipeline;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mentula.Content.MM
 {
@@ -18,47 +17,35 @@ namespace Mentula.Content.MM
             for (int i = 0; i < length; i++)
             {
                 Container cur = input.Container.Childs[i];
-                Manifest mani = new Manifest();
 
                 try
                 {
-                    string rawValue = string.Empty;
-
-                    if (cur.TryGetValue("Default", out rawValue)) mani.Name = rawValue;
-                    else throw new ParameterNullException("Name");
-
-                    mani.Values = new KeyValuePair<int, string>[(cur.Values.Count - 1) >> 1];
+                    string tagCategory = cur.Name;
+                    KeyValuePair<int, string>[] values = new KeyValuePair<int, string>[cur.Values.Count + cur.Childs.Length];
 
                     int index = 0;
-                    for (int j = 1; j < cur.Values.Count; j += 2)
+                    foreach (KeyValuePair<string, string> tag in cur.Values)
                     {
-                        int key = 0;
-
-                        string rawKey = cur.Values.ElementAt(j).Value;
-                        if (j + 1 < cur.Values.Count) rawValue = cur.Values.ElementAt(j + 1).Value;
-                        else throw new ParameterNullException("Value at key: " + rawKey);
-
-                        if (!int.TryParse(rawKey, out key)) throw new ParameterException("Id", rawKey, typeof(int));
-
-                        mani.Values[index] = new KeyValuePair<int, string>(key, rawValue);
-                        index++;
+                        values[index++] = new KeyValuePair<int, string>(Utils.ConvertToInt32("Id", tag.Value), tag.Key);
                     }
 
-                    result[i] = new KeyValuePair<string, KeyValuePair<int, string>[]>(mani.Name, mani.Values);
+                    for (int j = 0; j < cur.Childs.Length; j++)
+                    {
+                        Container tag = cur.Childs[j];
+                        values[index++] = new KeyValuePair<int, string>(
+                            tag.GetInt32Value("Id"),
+                            tag.GetStringValue("Name"));
+                    }
+
+                    result[i] = new KeyValuePair<string, KeyValuePair<int, string>[]>(tagCategory, values);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     throw new ContainerException(cur.Name, e);
                 }
             }
 
             return new R(result);
-        }
-
-        private struct Manifest
-        {
-            public string Name;
-            public KeyValuePair<int, string>[] Values;
         }
     }
 }

@@ -9,12 +9,7 @@ namespace Mentula.Server
 {
     public static class AStar
     {
-        private static IntVector2 Default;
-
-        static AStar()
-        {
-            Default = new IntVector2(int.MinValue);
-        }
+        private static IntVector2 Default = new IntVector2(int.MinValue);
 
         public static IntVector2 Next4(ref Map map)
         {

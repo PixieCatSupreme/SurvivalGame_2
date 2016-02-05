@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mentula.Content.MM
 {
@@ -16,7 +15,7 @@ namespace Mentula.Content.MM
 
             for (int i = 0; i < value.Values.Count; i++)
             {
-                KeyValuePair<int, string> val = value.Values.ElementAt(i);
+                KeyValuePair<int, string> val = value.ElementAt(i);
                 string[] split = val.Value.Split('/');
                 string b = "";
 

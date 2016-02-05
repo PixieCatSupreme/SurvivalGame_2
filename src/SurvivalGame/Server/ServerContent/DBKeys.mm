@@ -1,9 +1,9 @@
 ﻿[Container: "R"]
 {
-	[Container: "Databases"]
+	[Databases]
 	{
-		[Metals: id=0, name="Metals"]
-		[Biomass: id=1, name="Biomass"]
-		[BodyParts: id=2, name="BodyParts"]
+		[Metals: 0]
+		[Biomass: 1]
+		[BodyParts: 2]
 	}
 }

@@ -50,11 +50,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="R.mm">
-      <Name>R</Name>
+    <None Include="Tags.mm">
+      <Name>Tags</Name>
       <Importer>MMImporter</Importer>
       <Processor>MRProcessor</Processor>
-    </Compile>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Databases\BodyParts.mm">
@@ -75,6 +75,13 @@
       <Name>Creatures</Name>
       <Importer>MMImporter</Importer>
       <Processor>MCreatureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Slots.mm">
+      <Name>Slots</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MRProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

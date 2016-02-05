@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Mentula.Content.MM
 {
-    public class R
+    public class R : Dictionary<int, string>
     {
-        public Dictionary<int, string> Values { get; private set; }
-
         internal R(KeyValuePair<string, KeyValuePair<int, string>[]>[] raw)
         {
-            Values = new Dictionary<int, string>();
-
             for (int i = 0; i < raw.Length; i++)
             {
                 KeyValuePair<string, KeyValuePair<int, string>[]> iA = raw.ElementAt(i);
@@ -19,9 +14,25 @@ namespace Mentula.Content.MM
                 for (int j = 0; j < iA.Value.Length; j++)
                 {
                     KeyValuePair<int, string> item = iA.Value[j];
-                    Values.Add(item.Key, iA.Key + "/" + item.Value);
+
+                    if (ContainsKey(item.Key))
+                    {
+                        throw new ContainerException(iA.Key,  new BuildException($"{item.Key} has already been added!"));
+                    }
+
+                    Add(item.Key, $"{iA.Key}/{item.Value}");
                 }
             }
+        }
+
+        public int GetTagId(string name)
+        {
+            foreach (KeyValuePair<int, string> cur in this)
+            {
+                if (cur.Value == name) return cur.Key;
+            }
+
+            return -1;
         }
     }
 }

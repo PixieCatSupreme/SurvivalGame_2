@@ -43,11 +43,13 @@ namespace Mentula.Content.MM
                         Container db = parts.Childs[j];
                         ulong dbId = db.GetUInt64Value("DEFAULT");
 
-                        KeyValuePair<ulong, ulong>[] items = new KeyValuePair<ulong, ulong>[db.Values.Count + db.Childs.Length];
+                        KeyValuePair<ulong, ulong>[] items = new KeyValuePair<ulong, ulong>[(db.Values.Count - 1) + db.Childs.Length];
                         int index = 0;
 
                         foreach (KeyValuePair<string, string> nonVolumePart in db.Values)
                         {
+                            if (nonVolumePart.Key == "DEFAULT") continue;
+
                             items[index++] = new KeyValuePair<ulong, ulong>(
                                 Utils.ConvertToUInt64("DEFAULT", nonVolumePart.Value),
                                 100);
@@ -87,13 +89,14 @@ namespace Mentula.Content.MM
 
         public unsafe ulong GetByteCount()
         {
-            ulong result = (ulong)Encoding.ASCII.GetBytes(name).LongLength;      // Name Byte count
+            ulong result = (ulong)Encoding.ASCII.GetBytes(name).LongLength;     // Name Byte count
             result += sizeof(int);                                              // Name Length specifier
 
-            result += sizeof(int);                                             // Texture Id
+            result += sizeof(int);                                              // Texture Id
             result += sizeof(bool);                                             // IsBio
             result += (ulong)sizeof(Stats);                                     // Stats
 
+            result += sizeof(int);                                              // Part count
             foreach (KeyValuePair<ulong, KeyValuePair<ulong, ulong>[]> dataBank in parts)
             {
                 result += sizeof(ulong);                                        // Database id

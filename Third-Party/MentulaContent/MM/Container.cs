@@ -11,7 +11,7 @@ namespace Mentula.Content.MM
         public Dictionary<string, string> Values;
         public Container[] Childs;
 
-        public bool IsUseless { get { return string.IsNullOrWhiteSpace(Name) | (Values.Count == 0 & Childs.Length == 0) ? true : false; } }
+        public bool IsUseless { get { return string.IsNullOrWhiteSpace(Name) || (Values.Count == 0 & Childs.Length == 0) ? true : false; } }
 
         public Container()
         {
