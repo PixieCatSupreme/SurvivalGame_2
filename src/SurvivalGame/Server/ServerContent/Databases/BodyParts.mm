@@ -1,5 +1,76 @@
-﻿[Database: name="BodyParts", id=3]
+﻿[Database: name="BodyParts", id=2]
 {
+	[Torso:100]
+	{
+		[Items]
+		{
+			[LeftLung: 11]
+			[RightLung: 11]
+			[LeftKidney: 12]
+			[RightKidney: 12]
+			[Heart: 13]
+			[Liver: 14]
+			[Flesh: 15]
+			[Skin: 16]
+		}
+	}
+
+	[Head:101]
+	{
+		[Items]
+		{
+			[Brain: 7]
+			[LeftEye: 8]
+			[RightEye: 8]
+			[LeftEar: 9]
+			[RightEar: 9]
+			[Mouth: 10]
+			[Skull: 17]
+			[HeadSkin:18]
+		}
+	}
+	[Arm:102]
+	{
+		[Tags]
+		{
+			[Manipulation]
+			{
+				[id=4]
+				[value=1]
+			}
+		}
+
+		[Items]
+		{
+			[Humerus: 4]
+			[Radius: 5]
+			[Ulna: 6]
+			[ArmFlesh: 19]
+			[ArmSkin: 20]
+		}
+	}
+
+	[Leg: 103]
+	{
+		[Tags]
+		{
+			[Moving]
+			{
+				[id=3]
+				[value=1]
+			}
+		}
+
+		[Items]
+		{
+			[Tibia: 0]
+			[Fibula: 1]
+			[Femur: 2]
+			[LegFlesh:21]
+			[LegSkin:22]
+		}
+	}
+
 	[Tibia: 0]
 	{
 		[Material]
@@ -217,9 +288,9 @@
 	{
 		[Material]
 		{
-		[db=1]
-		[Id=2]
-		[volume=400]
+			[db=1]
+			[Id=2]
+			[volume=400]
 		}
 	}
 
@@ -280,77 +351,6 @@
 			[db=1]
 			[Id=2]
 			[volume=552]
-		}
-	}
-
-	[Torso:100]
-	{
-		[Items]
-		{
-			[LeftLung: 11]
-			[RightLung: 11]
-			[LeftKidney: 12]
-			[RightKidney: 12]
-			[Heart: 13]
-			[Liver: 14]
-			[Flesh: 15]
-			[Skin: 16]
-		}
-	}
-
-	[Head:101]
-	{
-		[Items]
-		{
-			[Brain: 7]
-			[LeftEye: 8]
-			[RightEye: 8]
-			[LeftEar: 9]
-			[RightEar: 9]
-			[Mouth: 10]
-			[Skull: 17]
-			[HeadSkin:18]
-		}
-	}
-	[Arm:102]
-	{
-		[Tags]
-		{
-			[Manipulation]
-			{
-				[id=4]
-				[value=1]
-			}
-		}
-
-		[Items]
-		{
-			[Humerus: 4]
-			[Radius: 5]
-			[Ulna: 6]
-			[ArmFlesh: 19]
-			[ArmSkin: 20]
-		}
-	}
-
-	[Leg: 103]
-	{
-		[Tags]
-		{
-			[Moving]
-			{
-				[id=3]
-				[value=1]
-			}
-		}
-
-		[Items]
-		{
-			[Tibia: 0]
-			[Fibula: 1]
-			[Femur: 2]
-			[LegFlesh:21]
-			[LegSkin:22]
 		}
 	}	
 }

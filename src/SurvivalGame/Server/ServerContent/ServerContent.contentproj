@@ -36,31 +36,52 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Biomass.mm">
+    <Compile Include="Databases\Biomass.mm">
       <Name>Biomass</Name>
       <Importer>MMImporter</Importer>
       <Processor>MBioProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Metals.mm">
+    <Compile Include="Databases\Metals.mm">
       <Name>Metals</Name>
       <Importer>MMImporter</Importer>
       <Processor>MMetalProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="R.mm">
-      <Name>R</Name>
+    <None Include="Tags.mm">
+      <Name>Tags</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MRProcessor</Processor>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Databases\BodyParts.mm">
+      <Name>BodyParts</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MItemProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DBKeys.mm">
+      <Name>DBKeys</Name>
       <Importer>MMImporter</Importer>
       <Processor>MRProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BodyParts.mm">
-      <Name>BodyParts</Name>
+    <Compile Include="Databases\Creatures.mm">
+      <Name>Creatures</Name>
       <Importer>MMImporter</Importer>
-      <Processor>MItemProcessor</Processor>
+      <Processor>MCreatureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Slots.mm">
+      <Name>Slots</Name>
+      <Importer>MMImporter</Importer>
+      <Processor>MRProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

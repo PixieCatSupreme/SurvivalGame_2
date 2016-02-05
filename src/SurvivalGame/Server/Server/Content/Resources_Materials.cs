@@ -9,7 +9,7 @@ namespace Mentula.Server
         {
             if (metals == null)
             {
-                if ((metals = Load<Metal[]>("Metals")) == null) return null;
+                if ((metals = Load<Metal[]>("Databases/Metals")) == null) return null;
             }
 
             for (uint i = 0; i < metals.Length; i++)
@@ -26,7 +26,7 @@ namespace Mentula.Server
         {
             if (biomasses == null)
             {
-                if ((biomasses = Load<Biomass[]>("Biomass")) == null) return null;
+                if ((biomasses = Load<Biomass[]>("Databases/Biomass")) == null) return null;
             }
 
             for (uint i = 0; i < biomasses.Length; i++)

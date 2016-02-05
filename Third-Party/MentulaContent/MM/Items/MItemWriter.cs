@@ -2,20 +2,19 @@
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using static Mentula.Content.MM.MItemProcessor;
 
 namespace Mentula.Content.MM
 {
     [ContentTypeWriter]
-    internal class MItemWriter : ContentTypeWriter<Manifest[]>
+    internal class MItemWriter : ContentTypeWriter<ItemManifest[]>
     {
-        protected override void Write(ContentWriter output, Manifest[] value)
+        protected override void Write(ContentWriter output, ItemManifest[] value)
         {
             output.Write(value.Length);
 
             for (int i = 0; i < value.Length; i++)
             {
-                Manifest cur = value[i];
+                ItemManifest cur = value[i];
 
                 output.Write(cur.id);
                 output.Write(cur.GetByteCount());
@@ -65,7 +64,7 @@ namespace Mentula.Content.MM
 
         public override string GetRuntimeType(TargetPlatform targetPlatform)
         {
-            return typeof(Manifest[]).AssemblyQualifiedName;
+            return typeof(ItemManifest[]).AssemblyQualifiedName;
         }
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform)

@@ -1,5 +1,4 @@
 ﻿using Mentula.Content.MM;
-using Microsoft.Xna.Framework.Content;
 
 namespace Mentula.Content
 {

@@ -1,53 +1,47 @@
-﻿using Mentula.Utilities;
+﻿using Mentula.Content.MM;
+using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Linq;
-using Mentula.Utilities.MathExtensions;
+using System.Collections.Generic;
 
 namespace Mentula.Content
 {
     [MMEditable]
     public class Creature : Item, IEntity
     {
-        [MMIgnore]
         public Vector2 Pos { get; set; }
-        [MMIgnore]
         public IntVector2 ChunkPos { get; set; }
-        [MMIgnore]
         public float Rotation { get; set; }
 
-        public readonly string Name;
         public readonly Stats Stats;
         public readonly int TextureId;
-        [MMOptional]
-        public bool IsBio;
-        [MMIgnore]
-        public Tag[] Systems { private set; get; }
-        [MMIgnore]
-        public bool IsAlive { private set; get; }
-        [MMIgnore]
-        private Tag[] DefaultSystemsVal;
+        public readonly bool IsBio;
+
+        private Dictionary<int, Item> equipment;
+        private List<Item> inventory;
+
+        public Tag[] Systems { get; private set; }
+        private readonly Tag[] DefaultSystemsVal;
 
         internal Creature()
-            : base()
+            : base(0, "The Unnameable", Cheats.Unobtanium, ulong.MaxValue)
         {
-            Name = "The Unnameable";
             Stats = new Stats(short.MaxValue);
+            DefaultSystemsVal = CalcSystems();
+            equipment = new Dictionary<int, Item>();
+            inventory = new List<Item>();
         }
 
-        internal Creature(string n, Stats stats, int textId)
-            :base () // TODO: Change to propper key.
+        public Creature(ulong id, string name, int tex, bool isBio, Stats stats, Item[] parts)
+            : base(id, name, parts)
         {
-            Pos = Vector2.Zero;
-            ChunkPos = IntVector2.Zero;
-            Name = n;
+            TextureId = tex;
+            IsBio = isBio;
             Stats = stats;
-            TextureId = textId;
-        }
-
-        public static Creature CreatePlayer(string name)
-        {
-            return new Creature(name, new Stats(6), 9997);
+            DefaultSystemsVal = CalcSystems();
+            equipment = new Dictionary<int, Item>();
+            inventory = new List<Item>();
         }
 
         public Tag[] CalcSystems()
@@ -58,13 +52,11 @@ namespace Mentula.Content
 
         public bool CalcIsAlive()
         {
-            IsAlive = IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
-            return IsAlive;
+            return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
         }
 
         public byte GetHealth()
         {
-            DefaultSystemsVal = GetAllTagsWithDurability();
             byte health = byte.MaxValue;
             for (int i = 0; i < Systems.Length; i++)
             {
@@ -109,6 +101,87 @@ namespace Mentula.Content
                     ChunkPos = new IntVector2(ChunkPos.X, ChunkPos.Y + 1);
                 }
             }
+        }
+
+        public ulong CalcMaxStorage()
+        {
+            const int STORAGE_ID = 11;
+
+            ulong result = 0;
+            foreach (KeyValuePair<int, Item> item in equipment)
+            {
+                Tag storage = item.Value.Tags.FirstOrDefault(t => t.Key == STORAGE_ID);
+                result += (ulong)storage.Value;
+            }
+
+            return result;
+        }
+
+        public ulong CalcOccupiedStorage()
+        {
+            ulong result = 0;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                result += inventory[i].CalcVolume();
+            }
+
+            return result;
+        }
+
+        public bool AddItem(Item item)
+        {
+            ulong max = CalcMaxStorage();
+            ulong cur = CalcOccupiedStorage();
+
+            if ((cur + item.CalcVolume()) <= max)
+            {
+                inventory.Add(item);
+                return true;
+            }
+
+            return false;
+        }
+
+        public Item RemoveItem(string name)
+        {
+            Item item = inventory.FirstOrDefault(i => i.Name == name);
+
+            if (item != null) inventory.Remove(item);
+            return item;
+        }
+
+        public void EquipItem(R slots, int slot, Item item)
+        {
+            if (slots.ContainsKey(slot))
+            {
+                if (!equipment.ContainsKey(slot))
+                {
+                    equipment.Add(slot, item);
+                }
+            }
+        }
+
+        public Item GetEquipment(int slot)
+        {
+            if (equipment.ContainsKey(slot))
+            {
+                return equipment[slot];
+            }
+
+            return null;
+        }
+
+        public Item UnequipItem(int slot)
+        {
+            if (equipment.ContainsKey(slot))
+            {
+                Item item = equipment[slot];
+                equipment.Remove(slot);
+                return item;
+            }
+
+            return null;
         }
     }
 

@@ -4,12 +4,7 @@ namespace Mentula.Utilities
 {
     public static class RNG
     {
-        private static Random r;
-
-        static RNG()
-        {
-            r = new Random();
-        }
+        private static Random r = new Random();
 
         public static float RFloatFromString(string s)
         {

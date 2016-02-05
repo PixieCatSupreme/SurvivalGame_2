@@ -1,35 +1,31 @@
-﻿using Mentula.Utilities;
-using Mentula.Utilities.Udp;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Mentula.Content
 {
     [MMEditable]
+    [DebuggerDisplay("{Name}")]
     public class Item
     {
-        [MMIgnore]
         public readonly ulong Id;
         public readonly string Name;
-        [MMOptional]
+
         public readonly ulong Volume;
-        public readonly ulong Weight;
-        [MMOptional]
         public byte Durability;
 
-        [MMOptional]
         public readonly Tag[] Tags;
-        [MMOptional]
         public readonly Item[] Parts;
-        [MMOptional]
-        public readonly IMaterial Material;
+        public readonly Material Material;
 
         internal Item()
         {
             Durability = 100;
+            Tags = new Tag[0];
+            Parts = new Item[0];
         }
 
-        public Item(ulong id, string name, IMaterial material, ulong volume)
-            :this()
+        public Item(ulong id, string name, Material material, ulong volume)
+            : this()
         {
             Id = id;
             Volume = volume;
@@ -37,8 +33,8 @@ namespace Mentula.Content
             Material = material;
         }
 
-        public Item(ulong id, string name, IMaterial material, ulong volume, Tag[] tags)
-            :this()
+        public Item(ulong id, string name, Material material, ulong volume, Tag[] tags)
+            : this()
         {
             Id = id;
             Volume = volume;
@@ -47,8 +43,16 @@ namespace Mentula.Content
             Tags = tags;
         }
 
+        public Item(ulong id, string name, Item[] parts)
+            : this()
+        {
+            Id = id;
+            Name = name;
+            Parts = parts;
+        }
+
         public Item(ulong id, string name, Item[] parts, Tag[] tags)
-            :this()
+            : this()
         {
             Id = id;
             Name = name;
@@ -58,7 +62,7 @@ namespace Mentula.Content
 
         public Tag[] GetAllTags()
         {
-            List<Tag> result = new List<Tag>();
+            List<Tag> result = new List<Tag>(Tags);
 
             for (int i = 0; i < Parts.Length; i++)
             {
@@ -115,6 +119,35 @@ namespace Mentula.Content
             }
 
             return result.ToArray();
+        }
+
+        public float CalcWeight()
+        {
+            float result = 0;
+
+            if (Material != null)
+            {
+                result = Material.Density * Volume;
+            }
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].CalcWeight();
+            }
+
+            return result;
+        }
+
+        public ulong CalcVolume()
+        {
+            ulong result = Volume;
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].CalcVolume();
+            }
+
+            return result;
         }
     }
 }
