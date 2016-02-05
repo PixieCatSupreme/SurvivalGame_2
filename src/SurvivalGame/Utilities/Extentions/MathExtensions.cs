@@ -5,6 +5,7 @@ using Mentula.Utilities;
 using Mentula.Engine.Core.ExtendedMath;
 using Resc = Mentula.Utilities.Resources.Res;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mentula.Utilities.MathExtensions
 {
@@ -107,6 +108,41 @@ namespace Mentula.Utilities.MathExtensions
             }
 
             return tilePos;
+        }
+
+        public static void Shuffle<T>(this IList<T> collection)
+        {
+            int count;
+
+            if (collection.GetType() == typeof(T[])) count = ((T[])collection).Length;
+            else count = collection.Count;
+
+            int[] indexes = new int[count];
+            Random rng = new Random();
+
+            for (int i = 0; i < count; i++)
+            {
+                int rnd;
+                indexes[i] = -1;
+
+                do
+                {
+                    rnd = rng.Next(0, count);
+                } while (indexes.Contains(rnd));
+
+                indexes[i] = rnd;
+            }
+
+            T[] temp = new T[count];
+            for (int i = 0; i < count; i++)
+            {
+                temp[indexes[i]] = collection[i];
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                collection[i] = temp[i];
+            }
         }
     }
 }

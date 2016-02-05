@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using static Mentula.Utilities.Resources.Res;
+using Mentula.Utilities.MathExtensions;
+
 namespace Mentula.Server
 {
     public class MegaChunk
@@ -94,6 +96,7 @@ namespace Mentula.Server
         private void GenerateHouse(Street str, Building b, Random r)
         {
             List<Rectangle> rooms = BinarySplitGenerator.GenerateBinarySplitMap1(new Rectangle(0, 0, b.Space.Width - 1, b.Space.Height - 1), new IntVector2(minRoomSize), r.NextDouble().ToString());
+            rooms.Shuffle();
             Structure s = new Structure();
             s.Space = b.Space;
             for (int i = 0; i < b.Space.Width; i++)
@@ -124,6 +127,8 @@ namespace Mentula.Server
                 }
             }
             IntVector2 startpos = IntVector2.Zero;
+
+            #region direction
             Vector2 dir = new Vector2(b.Space.Center.X, b.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
             int dist = int.MaxValue;
             if (str.Space.Width > str.Space.Height)
@@ -215,6 +220,8 @@ namespace Mentula.Server
                     s.Destructibles.RemoveAt(i);
                 }
             }
+            #endregion
+
             Structures.Add(s);
         }
     }
