@@ -29,7 +29,6 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -41,7 +40,6 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
             
@@ -54,7 +52,6 @@ namespace Mentula.Content
             IsBio = copy.IsBio;
             Stats = copy.Stats;
             DefaultSystemsVal = CalcSystems();
-            Systems = CalcSystemsWithDur();
             equipment = copy.equipment;
             inventory = copy.inventory;
         }
