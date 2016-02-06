@@ -125,6 +125,22 @@ namespace Mentula.Utilities.MathExtensions
             return tilePos;
         }
 
+        public static T[] Copy<T>(this IList<T> collection)
+        {
+            int count;
+
+            if (collection.GetType() == typeof(T[])) count = ((T[])collection).Length;
+            else count = collection.Count;
+
+            T[] result = new T[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = collection[i];
+            }
+
+            return result;
+        }
+
         public static void Shuffle<T>(this IList<T> collection)
         {
             int count;
