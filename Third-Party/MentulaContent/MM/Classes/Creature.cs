@@ -29,6 +29,7 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
+            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -40,8 +41,10 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
+            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
+            
         }
 
         public Creature(Creature copy)
@@ -51,6 +54,7 @@ namespace Mentula.Content
             IsBio = copy.IsBio;
             Stats = copy.Stats;
             DefaultSystemsVal = CalcSystems();
+            Systems = CalcSystemsWithDur();
             equipment = copy.equipment;
             inventory = copy.inventory;
         }
@@ -61,6 +65,12 @@ namespace Mentula.Content
             return Systems;
         }
 
+        public Tag[] CalcSystemsWithDur()
+        {
+            Systems = GetDurTags();
+            return Systems;
+        }
+
         public bool CalcIsAlive()
         {
             return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
@@ -68,16 +78,21 @@ namespace Mentula.Content
 
         public byte GetHealth()
         {
-            byte health = byte.MaxValue;
+            if (!CalcIsAlive())
+            {
+                return 0;
+            }
+            float health = 255;
+            if (Systems.Length==0)
+            {
+                return 0;
+            }
             for (int i = 0; i < Systems.Length; i++)
             {
-                byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
-                if (h < health)
-                {
-                    health = h;
-                }
+                float h =(float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                health *= h;
             }
-            return health;
+            return (byte)health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)

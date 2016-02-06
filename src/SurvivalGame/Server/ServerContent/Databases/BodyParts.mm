@@ -31,15 +31,6 @@
 	}
 	[Arm:102]
 	{
-		[Tags]
-		{
-			[Manipulation]
-			{
-				[id=4]
-				[value=1]
-			}
-		}
-
 		[Items]
 		{
 			[Humerus: 4]
@@ -52,14 +43,6 @@
 
 	[Leg: 103]
 	{
-		[Tags]
-		{
-			[Moving]
-			{
-				[id=3]
-				[value=1]
-			}
-		}
 
 		[Items]
 		{
@@ -73,6 +56,14 @@
 
 	[Tibia: 0]
 	{
+		[Tags]
+		{
+			[Moving]
+			{
+				[id=3]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -83,6 +74,14 @@
 
 	[Fibula: 1]
 	{
+		[Tags]
+		{
+			[Moving]
+			{
+				[id=3]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -93,6 +92,14 @@
 
 	[Femur: 2]
 	{
+		[Tags]
+		{
+			[Moving]
+			{
+				[id=3]
+				[value=100]
+			}
+		}
 		[Material]
 		{ 
 			[db=1]
@@ -103,6 +110,14 @@
 
 	[Humerus: 4]
 	{
+		[Tags]
+		{
+			[Manipulation]
+			{
+				[id=4]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -113,6 +128,15 @@
 
 	[Radius: 5]
 	{
+
+		[Tags]
+		{
+			[Manipulation]
+			{
+				[id=4]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -123,6 +147,14 @@
 
 	[Ulna: 6]
 	{
+		[Tags]
+		{
+			[Manipulation]
+			{
+				[id=4]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -137,7 +169,7 @@
 			[Consciousness]
 			{
 				[id=0]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -155,7 +187,7 @@
 			[Sight]
 			{
 				[id=1]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -173,7 +205,7 @@
 			[Hearing]
 			{
 				[id=2]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -191,7 +223,7 @@
 			[Communication]
 			{
 				[id=5]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -209,7 +241,7 @@
 			[Breathing]
 			{
 				[id=6]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -227,7 +259,7 @@
 			[BloodFiltration]
 			{
 				[id=7]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -245,7 +277,7 @@
 			[BloodPumping]
 			{ 
 				[id=8]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -263,7 +295,7 @@
 			[Metabolism]
 			{
 				[id=9]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -316,6 +348,14 @@
 
 	[ArmFlesh:19]
 	{
+		[Tags]
+		{
+			[Manipulation]
+			{
+				[id=4]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]
@@ -336,6 +376,14 @@
 
 	[LegFlesh:21]
 	{
+		[Tags]
+		{
+			[Moving]
+			{
+				[id=3]
+				[value=100]
+			}
+		}
 		[Material]
 		{
 			[db=1]

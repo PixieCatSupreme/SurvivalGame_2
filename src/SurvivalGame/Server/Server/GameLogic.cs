@@ -101,6 +101,15 @@ namespace Mentula.Server
 
         public void PlayerAttack(long id)
         {
+            int index = 0;
+            for (int i = 0; i < Players.Length; i++)
+            {
+                if (Players[i].Key == id)
+                {
+                    index = i;
+                }
+            }
+            Combat.OnMelee(Players[index].Value,ref Map.LoadedNPCs);
         }
     }
 }
