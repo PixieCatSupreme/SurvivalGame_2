@@ -153,29 +153,39 @@ namespace Mentula.Content
 
         public float GetHealth()
         {
-            return Durability * Material.Ultimate_Tensile_Strength * Volume;
+            float result = 0;
+            if (Material!=null)
+            {
+                result= Durability * Material.Ultimate_Tensile_Strength * Volume;
+            }
+
+            return result;
         }
 
         public float GetTotalHealth()
         {
-            float health = Durability * Material.Ultimate_Tensile_Strength * Volume;
+            float result = 0;
+            if (Material != null)
+            {
+                result = Durability * Material.Ultimate_Tensile_Strength * Volume;
+            }
 
             for (int i = 0; i < Parts.Length; i++)
             {
-                health += Parts[i].GetTotalHealth();
+                result += Parts[i].GetTotalHealth();
             }
 
-            return health;
+            return result;
         }
 
         public void DealDamage(float damage)
         {
-            ulong v = RNG.Next(CalcVolume());
+            long v = RNG.Next((long)CalcVolume());
             float remainingDamage = damage;
 
             if (Volume > 0)
             {
-                v -= Volume;
+                v -= (long)Volume;
                 if (v < 0)
                 {
                     if (GetHealth() <= remainingDamage)
@@ -195,7 +205,8 @@ namespace Mentula.Content
             {
                 for (int i = 0; i < Parts.Length; i++)
                 {
-                    v -= Parts[i].CalcVolume();
+                     
+                    v -= (long)Parts[i].CalcVolume();
 
                     if (v < 0)
                     {

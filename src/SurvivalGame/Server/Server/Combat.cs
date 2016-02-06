@@ -12,7 +12,7 @@ namespace Mentula.Server
 {
     public static class Combat
     {
-        public static void OnMelee(Creature attacker, List<NPC> defender)
+        public static void OnMelee(Creature attacker,ref List<NPC> defender)
         {
             float range = 2;//todo generate range
             float arc = 30;
@@ -26,13 +26,13 @@ namespace Mentula.Server
                 Vector2 defenderPos = defender[i].creature.Pos + defender[i].creature.ChunkPos * ChunkSize;
                 if (Vector2.Distance(attackerPos, defenderPos) < range)
                 {
-                    Vector2 defenderAngle1 = defenderPos - attackerPos-rot;
+                    Vector2 defenderAngle1 = defenderPos - attackerPos;
                     defenderAngle1.Normalize();
                     float defenderDeg = MathEX.VectorToDegrees(defenderAngle1);
                     if (MathEX.DifferenceBetweenDegrees(defenderDeg,attackerRot)<arc)
                     {
-                        int o = 0;
-                        defender[i].creature.DealDamage(1000000);
+                        defender[i].creature.DealDamage(0);
+                        defender[i].creature.CalcSystemsWithDur();
                     }
 
                 }

@@ -109,7 +109,7 @@ namespace Mentula.Server
                     index = i;
                 }
             }
-            Combat.OnMelee(Players[index].Value, Map.LoadedNPCs);
+            Combat.OnMelee(Players[index].Value,ref Map.LoadedNPCs);
         }
     }
 }

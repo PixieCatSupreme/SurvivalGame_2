@@ -29,6 +29,7 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
+            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -40,6 +41,7 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
+            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -51,6 +53,7 @@ namespace Mentula.Content
             IsBio = copy.IsBio;
             Stats = copy.Stats;
             DefaultSystemsVal = CalcSystems();
+            //Systems = CalcSystems();
             equipment = copy.equipment;
             inventory = copy.inventory;
         }
@@ -58,6 +61,12 @@ namespace Mentula.Content
         public Tag[] CalcSystems()
         {
             Systems = GetAllTags();
+            return Systems;
+        }
+
+        public Tag[] CalcSystemsWithDur()
+        {
+            Systems = GetAllTagsWithDurability();
             return Systems;
         }
 
@@ -69,6 +78,10 @@ namespace Mentula.Content
         public byte GetHealth()
         {
             byte health = byte.MaxValue;
+            if (Systems.Length==0)
+            {
+                return 0;
+            }
             for (int i = 0; i < Systems.Length; i++)
             {
                 byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
