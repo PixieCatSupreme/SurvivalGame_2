@@ -31,7 +31,7 @@ namespace Mentula.Server
                     float defenderDeg = MathEX.VectorToDegrees(defenderAngle1);
                     if (MathEX.DifferenceBetweenDegrees(defenderDeg,attackerRot)<arc)
                     {
-                        defender[i].creature.DealDamage(0);
+                        defender[i].creature.DealDamage(1000000000);
                         defender[i].creature.CalcSystemsWithDur();
                     }
 

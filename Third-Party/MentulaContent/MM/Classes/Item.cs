@@ -93,7 +93,7 @@ namespace Mentula.Content
 
         public Tag[] GetAllTagsWithDurability()
         {
-            List<Tag> result = new List<Tag>();
+            List<Tag> result = new List<Tag>(Tags);
 
             for (int i = 0; i < Parts.Length; i++)
             {
@@ -102,7 +102,7 @@ namespace Mentula.Content
                 for (int j = 0; j < childTags.Length; j++)
                 {
                     Tag current = childTags[j];
-                    current.Value *= Durability;
+                    current.Value *= (short)(Durability/100);
                     bool found = false;
 
                     for (int k = 0; k < result.Count; k++)
@@ -154,9 +154,9 @@ namespace Mentula.Content
         public float GetHealth()
         {
             float result = 0;
-            if (Material!=null)
+            if (Material != null)
             {
-                result= Durability * Material.Ultimate_Tensile_Strength * Volume;
+                result = Durability * Material.Ultimate_Tensile_Strength * Volume;
             }
 
             return result;
@@ -205,7 +205,7 @@ namespace Mentula.Content
             {
                 for (int i = 0; i < Parts.Length; i++)
                 {
-                     
+
                     v -= (long)Parts[i].CalcVolume();
 
                     if (v < 0)
