@@ -17,29 +17,24 @@ namespace Mentula.Server
             float range = 2;//todo generate range
             float arc = 30;
             Vector2 attackerPos = attacker.Pos + attacker.ChunkPos * ChunkSize;
-            Vector2 rot = MathEX.DegreesToVector(attacker.Rotation);
+            float attackerRot = attacker.Rotation / (float)Math.PI * 180;
+            Vector2 rot = MathEX.DegreesToVector(attackerRot);
+            rot /= 2;
+
             for (int i = 0; i < defender.Count; i++)
             {
                 Vector2 defenderPos = defender[i].creature.Pos + defender[i].creature.ChunkPos * ChunkSize;
                 if (Vector2.Distance(attackerPos, defenderPos) < range)
                 {
-                    if (MathEX.DifferenceBetweenDegrees(attacker.Rotation, defender[i].creature.Rotation) < 90)
+                    Vector2 defenderAngle1 = defenderPos - attackerPos-rot;
+                    defenderAngle1.Normalize();
+                    float defenderDeg = MathEX.VectorToDegrees(defenderAngle1);
+                    if (MathEX.DifferenceBetweenDegrees(defenderDeg,attackerRot)<arc)
                     {
-                        Vector2 defenderPosLeft = defenderPos;
-                        defenderPosLeft.X += rot.X;
-                        defenderPosLeft.Y -= rot.Y;
-                        Vector2 defenderPosRight = defenderPos;
-                        defenderPosRight.X -= rot.X;
-                        defenderPosRight.Y += rot.Y;
-                        float defenderRotLeft = MathEX.VectorToDegrees(defenderPosLeft);
-                        float defenderRotRight = MathEX.VectorToDegrees(defenderPosRight);
-                        float attackerArcLeft = MathEX.VectorToDegrees(new Vector2(rot.X, -rot.Y));
-                        float attackerArcRight = MathEX.VectorToDegrees(new Vector2(-rot.X, rot.Y));
-                        if (MathEX.DifferenceBetweenDegrees(defenderRotLeft, attackerArcLeft) < 90 + arc && MathEX.DifferenceBetweenDegrees(defenderRotRight, attackerArcRight) < 90 + arc)
-                        {
-                            defender[i].creature.DealDamage(1000000);
-                        }
+                        int o = 0;
+                        defender[i].creature.DealDamage(1000000);
                     }
+
                 }
             }
         }
