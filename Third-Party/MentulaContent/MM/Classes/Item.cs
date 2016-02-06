@@ -91,34 +91,34 @@ namespace Mentula.Content
             return result.ToArray();
         }
 
-        public Tag[] GetAllTagsWithDurability()
+      
+        public Tag[] GetDurTags()
         {
-            List<Tag> result = new List<Tag>(Tags);
-
+            List<Tag> result = new List<Tag>();
+            for (int i = 0; i < Tags.Length; i++)
+            {
+                result.Add(new Tag(Tags[i].Key, (short)(Tags[i].Value * Durability / 100)));
+            }
             for (int i = 0; i < Parts.Length; i++)
             {
-                Tag[] childTags = Parts[i].GetAllTagsWithDurability();
-
-                for (int j = 0; j < childTags.Length; j++)
+                List<Tag> tags = new List<Tag>(Parts[i].GetDurTags());
+                for (int j = 0; j < tags.Count; j++)
                 {
-                    Tag current = childTags[j];
-                    current.Value *= (short)(Durability/100);
-                    bool found = false;
-
+                    bool canAdd = true;
                     for (int k = 0; k < result.Count; k++)
                     {
-                        if (result[k].Key == current.Key)
+                        if (tags[j].Key == result[k].Key)
                         {
-                            result[k] += current;
-                            found = true;
-                            break;
+                            result[k] += tags[j];
+                            canAdd = false;
                         }
                     }
-
-                    if (!found) result.Add(current);
+                    if (canAdd)
+                    {
+                        result.Add(tags[j]);
+                    }
                 }
             }
-
             return result.ToArray();
         }
 

@@ -61,7 +61,7 @@
 			[Moving]
 			{
 				[id=3]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -79,7 +79,7 @@
 			[Moving]
 			{
 				[id=3]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -97,7 +97,7 @@
 			[Moving]
 			{
 				[id=3]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -115,7 +115,7 @@
 			[Manipulation]
 			{
 				[id=4]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -134,7 +134,7 @@
 			[Manipulation]
 			{
 				[id=4]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -152,7 +152,7 @@
 			[Manipulation]
 			{
 				[id=4]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -169,7 +169,7 @@
 			[Consciousness]
 			{
 				[id=0]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -187,7 +187,7 @@
 			[Sight]
 			{
 				[id=1]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -205,7 +205,7 @@
 			[Hearing]
 			{
 				[id=2]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -223,7 +223,7 @@
 			[Communication]
 			{
 				[id=5]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -241,7 +241,7 @@
 			[Breathing]
 			{
 				[id=6]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -259,7 +259,7 @@
 			[BloodFiltration]
 			{
 				[id=7]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -277,7 +277,7 @@
 			[BloodPumping]
 			{ 
 				[id=8]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -295,7 +295,7 @@
 			[Metabolism]
 			{
 				[id=9]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -353,7 +353,7 @@
 			[Manipulation]
 			{
 				[id=4]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]
@@ -381,7 +381,7 @@
 			[Moving]
 			{
 				[id=3]
-				[value=1]
+				[value=100]
 			}
 		}
 		[Material]

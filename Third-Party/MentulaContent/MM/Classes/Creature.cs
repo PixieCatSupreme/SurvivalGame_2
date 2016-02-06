@@ -44,6 +44,7 @@ namespace Mentula.Content
             //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
+            
         }
 
         public Creature(Creature copy)
@@ -53,7 +54,7 @@ namespace Mentula.Content
             IsBio = copy.IsBio;
             Stats = copy.Stats;
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
+            Systems = CalcSystemsWithDur();
             equipment = copy.equipment;
             inventory = copy.inventory;
         }
@@ -66,7 +67,7 @@ namespace Mentula.Content
 
         public Tag[] CalcSystemsWithDur()
         {
-            Systems = GetAllTagsWithDurability();
+            Systems = GetDurTags();
             return Systems;
         }
 
@@ -77,20 +78,21 @@ namespace Mentula.Content
 
         public byte GetHealth()
         {
-            byte health = byte.MaxValue;
+            if (!CalcIsAlive())
+            {
+                return 0;
+            }
+            float health = 255;
             if (Systems.Length==0)
             {
                 return 0;
             }
             for (int i = 0; i < Systems.Length; i++)
             {
-                byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
-                if (h < health)
-                {
-                    health = h;
-                }
+                float h =(float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                health *= h;
             }
-            return health;
+            return (byte)health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)

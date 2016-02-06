@@ -107,7 +107,7 @@ namespace Mentula.Server
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
             for (int i = 0; i < ChunkSize * ChunkSize; i++)
             {
-                float chance = rainArray[i] / 1000;
+                float chance = (rainArray[i]-35) / 650;
                 if (r.NextDouble() < chance)
                 {
                     Vector2 pos = new Vector2(i % ChunkSize, i / ChunkSize);
