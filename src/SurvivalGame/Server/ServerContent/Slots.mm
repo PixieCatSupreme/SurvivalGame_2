@@ -15,5 +15,7 @@
 		[Pants: 10]
 		[Socks: 11]
 		[Shoes: 12]
+		[LeftHand: 13]
+		[RightHand: 14]
 	}
 }
