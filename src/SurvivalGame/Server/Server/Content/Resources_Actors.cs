@@ -7,16 +7,8 @@ namespace Mentula.Server
 {
     public partial class Resources : ContentManager
     {
-        private List<Creature> cachesCreatures = new List<Creature>();
-
-        public Creature GetCreature(string dataBase, ulong id, bool cache, string name = null)
+        public Creature GetCreature(string dataBase, ulong id, string name = null)
         {
-            for (int i = 0; i < cachesCreatures.Count; i++)
-            {
-                Creature cur = cachesCreatures[i];
-                if (cur.Id == id) return new Creature(cur);
-            }
-
             Variables.IdBuffer.Push(id);
             CreatureManifest mani = Load<CreatureManifest>(dataBase);
 
@@ -44,10 +36,7 @@ namespace Mentula.Server
             }
 
 
-            Creature c = new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
-            if (cache) cachesCreatures.Add(c);
-
-            return new Creature(c);
+            return new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
         }
     }
 }

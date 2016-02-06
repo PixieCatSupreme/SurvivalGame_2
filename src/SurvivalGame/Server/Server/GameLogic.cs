@@ -49,7 +49,7 @@ namespace Mentula.Server
         {
             if (Index < Players.Length)
             {
-                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, false, name));
+                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
                 Map.Generate(Players[Index].Value.ChunkPos, content);
                 Index++;
             }

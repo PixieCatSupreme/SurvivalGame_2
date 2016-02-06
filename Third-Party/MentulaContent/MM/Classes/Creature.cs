@@ -4,6 +4,8 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Collections.Generic;
+using System;
+using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Content
 {
@@ -29,7 +31,7 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
+            Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -41,14 +43,14 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
+            Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
-            
+
         }
 
         public Creature(Creature copy)
-            :base (copy.Id, copy.Name, copy.Parts)
+            : base(copy.Id, copy.Name, copy.Parts)
         {
             TextureId = copy.TextureId;
             IsBio = copy.IsBio;
@@ -83,13 +85,13 @@ namespace Mentula.Content
                 return 0;
             }
             float health = 255;
-            if (Systems.Length==0)
+            if (Systems.Length == 0)
             {
                 return 0;
             }
             for (int i = 0; i < Systems.Length; i++)
             {
-                float h =(float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                float h = (float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
                 health *= h;
             }
             return (byte)health;
