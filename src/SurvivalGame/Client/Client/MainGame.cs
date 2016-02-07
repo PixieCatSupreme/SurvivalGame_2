@@ -1,5 +1,6 @@
 #define COLLISION
 
+using Mentula.Client.Menus;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
@@ -20,25 +21,33 @@ namespace Mentula.Client
         internal Chunk[] chunks;
 
         internal MediumGraphics vGraphics;
-        internal MainMenu mainMenu;
         internal ClientNetworking networking;
+
+        internal MainMenu mainMenu;
+        internal SingleplayerMenu singleMenu;
+        internal MultiplayerMenu multiMenu;
 
         public MainGame()
         {
             Content.RootDirectory = "Content";
+            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
+            chunks = new Chunk[0];
+            npcs = new NPC[0];
 
             Components.Add(vGraphics = new MediumGraphics(this));
-            Components.Add(mainMenu = new MainMenu(this));
-            Components.Add(networking = new ClientNetworking(this));
-            SetState(GameState.MainMenu);
         }
 
         protected override void Initialize()
         {
-            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
-            chunks = new Chunk[0];
-            npcs = new NPC[0];
-            mainMenu.DiscoverCalled += OnConnect;
+            Components.Add(mainMenu = new MainMenu(this));
+            Components.Add(singleMenu = new SingleplayerMenu(this));
+            Components.Add(multiMenu = new MultiplayerMenu(this));
+            Components.Add(networking = new ClientNetworking(this));
+
+            SetState(GameState.MainMenu);
+            singleMenu.DiscoverCalled += OnConnect;
+            multiMenu.DiscoverCalled += OnConnect;
+
             base.Initialize();
         }
 
@@ -231,20 +240,37 @@ namespace Mentula.Client
                 case (GameState.MainMenu):
                     IsMouseVisible = true;
                     vGraphics.Visible = false;
-                    mainMenu.Enabled = true;
-                    mainMenu.Visible = true;
+                    mainMenu.Show();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
+                    break;
+                case (GameState.SingleplayerMenu):
+                    IsMouseVisible = true;
+                    vGraphics.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Show();
+                    multiMenu.Hide();
+                    break;
+                case (GameState.MultiplayerMenu):
+                    IsMouseVisible = true;
+                    vGraphics.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Show();
                     break;
                 case (GameState.Loading):
                     IsMouseVisible = false;
                     vGraphics.Visible = false;
-                    mainMenu.Enabled = false;
-                    mainMenu.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
                     break;
                 case (GameState.Game):
                     IsMouseVisible = false;
                     vGraphics.Visible = true;
-                    mainMenu.Visible = false;
-                    mainMenu.Enabled = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
                     break;
             }
 

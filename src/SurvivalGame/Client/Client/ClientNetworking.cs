@@ -27,6 +27,7 @@ namespace Mentula.Client
         private TimeSpan prevMessage;
         private MainGame game;
         private NetClient client;
+        private bool singleplayer;
         /* 1 -> Discovery send.     0x1
          * 2 -> Restart required    0x2
          * 4 -> ...                 0x4
@@ -74,9 +75,11 @@ namespace Mentula.Client
                             if ((state & 0x1) != 0)
                             {
                                 state ^= 0x1;
-                                game.mainMenu.SetError(msg.ReadString());
+                                if (singleplayer) game.singleMenu.SetError(msg.ReadString());
+                                else game.multiMenu.SetError(msg.ReadString());
                             }
-                            game.SetState(GameState.MainMenu);
+                            if (singleplayer) game.SetState(GameState.SingleplayerMenu);
+                            else game.SetState(GameState.MultiplayerMenu);
                         }
                         break;
                     case (NIMT.Data):
@@ -147,6 +150,7 @@ namespace Mentula.Client
             {
                 client.DiscoverKnownPeer("localhost", Ips.PORT);
                 state |= 0x1;
+                singleplayer = true;
             }
         }
 
@@ -157,6 +161,7 @@ namespace Mentula.Client
                 IPEndPoint end = new IPEndPoint(address, Ips.PORT);
                 client.DiscoverKnownPeer(end);
                 state |= 0x1;
+                singleplayer = false;
             }
         }
 
