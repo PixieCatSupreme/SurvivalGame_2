@@ -92,6 +92,7 @@
     <Compile Include="Graphics\FastGraphics.cs" />
     <Compile Include="Graphics\FPS.cs" />
     <Compile Include="GameState.cs" />
+    <Compile Include="Menus\GuiMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\MultiplayerMenu.cs" />
     <Compile Include="Menus\SingleplayerMenu.cs" />
