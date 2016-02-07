@@ -70,6 +70,7 @@ namespace Mentula.Client
                     if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
                     if (kState.IsKeyDown(Keys.D)) inp.X += 1;
                     if (kState.IsKeyDown(Keys.E)) networking.Disconect();
+                    if (kState.IsKeyDown(Keys.PrintScreen)) vGraphics.TakeScreenshot();
 
                     if (inp != Vector2.Zero)
                     {

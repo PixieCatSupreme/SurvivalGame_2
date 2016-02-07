@@ -27,6 +27,16 @@
 		[Road:10]
 		[Road_Yellow1:11]
 		[Road_Yellow2:12]
+		[CrossingH]
+		{
+			[Id: 13]
+			[Name: "Crossing1"]
+		}
+		[CrossingV]
+		{
+			[Id: 14]
+			[Name: "Crossing2"]
+		}
 	}
 
 	[Destructable]

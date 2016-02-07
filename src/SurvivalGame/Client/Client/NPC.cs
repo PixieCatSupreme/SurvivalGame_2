@@ -1,7 +1,11 @@
 ﻿using Mentula.Content;
+using Mentula.GuiItems.Core;
+using Mentula.GuiItems.Items;
 using Mentula.Utilities;
+using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Mentula.Client
 {
@@ -12,7 +16,7 @@ namespace Mentula.Client
         public float Rotation { get; set; }
         public string Name;
         public int TextureId;
-        public byte HealthPrec;
+        public byte HealthPrec { get; set; }
 
         public NPC()
         {
@@ -35,7 +39,6 @@ namespace Mentula.Client
             ChunkPos = chunk;
             Pos = tile;
             Rotation = rot;
-            HealthPrec = health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)

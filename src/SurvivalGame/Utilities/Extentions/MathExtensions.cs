@@ -111,6 +111,12 @@ namespace Mentula.Utilities.MathExtensions
             return (ulong)result;
         }
 
+        public static int ToPercentage(int value, int max)
+        {
+            float onePerc = max / 100f;
+            return (int)(value / onePerc);
+        }
+
         public static Vector2 FormatPos(this Vector2 tilePos)
         {
             while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)
