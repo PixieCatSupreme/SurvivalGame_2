@@ -14,8 +14,8 @@ namespace Mentula.Server
         public IntVector2 Pos;
         private const int citySize = 1024;
         private const int maxCities = 6;
-        private const int minStreetSize = 32;
-        private const int minBuildingSize = 16;
+        private const int minStreetSize = 27;
+        private const int minBuildingSize = 13;
         private const int minRoomSize = 3;
         public MegaChunk(IntVector2 pos)
         {
