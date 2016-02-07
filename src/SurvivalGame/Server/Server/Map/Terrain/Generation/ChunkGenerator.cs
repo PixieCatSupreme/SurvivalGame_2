@@ -77,7 +77,7 @@ namespace Mentula.Server
 
                 for (int j = 0; j < structures.Count; j++)
                 {
-                    Rectangle structurespace = new Rectangle(structures[j].Space.X-c.ChunkPos.X*ChunkSize, structures[j].Space.Y - c.ChunkPos.Y * ChunkSize, structures[j].Space.Width, structures[j].Space.Height);
+                    Rectangle structurespace = new Rectangle(structures[j].Space.X - c.ChunkPos.X * ChunkSize, structures[j].Space.Y - c.ChunkPos.Y * ChunkSize, structures[j].Space.Width, structures[j].Space.Height);
                     if (!Rectangle.Intersect(rp, structurespace).IsEmpty)
                     {
                         canplace = false;
@@ -107,7 +107,7 @@ namespace Mentula.Server
             Random r = new Random(RNG.RIntFromString(c.ChunkPos.X + "x" + c.ChunkPos.Y));
             for (int i = 0; i < ChunkSize * ChunkSize; i++)
             {
-                float chance = rainArray[i] / 1000;
+                float chance = (rainArray[i]-35) / 650;
                 if (r.NextDouble() < chance)
                 {
                     Vector2 pos = new Vector2(i % ChunkSize, i / ChunkSize);

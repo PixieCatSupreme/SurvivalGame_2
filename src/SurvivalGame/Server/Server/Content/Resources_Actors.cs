@@ -1,6 +1,5 @@
 ﻿using Mentula.Content;
 using Mentula.Content.MM;
-using Mentula.Utilities.MathExtensions;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
 
@@ -35,6 +34,7 @@ namespace Mentula.Server
                     }
                 }
             }
+
 
             return new Creature(mani.id, !string.IsNullOrEmpty(name) ? name : mani.name, mani.textureId, mani.isBio, mani.stats, parts);
         }

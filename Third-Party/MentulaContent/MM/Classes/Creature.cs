@@ -4,6 +4,8 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using System.Collections.Generic;
+using System;
+using Mentula.Utilities.MathExtensions;
 
 namespace Mentula.Content
 {
@@ -42,11 +44,29 @@ namespace Mentula.Content
             DefaultSystemsVal = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
+
+        }
+
+        public Creature(Creature copy)
+            : base(copy.Id, copy.Name, copy.Parts)
+        {
+            TextureId = copy.TextureId;
+            IsBio = copy.IsBio;
+            Stats = copy.Stats;
+            DefaultSystemsVal = CalcSystems();
+            equipment = copy.equipment;
+            inventory = copy.inventory;
         }
 
         public Tag[] CalcSystems()
         {
             Systems = GetAllTags();
+            return Systems;
+        }
+
+        public Tag[] CalcSystemsWithDur()
+        {
+            Systems = GetDurTags();
             return Systems;
         }
 
@@ -57,16 +77,21 @@ namespace Mentula.Content
 
         public byte GetHealth()
         {
-            byte health = byte.MaxValue;
+            if (!CalcIsAlive())
+            {
+                return 0;
+            }
+            float health = 255;
+            if (Systems.Length == 0)
+            {
+                return 0;
+            }
             for (int i = 0; i < Systems.Length; i++)
             {
-                byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
-                if (h < health)
-                {
-                    health = h;
-                }
+                float h = (float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                health *= h;
             }
-            return health;
+            return (byte)health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)

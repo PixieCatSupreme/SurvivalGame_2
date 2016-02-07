@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Mentula.Utilities;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Mentula.Content
@@ -90,34 +91,34 @@ namespace Mentula.Content
             return result.ToArray();
         }
 
-        public Tag[] GetAllTagsWithDurability()
+      
+        public Tag[] GetDurTags()
         {
             List<Tag> result = new List<Tag>();
-
+            for (int i = 0; i < Tags.Length; i++)
+            {
+                result.Add(new Tag(Tags[i].Key, (short)(Tags[i].Value * Durability / 100)));
+            }
             for (int i = 0; i < Parts.Length; i++)
             {
-                Tag[] childTags = Parts[i].GetAllTagsWithDurability();
-
-                for (int j = 0; j < childTags.Length; j++)
+                List<Tag> tags = new List<Tag>(Parts[i].GetDurTags());
+                for (int j = 0; j < tags.Count; j++)
                 {
-                    Tag current = childTags[j];
-                    current.Value *= Durability;
-                    bool found = false;
-
+                    bool canAdd = true;
                     for (int k = 0; k < result.Count; k++)
                     {
-                        if (result[k].Key == current.Key)
+                        if (tags[j].Key == result[k].Key)
                         {
-                            result[k] += current;
-                            found = true;
-                            break;
+                            result[k] += tags[j];
+                            canAdd = false;
                         }
                     }
-
-                    if (!found) result.Add(current);
+                    if (canAdd)
+                    {
+                        result.Add(tags[j]);
+                    }
                 }
             }
-
             return result.ToArray();
         }
 
@@ -148,6 +149,81 @@ namespace Mentula.Content
             }
 
             return result;
+        }
+
+        public float GetHealth()
+        {
+            float result = 0;
+            if (Material != null)
+            {
+                result = Durability * Material.Ultimate_Tensile_Strength * Volume;
+            }
+
+            return result;
+        }
+
+        public float GetTotalHealth()
+        {
+            float result = 0;
+            if (Material != null)
+            {
+                result = Durability * Material.Ultimate_Tensile_Strength * Volume;
+            }
+
+            for (int i = 0; i < Parts.Length; i++)
+            {
+                result += Parts[i].GetTotalHealth();
+            }
+
+            return result;
+        }
+
+        public void DealDamage(float damage)
+        {
+            long v = RNG.Next((long)CalcVolume());
+            float remainingDamage = damage;
+
+            if (Volume > 0)
+            {
+                v -= (long)Volume;
+                if (v < 0)
+                {
+                    if (GetHealth() <= remainingDamage)
+                    {
+                        remainingDamage -= GetHealth();
+                        Durability = 0;
+                    }
+                    else
+                    {
+                        Durability -= (byte)(remainingDamage / Material.Ultimate_Tensile_Strength / Volume);
+                        remainingDamage = 0;
+                    }
+                }
+            }
+
+            while (remainingDamage > 0 && GetTotalHealth() > 0)
+            {
+                for (int i = 0; i < Parts.Length; i++)
+                {
+
+                    v -= (long)Parts[i].CalcVolume();
+
+                    if (v < 0)
+                    {
+                        float partHealth = Parts[i].GetTotalHealth();
+                        if (remainingDamage > partHealth)
+                        {
+                            remainingDamage -= partHealth;
+                            Parts[i].DealDamage(partHealth);
+                        }
+                        else
+                        {
+                            Parts[i].DealDamage(remainingDamage);
+                            remainingDamage = 0;
+                        }
+                    }
+                }
+            }
         }
     }
 }
