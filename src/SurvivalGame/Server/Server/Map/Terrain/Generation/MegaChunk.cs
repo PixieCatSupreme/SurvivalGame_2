@@ -24,6 +24,7 @@ namespace Mentula.Server
             Pos = pos;
             GenerateCities();
         }
+
         private void GenerateCities()
         {
             Random r = new Random(RNG.RIntFromString(Pos.X + Seed + Pos.Y));
@@ -79,6 +80,7 @@ namespace Mentula.Server
                             roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y + Cities[i].Streets[j].Space.Height, Cities[i].Streets[j].Space.Width + 18, 9));
                             Cities[i].Streets[j].Buildings = new List<Building>();
                             List<Rectangle> buildings = BinarySplitGenerator.GenerateBinarySplitMap1(Cities[i].Streets[j].Space, new IntVector2(minBuildingSize), r.NextDouble().ToString());
+
                             for (int k = 0; k < buildings.Count; k++)
                             {
                                 Rectangle bs = buildings[k];
@@ -90,6 +92,7 @@ namespace Mentula.Server
                                 GenerateHouse(Cities[i].Streets[j], Cities[i].Streets[j].Buildings[k], r);
                             }
                         }
+
                         for (int j = 0; j < roads.Count; j++)
                         {
                             for (int k = j + 1; k < roads.Count;)
@@ -106,6 +109,8 @@ namespace Mentula.Server
                             }
                             GenerateRoads(roads[j]);
                         }
+
+
                         break;
                     }
                 }
@@ -346,6 +351,11 @@ namespace Mentula.Server
                 }
             }
             Structures.Add(s);
+        }
+
+        private void GenerateCrossRoad(bool up, bool right, bool down, bool left)
+        {
+
         }
     }
 }
