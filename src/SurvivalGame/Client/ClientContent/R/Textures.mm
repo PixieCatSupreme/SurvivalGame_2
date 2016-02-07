@@ -23,7 +23,7 @@
 		[Floor2: 6]
 		[Wall_Brick1: 7]
 		[Wall_Brick2: 8]
-		[Floor_Tiles3:9]
+		[Floor_Tiles3: 9]
 		[Road:10]
 		[Road_Yellow1:11]
 		[Road_Yellow2:12]
