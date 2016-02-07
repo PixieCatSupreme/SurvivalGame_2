@@ -23,6 +23,16 @@
 		[Floor2: 6]
 		[Wall_Brick1: 7]
 		[Wall_Brick2: 8]
+		[CrossingH]
+		{
+			[Id: 13]
+			[Name: "Crossing1"]
+		}
+		[CrossingV]
+		{
+			[Id: 14]
+			[Name: "Crossing2"]
+		}
 	}
 
 	[Destructable]
