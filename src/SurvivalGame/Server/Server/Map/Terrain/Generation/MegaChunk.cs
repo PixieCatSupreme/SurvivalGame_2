@@ -14,8 +14,8 @@ namespace Mentula.Server
         public IntVector2 Pos;
         private const int citySize = 1024;
         private const int maxCities = 6;
-        private const int minStreetSize = 32;
-        private const int minBuildingSize = 16;
+        private const int minStreetSize = 27;
+        private const int minBuildingSize = 13;
         private const int minRoomSize = 3;
         public MegaChunk(IntVector2 pos)
         {
@@ -92,6 +92,18 @@ namespace Mentula.Server
                         }
                         for (int j = 0; j < roads.Count; j++)
                         {
+                            for (int k = j + 1; k < roads.Count;)
+                            {
+                                if (roads[j] == roads[k])
+                                {
+                                    roads.RemoveAt(k);
+                                    break;
+                                }
+                                else
+                                {
+                                    k++;
+                                }
+                            }
                             GenerateRoads(roads[j]);
                         }
                         break;
@@ -295,7 +307,12 @@ namespace Mentula.Server
             s.Space = road;
             if (road.Width == 9)
             {
-                for (int i = 0; i < road.Height; i++)
+                for (int i = 0; i < 9; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 0)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, road.Height - 1)));
+                }
+                for (int i = 1; i < road.Height - 1; i++)
                 {
                     s.Tiles.Add(new Tile(9, new IntVector2(0, i)));
                     s.Tiles.Add(new Tile(10, new IntVector2(1, i)));
@@ -310,7 +327,12 @@ namespace Mentula.Server
             }
             else if (road.Height == 9)
             {
-                for (int i = 0; i < road.Width; i++)
+                for (int i = 0; i < 9; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(0, i)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(road.Width - 1, i)));
+                }
+                for (int i = 1; i < road.Width - 1; i++)
                 {
                     s.Tiles.Add(new Tile(9, new IntVector2(i, 0)));
                     s.Tiles.Add(new Tile(10, new IntVector2(i, 1)));
