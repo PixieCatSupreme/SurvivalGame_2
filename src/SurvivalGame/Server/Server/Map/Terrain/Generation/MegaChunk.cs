@@ -52,6 +52,7 @@ namespace Mentula.Server
                     {
                         Cities.Add(new City() { Space = rect });
                         Cities[i].Streets = new List<Street>();
+                        List<Rectangle> roads = new List<Rectangle>();
                         List<Rectangle> streets = BinarySplitGenerator.GenerateBinarySplitMap2(Cities[i].Space, new IntVector2(minStreetSize), r.NextDouble().ToString());
                         Vector2 citymiddle = new Vector2(size / 2 + rect.X, size / 2 + rect.Y);
                         for (int j = 0; j < streets.Count; j++)
@@ -72,7 +73,10 @@ namespace Mentula.Server
                             Cities[i].Streets[j].Space.Y += 4;
                             Cities[i].Streets[j].Space.Width -= 9;
                             Cities[i].Streets[j].Space.Height -= 9;
-
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y - 9, 9, Cities[i].Streets[j].Space.Height + 18));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y - 9, Cities[i].Streets[j].Space.Width + 18, 9));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X + Cities[i].Streets[j].Space.Width, Cities[i].Streets[j].Space.Y - 9, 9, Cities[i].Streets[j].Space.Height + 18));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y + Cities[i].Streets[j].Space.Height, Cities[i].Streets[j].Space.Width + 18, 9));
                             Cities[i].Streets[j].Buildings = new List<Building>();
                             List<Rectangle> buildings = BinarySplitGenerator.GenerateBinarySplitMap1(Cities[i].Streets[j].Space, new IntVector2(minBuildingSize), r.NextDouble().ToString());
                             for (int k = 0; k < buildings.Count; k++)
@@ -85,6 +89,10 @@ namespace Mentula.Server
                                 Cities[i].Streets[j].Buildings.Add(new Building() { Space = bs });
                                 GenerateHouse(Cities[i].Streets[j], Cities[i].Streets[j].Buildings[k], r);
                             }
+                        }
+                        for (int j = 0; j < roads.Count; j++)
+                        {
+                            GenerateRoads(roads[j]);
                         }
                         break;
                     }
@@ -221,7 +229,7 @@ namespace Mentula.Server
                 if (s.Destructibles[i].Pos == startpos)
                 {
                     s.Destructibles.RemoveAt(i);
-                    
+
                 }
             }
             #endregion
@@ -276,6 +284,43 @@ namespace Mentula.Server
                     {
                         allConected = false;
                     }
+                }
+            }
+            Structures.Add(s);
+        }
+
+        private void GenerateRoads(Rectangle road)
+        {
+            Structure s = new Structure();
+            s.Space = road;
+            if (road.Width == 9)
+            {
+                for (int i = 0; i < road.Height; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(0, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(1, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(2, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(3, i)));
+                    s.Tiles.Add(new Tile(11, new IntVector2(4, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(5, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(6, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(7, i)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(8, i)));
+                }
+            }
+            else if (road.Height == 9)
+            {
+                for (int i = 0; i < road.Width; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 0)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 1)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 2)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 3)));
+                    s.Tiles.Add(new Tile(12, new IntVector2(i, 4)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 5)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 6)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 7)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 8)));
                 }
             }
             Structures.Add(s);
