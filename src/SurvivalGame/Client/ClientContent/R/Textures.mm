@@ -27,7 +27,7 @@
 		[Road:10]
 		[Road_Yellow1:11]
 		[Road_Yellow2:12]
-				[CrossingH]
+		[CrossingH]
 		{
 			[Id: 13]
 			[Name: "Crossing1"]
