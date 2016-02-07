@@ -126,7 +126,7 @@ namespace Mentula.Server
                 }
             }
             IntVector2 startpos = IntVector2.Zero;
-
+            int frontDoorIndex = 0;
             #region direction
             Vector2 dir = new Vector2(b.Space.Center.X, b.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
             int dist = int.MaxValue;
@@ -152,6 +152,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 x = rooms[i].Center.X;
                             }
                         }
@@ -168,6 +169,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 x = rooms[i].Center.X;
                             }
                         }
@@ -189,6 +191,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 y = rooms[i].Center.Y;
                             }
                         }
@@ -205,6 +208,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 y = rooms[i].Center.Y;
                             }
                         }
@@ -217,10 +221,63 @@ namespace Mentula.Server
                 if (s.Destructibles[i].Pos == startpos)
                 {
                     s.Destructibles.RemoveAt(i);
+                    
                 }
             }
             #endregion
 
+            bool[] connected = new bool[rooms.Count];
+            connected[frontDoorIndex] = true;
+            bool allConected = false;
+            while (!allConected)
+            {
+                for (int i = 0; i < connected.Length; i++)
+                {
+                    for (int j = 0; j < connected.Length; j++)
+                    {
+                        if (!connected[i] && connected[j])
+                        {
+                            Rectangle room1 = rooms[i];
+                            room1.Width += 1;
+                            room1.Height += 1;
+                            Rectangle room2 = rooms[j];
+                            room2.Width += 1;
+                            room2.Height += 1;
+                            Rectangle overlap = Rectangle.Intersect(room1, room2);
+                            if (overlap.Width > 2 || overlap.Height > 2)
+                            {
+                                if (overlap.Width > 2)
+                                {
+                                    overlap.Width -= 2;
+                                    overlap.X += 1;
+                                }
+                                if (overlap.Height > 2)
+                                {
+                                    overlap.Height -= 2;
+                                    overlap.Y += 1;
+                                }
+                                IntVector2 doorPos = new IntVector2(overlap.Center.X, overlap.Center.Y);
+                                for (int k = 0; k < s.Destructibles.Count; k++)
+                                {
+                                    if (s.Destructibles[k].Pos == doorPos)
+                                    {
+                                        s.Destructibles.RemoveAt(k);
+                                    }
+                                }
+                                connected[i] = true;
+                            }
+                        }
+                    }
+                }
+                allConected = true;
+                for (int i = 0; i < connected.Length; i++)
+                {
+                    if (!connected[i])
+                    {
+                        allConected = false;
+                    }
+                }
+            }
             Structures.Add(s);
         }
     }
