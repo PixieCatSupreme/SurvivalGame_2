@@ -15,6 +15,8 @@ namespace Mentula.Server
 
         private Server server;
         private Resources content;
+        private int NPCClock;
+
 
         public GameLogic(Server server)
         {
@@ -22,6 +24,7 @@ namespace Mentula.Server
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             content = new Resources();
             Index = 0;
+            NPCClock = 0;
             this.server = server;
         }
 
@@ -98,6 +101,28 @@ namespace Mentula.Server
             }
 
             Map.UnloadChunks(posses);
+            if (NPCClock == 64)
+            {
+                NPCClock = 0;
+            }
+            else
+            {
+                NPCClock++;
+            }
+            //if (Index>0)
+            //{
+            //    for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
+            //    {
+            //        if (Map.LoadedNPCs[i].ChunkPos==Players[0].Value.ChunkPos)
+            //        {
+            //            Map.LoadedNPCs[i].GeneratePath(Players[0].Value, Map.LoadedChunks);
+            //        }
+            //    }
+            //}
+            for (int i = 0; i < Map.LoadedNPCs.Count; i++)
+            {
+                Map.LoadedNPCs[i].WalkPath(delta);
+            }
         }
 
         public void PlayerAttack(long id)

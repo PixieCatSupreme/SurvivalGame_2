@@ -6,6 +6,7 @@ using Mentula.Engine.Core;
 using System;
 using System.Collections.Generic;
 using Mentula.Content;
+using static Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
 {
@@ -14,58 +15,39 @@ namespace Mentula.Server
         private IntVector2[] path;
 
         public NPC(Creature c)
-            :base(c)
+            : base(c)
         {
-
+            path = new IntVector2[2];
+            path[0] = new IntVector2(-10, -10);
+            path[1] = new IntVector2(10, 10);
         }
 
         public void WalkPath(float deltaTime)
         {
-            Vector2 pos = Pos + ChunkPos * Resc.ChunkSize;
-            float movedist = 1 * deltaTime;
-
-            while (movedist > 0)
+            if (path != null)
             {
-                float dist = 0;
-                IntVector2 target = new IntVector2();
-                bool foundpath = false;
+                float speed = deltaTime;
+                Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
 
-                for (int i = 0; i < path.Length - 1; i++)
+                float dist = Vector2.Distance(pos, path[0]);
+                Vector2 rot = new Vector2(path[0].X-pos.X, path[0].Y - pos.Y);
+                int moveIndex = 0;
+                for (int i = 0; i < path.Length; i++)
                 {
-                    dist = Vector2.Distance(pos, path[i + 1]);
-                    float dist2 = Vector2.Distance(path[i], path[i + 1]);
-                    if (dist <= dist2)
-                    {
-                        target = path[i + 1];
-                        foundpath = true;
-                        break;
-                    }
-                }
 
-                if (foundpath)
+                }
+                if (dist < speed)
                 {
-                    if (dist > movedist)
-                    {
-                        Vector2 mpos = target - pos;
-                        mpos.Normalize();
-                        mpos *= movedist;
-                        Pos += mpos;
-                        movedist = 0;
-                    }
-
-                    else
-                    {
-                        Vector2 mpos = target - pos;
-                        float mdist = mpos.Length();
-                        Pos += mpos;
-                        movedist -= mdist;
-                    }
+                    Pos += rot;
+                    speed -= dist;
                 }
-
                 else
                 {
-                    break;
+                    Pos += (rot / dist * speed);
+                    speed = 0;
                 }
+
+                FormatPos();
             }
         }
 
