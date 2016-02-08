@@ -101,7 +101,7 @@ namespace Mentula.Server
                         isloaded = true;
                     }
                 }
-                if (MathEX.GetMaxDiff(NPCList[i].creature.ChunkPos, pos) <= Range_S && !isloaded)
+                if (MathEX.GetMaxDiff(NPCList[i].ChunkPos, pos) <= Range_S && !isloaded)
                 {
                     n.Add(NPCList[i]);
                 }
@@ -168,9 +168,9 @@ namespace Mentula.Server
             List<NPC> n = new List<NPC>();
             for (int i = 0; i < LoadedNPCs.Count; i++)
             {
-                if (MathEX.GetMaxDiff(LoadedNPCs[i].creature.ChunkPos, oldpos) > Res.Range_C)
+                if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, oldpos) > Res.Range_C)
                 {
-                    if (MathEX.GetMaxDiff(LoadedNPCs[i].creature.ChunkPos, newpos) <= Res.Range_C)
+                    if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, newpos) <= Res.Range_C)
                     {
                         n.Add(LoadedNPCs[i]);
                     }
@@ -185,7 +185,7 @@ namespace Mentula.Server
             List<NPC> n = new List<NPC>();
             for (int i = 0; i < LoadedNPCs.Count; i++)
             {
-                if (MathEX.GetMaxDiff(LoadedNPCs[i].creature.ChunkPos, pos) <= Res.Range_C)
+                if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, pos) <= Res.Range_C)
                 {
                     n.Add(LoadedNPCs[i]);
                 }
@@ -220,7 +220,7 @@ namespace Mentula.Server
                 bool isnearplayer = false;
                 for (int p = 0; p < pos.Length; p++)
                 {
-                    if (Math.Abs(LoadedNPCs[i].creature.ChunkPos.X - pos[p].X) <= Range_S && Math.Abs(LoadedNPCs[i].creature.ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
+                    if (Math.Abs(LoadedNPCs[i].ChunkPos.X - pos[p].X) <= Range_S && Math.Abs(LoadedNPCs[i].ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
                 }
 
                 if (!isnearplayer) LoadedNPCs.RemoveAt(i);

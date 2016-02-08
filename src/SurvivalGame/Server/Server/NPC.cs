@@ -9,14 +9,19 @@ using Mentula.Content;
 
 namespace Mentula.Server
 {
-    public class NPC
+    public class NPC : Creature
     {
-        public Creature creature;
         private IntVector2[] path;
+
+        public NPC(Creature c)
+            :base(c)
+        {
+
+        }
 
         public void WalkPath(float deltaTime)
         {
-            Vector2 pos = creature.Pos + creature.ChunkPos * Resc.ChunkSize;
+            Vector2 pos = Pos + ChunkPos * Resc.ChunkSize;
             float movedist = 1 * deltaTime;
 
             while (movedist > 0)
@@ -44,7 +49,7 @@ namespace Mentula.Server
                         Vector2 mpos = target - pos;
                         mpos.Normalize();
                         mpos *= movedist;
-                        creature.Pos += mpos;
+                        Pos += mpos;
                         movedist = 0;
                     }
 
@@ -52,7 +57,7 @@ namespace Mentula.Server
                     {
                         Vector2 mpos = target - pos;
                         float mdist = mpos.Length();
-                        creature.Pos += mpos;
+                        Pos += mpos;
                         movedist -= mdist;
                     }
                 }
@@ -71,10 +76,10 @@ namespace Mentula.Server
             int tRange = 5;
 
             List<Chunk> c = new List<Chunk>();
-            int xmin = Math.Min(target.ChunkPos.X, creature.ChunkPos.X) - cRange;
-            int xmax = Math.Max(target.ChunkPos.X, creature.ChunkPos.X) + cRange;
-            int ymin = Math.Min(target.ChunkPos.Y, creature.ChunkPos.Y) - cRange;
-            int ymax = Math.Max(target.ChunkPos.Y, creature.ChunkPos.Y) + cRange;
+            int xmin = Math.Min(target.ChunkPos.X, ChunkPos.X) - cRange;
+            int xmax = Math.Max(target.ChunkPos.X, ChunkPos.X) + cRange;
+            int ymin = Math.Min(target.ChunkPos.Y, ChunkPos.Y) - cRange;
+            int ymax = Math.Max(target.ChunkPos.Y, ChunkPos.Y) + cRange;
 
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -84,7 +89,7 @@ namespace Mentula.Server
                 }
             }
 
-            IntVector2 startpos = new IntVector2(creature.Pos.X, creature.Pos.Y);
+            IntVector2 startpos = new IntVector2(Pos.X, Pos.Y);
             IntVector2 endpos = new IntVector2(target.Pos.X, target.Pos.Y);
             AStar.Map m = new AStar.Map(startpos, endpos);
 
@@ -120,9 +125,5 @@ namespace Mentula.Server
         }
 
 
-        public static implicit operator NPC(Creature c)
-        {
-            return new NPC() { creature = c };
-        }
     }
 }
