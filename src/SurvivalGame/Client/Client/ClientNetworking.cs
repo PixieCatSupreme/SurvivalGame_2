@@ -263,7 +263,7 @@ namespace Mentula.Client
             else
             {
                 ulong volume = msg.ReadUInt64();
-                return new Item(0, name, null, volume, tags);
+                return new Item(0, name, null, volume, tags) { Durability = durability };
             }
         }
 
