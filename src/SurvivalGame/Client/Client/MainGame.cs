@@ -26,6 +26,7 @@ namespace Mentula.Client
         internal MainMenu mainMenu;
         internal SingleplayerMenu singleMenu;
         internal MultiplayerMenu multiMenu;
+        internal GuiMenu gui;
 
         public MainGame()
         {
@@ -42,6 +43,7 @@ namespace Mentula.Client
             Components.Add(mainMenu = new MainMenu(this));
             Components.Add(singleMenu = new SingleplayerMenu(this));
             Components.Add(multiMenu = new MultiplayerMenu(this));
+            Components.Add(gui = new GuiMenu(this));
             Components.Add(networking = new ClientNetworking(this));
 
             SetState(GameState.MainMenu);
@@ -244,6 +246,7 @@ namespace Mentula.Client
                     mainMenu.Show();
                     singleMenu.Hide();
                     multiMenu.Hide();
+                    gui.Hide();
                     break;
                 case (GameState.SingleplayerMenu):
                     IsMouseVisible = true;
@@ -251,6 +254,7 @@ namespace Mentula.Client
                     mainMenu.Hide();
                     singleMenu.Show();
                     multiMenu.Hide();
+                    gui.Hide();
                     break;
                 case (GameState.MultiplayerMenu):
                     IsMouseVisible = true;
@@ -258,6 +262,7 @@ namespace Mentula.Client
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Show();
+                    gui.Hide();
                     break;
                 case (GameState.Loading):
                     IsMouseVisible = false;
@@ -265,6 +270,7 @@ namespace Mentula.Client
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Hide();
+                    gui.Hide();
                     break;
                 case (GameState.Game):
                     IsMouseVisible = false;
@@ -272,6 +278,7 @@ namespace Mentula.Client
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Hide();
+                    gui.Show();
                     break;
             }
 

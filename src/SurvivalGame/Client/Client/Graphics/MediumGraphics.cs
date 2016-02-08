@@ -61,8 +61,8 @@ namespace Mentula.Client
             destrBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
 
-            PreferredBackBufferHeight = 600;
-            PreferredBackBufferWidth = 800;
+            PreferredBackBufferHeight = 900;
+            PreferredBackBufferWidth = 1600;
 #if !VSCYNC
             SynchronizeWithVerticalRetrace = false;
             game.IsFixedTimeStep = false;
@@ -144,15 +144,20 @@ namespace Mentula.Client
                 }
             }
 
-            MouseState mState = Mouse.GetState();
-            float adder = 8 * SCALE;
-            Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
-            DrawBatch(textures[9998], mousePos, 0);
-
 #if DEBUG
             batch.DrawString(fonts["ConsoleFont"], $"FPS: {fpsCounter.Avarage}", Vector2.Zero, Color.Red);
             batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}" , new Vector2(0, 16), Color.Red);
 #endif
+            batch.End();
+        }
+
+        public void DrawMouse()
+        {
+            MouseState mState = Mouse.GetState();
+            float adder = 8 * SCALE;
+            Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
+            batch.Begin();
+            batch.Draw(textures[9998], mousePos, null, Color.White, 0, midTexture, 1f, 0, 0);
             batch.End();
         }
 
