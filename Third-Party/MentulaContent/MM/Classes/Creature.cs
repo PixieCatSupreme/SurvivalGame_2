@@ -2,8 +2,8 @@
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mentula.Content
 {
@@ -42,6 +42,18 @@ namespace Mentula.Content
             DefaultSystemsVal = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
+
+        }
+
+        public Creature(Creature copy)
+            : base(copy.Id, copy.Name, copy.Parts)
+        {
+            TextureId = copy.TextureId;
+            IsBio = copy.IsBio;
+            Stats = copy.Stats;
+            DefaultSystemsVal = CalcSystems();
+            equipment = copy.equipment;
+            inventory = copy.inventory;
         }
 
         public Tag[] CalcSystems()
@@ -50,23 +62,34 @@ namespace Mentula.Content
             return Systems;
         }
 
+        public Tag[] CalcSystemsWithDur()
+        {
+            Systems = GetDurTags();
+            return Systems;
+        }
+
         public bool CalcIsAlive()
         {
             return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
         }
 
-        public byte GetHealth()
+        new public byte GetHealth()
         {
-            byte health = byte.MaxValue;
+            if (!CalcIsAlive())
+            {
+                return 0;
+            }
+            float health = 255;
+            if (Systems.Length == 0)
+            {
+                return 0;
+            }
             for (int i = 0; i < Systems.Length; i++)
             {
-                byte h = (byte)(Systems[i].Value / DefaultSystemsVal[i].Value * byte.MaxValue);
-                if (h < health)
-                {
-                    health = h;
-                }
+                float h = Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                health *= h;
             }
-            return health;
+            return (byte)health;
         }
 
         public unsafe void UpdatePos(IntVector2* chunk, Vector2* tile)

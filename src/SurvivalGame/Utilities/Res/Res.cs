@@ -5,7 +5,7 @@
 
     public static class Res
     {
-        public const int Range_C = 1;
+        public const int Range_C = 2;
         public const float DEG2RAD = 0.017453f;
         public const float FPS30 = 0.033333f;
         public const float FPS60 = 0.016666f;

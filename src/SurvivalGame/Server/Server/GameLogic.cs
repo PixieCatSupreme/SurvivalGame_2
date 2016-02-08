@@ -49,8 +49,8 @@ namespace Mentula.Server
         {
             if (Index < Players.Length)
             {
-                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, false, name));
-                Map.Generate(Players[Index].Value.ChunkPos);
+                Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
+                Map.Generate(Players[Index].Value.ChunkPos, content);
                 Index++;
             }
         }
@@ -80,7 +80,7 @@ namespace Mentula.Server
                 {
                     if (Index <= 1) Players[i] = new KeyValuePair<long, Creature>();
                     else Players[i] = Players[Index - 1];
-                    Index--;
+                    if (Index > 0) Index--;
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace Mentula.Server
             for (int i = 0; i < Index; i++)
             {
                 posses[i] = Players[i].Value.ChunkPos;
-                Map.Generate(posses[i]);
+                Map.Generate(posses[i], content);
                 Map.LoadChunks(posses[i]);
             }
 
@@ -101,6 +101,15 @@ namespace Mentula.Server
 
         public void PlayerAttack(long id)
         {
+            int index = 0;
+            for (int i = 0; i < Players.Length; i++)
+            {
+                if (Players[i].Key == id)
+                {
+                    index = i;
+                }
+            }
+            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs);
         }
     }
 }

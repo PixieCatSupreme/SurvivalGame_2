@@ -1,5 +1,6 @@
 #define COLLISION
 
+using Mentula.Client.Menus;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
@@ -14,31 +15,43 @@ namespace Mentula.Client
 {
     public class MainGame : Game
     {
+        public bool AllowInput;
+
         internal GameState gameState;
         internal NPC hero;
         internal NPC[] npcs;
         internal Chunk[] chunks;
 
         internal MediumGraphics vGraphics;
-        internal MainMenu mainMenu;
         internal ClientNetworking networking;
+
+        internal MainMenu mainMenu;
+        internal SingleplayerMenu singleMenu;
+        internal MultiplayerMenu multiMenu;
+        internal GuiMenu gui;
 
         public MainGame()
         {
             Content.RootDirectory = "Content";
+            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
+            chunks = new Chunk[0];
+            npcs = new NPC[0];
 
             Components.Add(vGraphics = new MediumGraphics(this));
-            Components.Add(mainMenu = new MainMenu(this));
-            Components.Add(networking = new ClientNetworking(this));
-            SetState(GameState.MainMenu);
         }
 
         protected override void Initialize()
         {
-            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
-            chunks = new Chunk[0];
-            npcs = new NPC[0];
-            mainMenu.DiscoverCalled += OnConnect;
+            Components.Add(mainMenu = new MainMenu(this));
+            Components.Add(singleMenu = new SingleplayerMenu(this));
+            Components.Add(multiMenu = new MultiplayerMenu(this));
+            Components.Add(gui = new GuiMenu(this));
+            Components.Add(networking = new ClientNetworking(this));
+
+            SetState(GameState.MainMenu);
+            singleMenu.DiscoverCalled += OnConnect;
+            multiMenu.DiscoverCalled += OnConnect;
+
             base.Initialize();
         }
 
@@ -53,14 +66,18 @@ namespace Mentula.Client
                     MouseState mState = Mouse.GetState();
 
                     Vector2 inp = new Vector2();
-                    if (kState.IsKeyDown(Keys.Escape)) Exit();
-                    if (kState.IsKeyDown(Keys.OemMinus) || mState.ScrollWheelValue < 0) vGraphics.SCALE *= 1 - 2f * delta;
-                    if (kState.IsKeyDown(Keys.OemPlus) || mState.ScrollWheelValue > 0) vGraphics.SCALE *= 1 + 2f * delta;
-                    if (kState.IsKeyDown(Keys.W)) inp.Y -= 1;
-                    if (kState.IsKeyDown(Keys.A)) inp.X -= 1;
-                    if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
-                    if (kState.IsKeyDown(Keys.D)) inp.X += 1;
-                    if (kState.IsKeyDown(Keys.E)) networking.Disconect();
+                    if (AllowInput)
+                    {
+                        if (kState.IsKeyDown(Keys.Escape)) Exit();
+                        if (kState.IsKeyDown(Keys.OemMinus) || mState.ScrollWheelValue < 0) vGraphics.SCALE *= 1 - 2f * delta;
+                        if (kState.IsKeyDown(Keys.OemPlus) || mState.ScrollWheelValue > 0) vGraphics.SCALE *= 1 + 2f * delta;
+                        if (kState.IsKeyDown(Keys.W)) inp.Y -= 1;
+                        if (kState.IsKeyDown(Keys.A)) inp.X -= 1;
+                        if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
+                        if (kState.IsKeyDown(Keys.D)) inp.X += 1;
+                        if (kState.IsKeyDown(Keys.E)) networking.Disconect();
+                        if (kState.IsKeyDown(Keys.PrintScreen)) vGraphics.TakeScreenshot();
+                    }
 
                     if (inp != Vector2.Zero)
                     {
@@ -231,20 +248,42 @@ namespace Mentula.Client
                 case (GameState.MainMenu):
                     IsMouseVisible = true;
                     vGraphics.Visible = false;
-                    mainMenu.Enabled = true;
-                    mainMenu.Visible = true;
+                    mainMenu.Show();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
+                    gui.Hide();
+                    break;
+                case (GameState.SingleplayerMenu):
+                    IsMouseVisible = true;
+                    vGraphics.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Show();
+                    multiMenu.Hide();
+                    gui.Hide();
+                    break;
+                case (GameState.MultiplayerMenu):
+                    IsMouseVisible = true;
+                    vGraphics.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Show();
+                    gui.Hide();
                     break;
                 case (GameState.Loading):
                     IsMouseVisible = false;
                     vGraphics.Visible = false;
-                    mainMenu.Enabled = false;
-                    mainMenu.Visible = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
+                    gui.Hide();
                     break;
                 case (GameState.Game):
                     IsMouseVisible = false;
                     vGraphics.Visible = true;
-                    mainMenu.Visible = false;
-                    mainMenu.Enabled = false;
+                    mainMenu.Hide();
+                    singleMenu.Hide();
+                    multiMenu.Hide();
+                    gui.Show();
                     break;
             }
 
