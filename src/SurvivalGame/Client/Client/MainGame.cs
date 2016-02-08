@@ -1,6 +1,7 @@
 #define COLLISION
 
 using Mentula.Client.Menus;
+using Mentula.Content;
 using Mentula.Utilities;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Resources;
@@ -18,8 +19,8 @@ namespace Mentula.Client
         public bool AllowInput;
 
         internal GameState gameState;
-        internal NPC hero;
-        internal NPC[] npcs;
+        internal Creature hero;
+        internal Creature[] npcs;
         internal Chunk[] chunks;
 
         internal MediumGraphics vGraphics;
@@ -33,9 +34,8 @@ namespace Mentula.Client
         public MainGame()
         {
             Content.RootDirectory = "Content";
-            hero = new NPC() { Pos = new Vector2(-1524, -2166) };//todo remove at some point
             chunks = new Chunk[0];
-            npcs = new NPC[0];
+            npcs = new Creature[0];
 
             Components.Add(vGraphics = new MediumGraphics(this));
         }
@@ -208,7 +208,7 @@ namespace Mentula.Client
             base.Update(gameTime);
         }
 
-        public void UpdateChunks(Chunk[] newChunks, NPC[] newNpcs)
+        public void UpdateChunks(Chunk[] newChunks, Creature[] newNpcs)
         {
             int index = 0;
 
@@ -228,7 +228,7 @@ namespace Mentula.Client
 
             for (int i = 0; i < npcs.Length && index < newNpcs.Length; i++)
             {
-                NPC cur = npcs[i];
+                Creature cur = npcs[i];
 
                 if (Math.Abs(cur.ChunkPos.X + hero.ChunkPos.X) > Res.Range_C ||
                     Math.Abs(cur.ChunkPos.Y + hero.ChunkPos.Y) > Res.Range_C)
@@ -247,7 +247,7 @@ namespace Mentula.Client
             {
                 case (GameState.MainMenu):
                     IsMouseVisible = true;
-                    vGraphics.Visible = false;
+                    vGraphics.Hide();
                     mainMenu.Show();
                     singleMenu.Hide();
                     multiMenu.Hide();
@@ -255,7 +255,7 @@ namespace Mentula.Client
                     break;
                 case (GameState.SingleplayerMenu):
                     IsMouseVisible = true;
-                    vGraphics.Visible = false;
+                    vGraphics.Hide();
                     mainMenu.Hide();
                     singleMenu.Show();
                     multiMenu.Hide();
@@ -263,7 +263,7 @@ namespace Mentula.Client
                     break;
                 case (GameState.MultiplayerMenu):
                     IsMouseVisible = true;
-                    vGraphics.Visible = false;
+                    vGraphics.Hide();
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Show();
@@ -271,7 +271,7 @@ namespace Mentula.Client
                     break;
                 case (GameState.Loading):
                     IsMouseVisible = false;
-                    vGraphics.Visible = false;
+                    vGraphics.Hide();
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Hide();
@@ -279,7 +279,7 @@ namespace Mentula.Client
                     break;
                 case (GameState.Game):
                     IsMouseVisible = false;
-                    vGraphics.Visible = true;
+                    vGraphics.Show();
                     mainMenu.Hide();
                     singleMenu.Hide();
                     multiMenu.Hide();
@@ -292,7 +292,7 @@ namespace Mentula.Client
 
         protected void OnConnect(object sender, object[] args)
         {
-            hero.Name = (string)args[0];
+            hero = new Creature(0, (string)args[0], 0, false, new Stats(), new Item[0]);
             if (args.Length > 1) networking.NetworkConnect((IPAddress)args[1]);
             else networking.LocalConnect();
             SetState(GameState.Loading);
