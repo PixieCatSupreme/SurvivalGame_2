@@ -3,13 +3,14 @@
 
 #pragma warning disable 67
 
+using Mentula.GuiItems.Core;
+using Mentula.GuiItems.Items;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using Matrix3 = Mentula.Engine.Core.Matrix3;
 using Vect2 = Mentula.Engine.Core.Vect2;
 
@@ -17,7 +18,7 @@ namespace Mentula.Client
 {
     public class MediumGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
-        internal float SCALE = 2f;
+        internal float SCALE = 1.15f;
         private float ROT = 0;
 
         public Camera Camera { get; private set; }
@@ -60,8 +61,8 @@ namespace Mentula.Client
             destrBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
 
-            PreferredBackBufferHeight = 600;
-            PreferredBackBufferWidth = 800;
+            PreferredBackBufferHeight = 900;
+            PreferredBackBufferWidth = 1600;
 #if !VSCYNC
             SynchronizeWithVerticalRetrace = false;
             game.IsFixedTimeStep = false;
@@ -125,7 +126,7 @@ namespace Mentula.Client
                 NPC actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                DrawString(nameFont, actor.HealthPrec + " | " + actor.Name, pos + nameOffset, Color.Red);
+                DrawString(nameFont, actor.Name + " | " + actor.HealthPrec, pos + nameOffset, Color.Red);
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
@@ -143,15 +144,20 @@ namespace Mentula.Client
                 }
             }
 
-            MouseState mState = Mouse.GetState();
-            float adder = 8 * SCALE;
-            Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
-            DrawBatch(textures[9998], mousePos, 0);
-
 #if DEBUG
             batch.DrawString(fonts["ConsoleFont"], $"FPS: {fpsCounter.Avarage}", Vector2.Zero, Color.Red);
             batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}" , new Vector2(0, 16), Color.Red);
 #endif
+            batch.End();
+        }
+
+        public void DrawMouse()
+        {
+            MouseState mState = Mouse.GetState();
+            float adder = 8 * SCALE;
+            Vector2 mousePos = new Vector2(mState.X + adder, mState.Y + adder);
+            batch.Begin();
+            batch.Draw(textures[9998], mousePos, null, Color.White, 0, midTexture, 1f, 0, 0);
             batch.End();
         }
 
@@ -168,8 +174,31 @@ namespace Mentula.Client
 
         public static void ChangeWindowBorder(IntPtr handle, byte newType)
         {
-            Control window = Control.FromHandle(handle);
-            window.FindForm().FormBorderStyle = (FormBorderStyle)newType;
+            System.Windows.Forms.Control window = System.Windows.Forms.Control.FromHandle(handle);
+            window.FindForm().FormBorderStyle = (System.Windows.Forms.FormBorderStyle)newType;
+        }
+
+        public bool TakeScreenshot()
+        {
+            try
+            {
+                int width = PreferredBackBufferWidth;
+                int height = PreferredBackBufferHeight;
+                RenderTarget2D screenShot = new RenderTarget2D(GraphicsDevice, width, height, false, SurfaceFormat.Color, DepthFormat.None);
+
+                GraphicsDevice.SetRenderTarget(screenShot);
+                Draw(new GameTime());
+                GraphicsDevice.SetRenderTarget(null);
+
+                using (System.IO.FileStream fs = new System.IO.FileStream(string.Format("{0}\\{1}.png", System.IO.Directory.GetCurrentDirectory(), DateTime.Now.ToString("dd-mm-yy H;mm;ss")), System.IO.FileMode.OpenOrCreate))
+                {
+                    screenShot.SaveAsPng(fs, width, height);
+                }
+
+                screenShot.Dispose();
+                return true;
+            }
+            catch (Exception) { return false; }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -2,8 +2,8 @@
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mentula.Content
 {
@@ -29,7 +29,6 @@ namespace Mentula.Content
         {
             Stats = new Stats(short.MaxValue);
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
         }
@@ -41,20 +40,18 @@ namespace Mentula.Content
             IsBio = isBio;
             Stats = stats;
             DefaultSystemsVal = CalcSystems();
-            //Systems = CalcSystems();
             equipment = new Dictionary<int, Item>();
             inventory = new List<Item>();
-            
+
         }
 
         public Creature(Creature copy)
-            :base (copy.Id, copy.Name, copy.Parts)
+            : base(copy.Id, copy.Name, copy.Parts)
         {
             TextureId = copy.TextureId;
             IsBio = copy.IsBio;
             Stats = copy.Stats;
             DefaultSystemsVal = CalcSystems();
-            Systems = CalcSystemsWithDur();
             equipment = copy.equipment;
             inventory = copy.inventory;
         }
@@ -76,20 +73,20 @@ namespace Mentula.Content
             return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
         }
 
-        public byte GetHealth()
+        new public byte GetHealth()
         {
             if (!CalcIsAlive())
             {
                 return 0;
             }
             float health = 255;
-            if (Systems.Length==0)
+            if (Systems.Length == 0)
             {
                 return 0;
             }
             for (int i = 0; i < Systems.Length; i++)
             {
-                float h =(float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                float h = Systems[i].Value / (float)DefaultSystemsVal[i].Value;
                 health *= h;
             }
             return (byte)health;

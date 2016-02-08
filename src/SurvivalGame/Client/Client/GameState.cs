@@ -1,10 +1,13 @@
 ﻿namespace Mentula.Client
 {
-    public enum GameState
+    public enum GameState : byte
     {
-        MainMenu = 0,
-        Options = 1,
-        Loading = 2,
-        Game = 3
+        MainMenu,
+        SingleplayerMenu,
+        MultiplayerMenu,
+        OptionsMenu,
+        Options,
+        Loading,
+        Game
     }
 }

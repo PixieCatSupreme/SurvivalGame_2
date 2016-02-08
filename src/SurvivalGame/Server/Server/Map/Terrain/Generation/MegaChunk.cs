@@ -14,8 +14,8 @@ namespace Mentula.Server
         public IntVector2 Pos;
         private const int citySize = 1024;
         private const int maxCities = 6;
-        private const int minStreetSize = 32;
-        private const int minBuildingSize = 16;
+        private const int minStreetSize = 27;
+        private const int minBuildingSize = 13;
         private const int minRoomSize = 3;
         public MegaChunk(IntVector2 pos)
         {
@@ -24,6 +24,7 @@ namespace Mentula.Server
             Pos = pos;
             GenerateCities();
         }
+
         private void GenerateCities()
         {
             Random r = new Random(RNG.RIntFromString(Pos.X + Seed + Pos.Y));
@@ -52,6 +53,7 @@ namespace Mentula.Server
                     {
                         Cities.Add(new City() { Space = rect });
                         Cities[i].Streets = new List<Street>();
+                        List<Rectangle> roads = new List<Rectangle>();
                         List<Rectangle> streets = BinarySplitGenerator.GenerateBinarySplitMap2(Cities[i].Space, new IntVector2(minStreetSize), r.NextDouble().ToString());
                         Vector2 citymiddle = new Vector2(size / 2 + rect.X, size / 2 + rect.Y);
                         for (int j = 0; j < streets.Count; j++)
@@ -72,9 +74,13 @@ namespace Mentula.Server
                             Cities[i].Streets[j].Space.Y += 4;
                             Cities[i].Streets[j].Space.Width -= 9;
                             Cities[i].Streets[j].Space.Height -= 9;
-
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y - 9, 9, Cities[i].Streets[j].Space.Height + 18));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y - 9, Cities[i].Streets[j].Space.Width + 18, 9));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X + Cities[i].Streets[j].Space.Width, Cities[i].Streets[j].Space.Y - 9, 9, Cities[i].Streets[j].Space.Height + 18));
+                            roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y + Cities[i].Streets[j].Space.Height, Cities[i].Streets[j].Space.Width + 18, 9));
                             Cities[i].Streets[j].Buildings = new List<Building>();
                             List<Rectangle> buildings = BinarySplitGenerator.GenerateBinarySplitMap1(Cities[i].Streets[j].Space, new IntVector2(minBuildingSize), r.NextDouble().ToString());
+
                             for (int k = 0; k < buildings.Count; k++)
                             {
                                 Rectangle bs = buildings[k];
@@ -86,6 +92,119 @@ namespace Mentula.Server
                                 GenerateHouse(Cities[i].Streets[j], Cities[i].Streets[j].Buildings[k], r);
                             }
                         }
+
+                        for (int j = 0; j < roads.Count; j++)
+                        {
+                            for (int k = j + 1; k < roads.Count;)
+                            {
+                                if (roads[j] == roads[k])
+                                {
+                                    roads.RemoveAt(k);
+                                    break;
+                                }
+                                else
+                                {
+                                    k++;
+                                }
+                            }
+                            GenerateRoads(roads[j]);
+                        }
+                        List<Rectangle> crossRoads = new List<Rectangle>();
+                        for (int j = 0; j < roads.Count; j++)
+                        {
+                            crossRoads.Add(new Rectangle(roads[j].X, roads[j].Y, 9, 9));
+                            if (roads[j].Width == 9)
+                            {
+                                crossRoads.Add(new Rectangle(roads[j].X, roads[j].Y + roads[j].Height - 9, 9, 9));
+                            }
+                            else
+                            {
+                                crossRoads.Add(new Rectangle(roads[j].X + roads[j].Width - 9, roads[j].Y, 9, 9));
+                            }
+                        }
+                        for (int j = 0; j < crossRoads.Count; j++)
+                        {
+                            for (int k = j + 1; k < crossRoads.Count;)
+                            {
+                                if (crossRoads[j] == crossRoads[k])
+                                {
+                                    crossRoads.RemoveAt(k);
+                                    break;
+                                }
+                                else
+                                {
+                                    k++;
+                                }
+                            }
+                        }
+                        for (int j = 0; j < crossRoads.Count; j++)
+                        {
+                            bool up = false;
+                            bool right = false;
+                            bool down = false;
+                            bool left = false;
+                            for (int k = 0; k < roads.Count; k++)
+                            {
+                                if (Rectangle.Intersect(crossRoads[j], roads[k]) == crossRoads[j])
+                                {
+                                    if (crossRoads[j].X == roads[k].X && crossRoads[j].Y == roads[k].Y)
+                                    {
+                                        if (roads[k].Width > roads[k].Height)
+                                        {
+                                            right = true;
+                                        }
+                                        else
+                                        {
+                                            down = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (crossRoads[j].X == roads[k].X)
+                                        {
+                                            up = true;
+                                            if (roads[k].Y + roads[k].Height > crossRoads[j].Y + crossRoads[j].Height)
+                                            {
+                                                down = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            left = true;
+                                            if (roads[k].X + roads[k].Width > crossRoads[j].X + crossRoads[j].Width)
+                                            {
+                                                right = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            for (int k = 0; k < crossRoads.Count; k++)
+                            {
+                                Rectangle intersection = Rectangle.Intersect(crossRoads[j], crossRoads[k]);
+                                if (intersection != Rectangle.Empty)
+                                {
+                                    if (intersection.X > crossRoads[j].X)
+                                    {
+                                        right = false;
+                                    }
+                                    if (intersection.Y > crossRoads[j].Y)
+                                    {
+                                        down = false;
+                                    }
+                                    if (intersection.X < crossRoads[j].X)
+                                    {
+                                        left = false;
+                                    }
+                                    if (intersection.Y < crossRoads[j].Y)
+                                    {
+                                        up = false;
+                                    }
+                                }
+                            }
+                            GenerateCrossRoad(up, right, down, left, new IntVector2(crossRoads[j].X, crossRoads[j].Y));
+                        }
+
                         break;
                     }
                 }
@@ -126,7 +245,7 @@ namespace Mentula.Server
                 }
             }
             IntVector2 startpos = IntVector2.Zero;
-
+            int frontDoorIndex = 0;
             #region direction
             Vector2 dir = new Vector2(b.Space.Center.X, b.Space.Center.Y) - new Vector2(str.Space.Center.X, str.Space.Center.Y);
             int dist = int.MaxValue;
@@ -152,6 +271,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 x = rooms[i].Center.X;
                             }
                         }
@@ -168,6 +288,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 x = rooms[i].Center.X;
                             }
                         }
@@ -189,6 +310,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 y = rooms[i].Center.Y;
                             }
                         }
@@ -205,6 +327,7 @@ namespace Mentula.Server
                             if (dist2 < dist)
                             {
                                 dist = dist2;
+                                frontDoorIndex = i;
                                 y = rooms[i].Center.Y;
                             }
                         }
@@ -217,10 +340,159 @@ namespace Mentula.Server
                 if (s.Destructibles[i].Pos == startpos)
                 {
                     s.Destructibles.RemoveAt(i);
+
                 }
             }
             #endregion
 
+            bool[] connected = new bool[rooms.Count];
+            connected[frontDoorIndex] = true;
+            bool allConected = false;
+            while (!allConected)
+            {
+                for (int i = 0; i < connected.Length; i++)
+                {
+                    for (int j = 0; j < connected.Length; j++)
+                    {
+                        if (!connected[i] && connected[j])
+                        {
+                            Rectangle room1 = rooms[i];
+                            room1.Width += 1;
+                            room1.Height += 1;
+                            Rectangle room2 = rooms[j];
+                            room2.Width += 1;
+                            room2.Height += 1;
+                            Rectangle overlap = Rectangle.Intersect(room1, room2);
+                            if (overlap.Width > 2 || overlap.Height > 2)
+                            {
+                                if (overlap.Width > 2)
+                                {
+                                    overlap.Width -= 2;
+                                    overlap.X += 1;
+                                }
+                                if (overlap.Height > 2)
+                                {
+                                    overlap.Height -= 2;
+                                    overlap.Y += 1;
+                                }
+                                IntVector2 doorPos = new IntVector2(overlap.Center.X, overlap.Center.Y);
+                                for (int k = 0; k < s.Destructibles.Count; k++)
+                                {
+                                    if (s.Destructibles[k].Pos == doorPos)
+                                    {
+                                        s.Destructibles.RemoveAt(k);
+                                    }
+                                }
+                                connected[i] = true;
+                            }
+                        }
+                    }
+                }
+                allConected = true;
+                for (int i = 0; i < connected.Length; i++)
+                {
+                    if (!connected[i])
+                    {
+                        allConected = false;
+                    }
+                }
+            }
+            Structures.Add(s);
+        }
+
+        private void GenerateRoads(Rectangle road)
+        {
+            Structure s = new Structure();
+            s.Space = road;
+            if (road.Width == 9)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 0)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, road.Height - 1)));
+                }
+                for (int i = 1; i < road.Height - 1; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(0, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(1, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(2, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(3, i)));
+                    s.Tiles.Add(new Tile(11, new IntVector2(4, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(5, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(6, i)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(7, i)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(8, i)));
+                }
+            }
+            else if (road.Height == 9)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(0, i)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(road.Width - 1, i)));
+                }
+                for (int i = 1; i < road.Width - 1; i++)
+                {
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 0)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 1)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 2)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 3)));
+                    s.Tiles.Add(new Tile(12, new IntVector2(i, 4)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 5)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 6)));
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, 7)));
+                    s.Tiles.Add(new Tile(9, new IntVector2(i, 8)));
+                }
+            }
+            Structures.Add(s);
+        }
+
+        private void GenerateCrossRoad(bool up, bool right, bool down, bool left, IntVector2 pos)
+        {
+            Structure s = new Structure();
+            s.Space.X = pos.X;
+            s.Space.Y = pos.Y;
+            s.Space.Width = 9;
+            s.Space.Height = 9;
+            for (int i = 1; i < 8; i++)
+            {
+                for (int j = 1; j < 8; j++)
+                {
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, j)));
+                }
+            }
+
+            if (up)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(14, new IntVector2(i, 0)));
+                }
+            }
+
+            if (right)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(13, new IntVector2(8, i)));
+                }
+            }
+
+            if (down)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(14, new IntVector2(i, 8)));
+                }
+            }
+
+            if (left)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(13, new IntVector2(0, i)));
+                }
+            }
             Structures.Add(s);
         }
     }

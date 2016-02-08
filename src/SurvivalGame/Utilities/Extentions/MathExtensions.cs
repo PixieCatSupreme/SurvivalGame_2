@@ -111,6 +111,12 @@ namespace Mentula.Utilities.MathExtensions
             return (ulong)result;
         }
 
+        public static int ToPercentage(int value, int max)
+        {
+            float onePerc = max / 100f;
+            return (int)(value / onePerc);
+        }
+
         public static Vector2 FormatPos(this Vector2 tilePos)
         {
             while (tilePos.X < 0 | tilePos.Y < 0 | tilePos.X > Resc.ChunkSize | tilePos.Y > Resc.ChunkSize)
@@ -123,6 +129,22 @@ namespace Mentula.Utilities.MathExtensions
             }
 
             return tilePos;
+        }
+
+        public static T[] Copy<T>(this IList<T> collection)
+        {
+            int count;
+
+            if (collection.GetType() == typeof(T[])) count = ((T[])collection).Length;
+            else count = collection.Count;
+
+            T[] result = new T[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = collection[i];
+            }
+
+            return result;
         }
 
         public static void Shuffle<T>(this IList<T> collection)
@@ -158,6 +180,11 @@ namespace Mentula.Utilities.MathExtensions
             {
                 collection[i] = temp[i];
             }
+        }
+
+        public static Color ApplyAlpha(this Color c, byte a)
+        {
+            return new Color(c.R, c.G, c.B, a);
         }
     }
 }
