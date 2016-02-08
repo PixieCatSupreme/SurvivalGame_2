@@ -28,14 +28,58 @@ namespace Mentula.Server
             }
         }
 
-        public static unsafe void Write(this NetBuffer msg, NPC value)
+        public static void Write(this NetBuffer msg, Tag tag)
+        {
+            msg.Write(tag.Key);
+            msg.Write(tag.Value);
+        }
+
+        public static void Write(this NetBuffer msg, Tag[] tags)
+        {
+            msg.Write(tags.Length);
+            for (int i = 0; i < tags.Length; i++)
+            {
+                msg.Write(tags[i]);
+            }
+        }
+
+        public static void Write(this NetBuffer msg, Item item)
+        {
+            msg.Write(item.Name);
+            msg.Write(item.Durability);
+            msg.Write(item.Tags);
+
+            msg.Write(item.Material == null);
+            if (item.Material == null) msg.Write(item.Parts);
+            else msg.Write(item.Volume);
+        }
+
+        public static void Write(this NetBuffer msg, Item[] items)
+        {
+            msg.Write(items.Length);
+            for (int i = 0; i < items.Length; i++)
+            {
+                msg.Write(items[i]);
+            }
+        }
+
+        public static void Write(this NetBuffer msg, Stats stats)
+        {
+            msg.Write(stats.Agility);
+            msg.Write(stats.Endurance);
+            msg.Write(stats.Intelect);
+            msg.Write(stats.Perception);
+            msg.Write(stats.Strength);
+        }
+
+        public static void Write(this NetBuffer msg, Creature value)
         {
             msg.Write(value.ChunkPos);
             msg.Write(value.Pos);
             msg.WriteHalfPrecision(value.Rotation);
-            msg.Write(value.GetHealth());
-            msg.Write(value.Name);
             msg.Write(value.TextureId);
+            msg.Write(value.Stats);
+            msg.Write((Item)value);
         }
 
         public static void Write(this NetBuffer msg, Chunk[] value)
@@ -61,15 +105,9 @@ namespace Mentula.Server
                 for (int i = 0; i < length; i++)
                 {
                     KeyValuePair<long, Creature> cur = players[i];
-
                     if (cur.Key == id) continue;
 
-                    msg.Write(cur.Value.ChunkPos);
-                    msg.Write(cur.Value.Pos);
-                    msg.WriteHalfPrecision(cur.Value.Rotation);
-                    msg.Write(cur.Value.GetHealth());
-                    msg.Write(cur.Value.Name);
-                    msg.Write(9997);
+                    msg.Write(cur.Value);
                 }
             }
         }

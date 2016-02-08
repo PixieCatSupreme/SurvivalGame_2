@@ -5,6 +5,7 @@ using Mentula.Engine;
 using Mentula.Engine.Core;
 using Mentula.Server.GUI;
 using Mentula.Utilities;
+using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Mentula.Utilities.Udp;
@@ -151,6 +152,12 @@ namespace Mentula.Server
 
                                 nom = server.CreateMessage();
                                 nom.Write((byte)NDT.InitialChunkRequest);
+
+                                Creature t = logic.GetPlayer(id);
+                                t.ChunkPos = -t.ChunkPos;
+                                nom.Write(t);
+                                t.ChunkPos = -t.ChunkPos;
+
                                 nom.Write(chunks);
                                 nom.Write(npcs);
                                 server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
