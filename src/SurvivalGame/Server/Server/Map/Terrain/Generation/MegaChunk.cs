@@ -24,6 +24,7 @@ namespace Mentula.Server
             Pos = pos;
             GenerateCities();
         }
+
         private void GenerateCities()
         {
             Random r = new Random(RNG.RIntFromString(Pos.X + Seed + Pos.Y));
@@ -79,6 +80,7 @@ namespace Mentula.Server
                             roads.Add(new Rectangle(Cities[i].Streets[j].Space.X - 9, Cities[i].Streets[j].Space.Y + Cities[i].Streets[j].Space.Height, Cities[i].Streets[j].Space.Width + 18, 9));
                             Cities[i].Streets[j].Buildings = new List<Building>();
                             List<Rectangle> buildings = BinarySplitGenerator.GenerateBinarySplitMap1(Cities[i].Streets[j].Space, new IntVector2(minBuildingSize), r.NextDouble().ToString());
+
                             for (int k = 0; k < buildings.Count; k++)
                             {
                                 Rectangle bs = buildings[k];
@@ -90,6 +92,7 @@ namespace Mentula.Server
                                 GenerateHouse(Cities[i].Streets[j], Cities[i].Streets[j].Buildings[k], r);
                             }
                         }
+
                         for (int j = 0; j < roads.Count; j++)
                         {
                             for (int k = j + 1; k < roads.Count;)
@@ -106,6 +109,102 @@ namespace Mentula.Server
                             }
                             GenerateRoads(roads[j]);
                         }
+                        List<Rectangle> crossRoads = new List<Rectangle>();
+                        for (int j = 0; j < roads.Count; j++)
+                        {
+                            crossRoads.Add(new Rectangle(roads[j].X, roads[j].Y, 9, 9));
+                            if (roads[j].Width == 9)
+                            {
+                                crossRoads.Add(new Rectangle(roads[j].X, roads[j].Y + roads[j].Height - 9, 9, 9));
+                            }
+                            else
+                            {
+                                crossRoads.Add(new Rectangle(roads[j].X + roads[j].Width - 9, roads[j].Y, 9, 9));
+                            }
+                        }
+                        for (int j = 0; j < crossRoads.Count; j++)
+                        {
+                            for (int k = j + 1; k < crossRoads.Count;)
+                            {
+                                if (crossRoads[j] == crossRoads[k])
+                                {
+                                    crossRoads.RemoveAt(k);
+                                    break;
+                                }
+                                else
+                                {
+                                    k++;
+                                }
+                            }
+                        }
+                        for (int j = 0; j < crossRoads.Count; j++)
+                        {
+                            bool up = false;
+                            bool right = false;
+                            bool down = false;
+                            bool left = false;
+                            for (int k = 0; k < roads.Count; k++)
+                            {
+                                if (Rectangle.Intersect(crossRoads[j], roads[k]) == crossRoads[j])
+                                {
+                                    if (crossRoads[j].X == roads[k].X && crossRoads[j].Y == roads[k].Y)
+                                    {
+                                        if (roads[k].Width > roads[k].Height)
+                                        {
+                                            right = true;
+                                        }
+                                        else
+                                        {
+                                            down = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (crossRoads[j].X == roads[k].X)
+                                        {
+                                            up = true;
+                                            if (roads[k].Y + roads[k].Height > crossRoads[j].Y + crossRoads[j].Height)
+                                            {
+                                                down = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            left = true;
+                                            if (roads[k].X + roads[k].Width > crossRoads[j].X + crossRoads[j].Width)
+                                            {
+                                                right = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            for (int k = 0; k < crossRoads.Count; k++)
+                            {
+                                Rectangle intersection = Rectangle.Intersect(crossRoads[j], crossRoads[k]);
+                                if (intersection != Rectangle.Empty)
+                                {
+                                    if (intersection.X > crossRoads[j].X)
+                                    {
+                                        right = false;
+                                    }
+                                    if (intersection.Y > crossRoads[j].Y)
+                                    {
+                                        down = false;
+                                    }
+                                    if (intersection.X < crossRoads[j].X)
+                                    {
+                                        left = false;
+                                    }
+                                    if (intersection.Y < crossRoads[j].Y)
+                                    {
+                                        up = false;
+                                    }
+                                }
+                            }
+                            GenerateCrossRoad(up, right, down, left, new IntVector2(crossRoads[j].X, crossRoads[j].Y));
+                        }
+
                         break;
                     }
                 }
@@ -343,6 +442,55 @@ namespace Mentula.Server
                     s.Tiles.Add(new Tile(10, new IntVector2(i, 6)));
                     s.Tiles.Add(new Tile(10, new IntVector2(i, 7)));
                     s.Tiles.Add(new Tile(9, new IntVector2(i, 8)));
+                }
+            }
+            Structures.Add(s);
+        }
+
+        private void GenerateCrossRoad(bool up, bool right, bool down, bool left, IntVector2 pos)
+        {
+            Structure s = new Structure();
+            s.Space.X = pos.X;
+            s.Space.Y = pos.Y;
+            s.Space.Width = 9;
+            s.Space.Height = 9;
+            for (int i = 1; i < 8; i++)
+            {
+                for (int j = 1; j < 8; j++)
+                {
+                    s.Tiles.Add(new Tile(10, new IntVector2(i, j)));
+                }
+            }
+
+            if (up)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(14, new IntVector2(i, 0)));
+                }
+            }
+
+            if (right)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(13, new IntVector2(8, i)));
+                }
+            }
+
+            if (down)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(14, new IntVector2(i, 8)));
+                }
+            }
+
+            if (left)
+            {
+                for (int i = 1; i < 8; i++)
+                {
+                    s.Tiles.Add(new Tile(13, new IntVector2(0, i)));
                 }
             }
             Structures.Add(s);
