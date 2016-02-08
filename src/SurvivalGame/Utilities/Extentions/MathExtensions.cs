@@ -181,5 +181,10 @@ namespace Mentula.Utilities.MathExtensions
                 collection[i] = temp[i];
             }
         }
+
+        public static Color ApplyAlpha(this Color c, byte a)
+        {
+            return new Color(c.R, c.G, c.B, a);
+        }
     }
 }

@@ -15,6 +15,8 @@ namespace Mentula.Client
 {
     public class MainGame : Game
     {
+        public bool AllowInput;
+
         internal GameState gameState;
         internal NPC hero;
         internal NPC[] npcs;
@@ -64,15 +66,18 @@ namespace Mentula.Client
                     MouseState mState = Mouse.GetState();
 
                     Vector2 inp = new Vector2();
-                    if (kState.IsKeyDown(Keys.Escape)) Exit();
-                    if (kState.IsKeyDown(Keys.OemMinus) || mState.ScrollWheelValue < 0) vGraphics.SCALE *= 1 - 2f * delta;
-                    if (kState.IsKeyDown(Keys.OemPlus) || mState.ScrollWheelValue > 0) vGraphics.SCALE *= 1 + 2f * delta;
-                    if (kState.IsKeyDown(Keys.W)) inp.Y -= 1;
-                    if (kState.IsKeyDown(Keys.A)) inp.X -= 1;
-                    if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
-                    if (kState.IsKeyDown(Keys.D)) inp.X += 1;
-                    if (kState.IsKeyDown(Keys.E)) networking.Disconect();
-                    if (kState.IsKeyDown(Keys.PrintScreen)) vGraphics.TakeScreenshot();
+                    if (AllowInput)
+                    {
+                        if (kState.IsKeyDown(Keys.Escape)) Exit();
+                        if (kState.IsKeyDown(Keys.OemMinus) || mState.ScrollWheelValue < 0) vGraphics.SCALE *= 1 - 2f * delta;
+                        if (kState.IsKeyDown(Keys.OemPlus) || mState.ScrollWheelValue > 0) vGraphics.SCALE *= 1 + 2f * delta;
+                        if (kState.IsKeyDown(Keys.W)) inp.Y -= 1;
+                        if (kState.IsKeyDown(Keys.A)) inp.X -= 1;
+                        if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
+                        if (kState.IsKeyDown(Keys.D)) inp.X += 1;
+                        if (kState.IsKeyDown(Keys.E)) networking.Disconect();
+                        if (kState.IsKeyDown(Keys.PrintScreen)) vGraphics.TakeScreenshot();
+                    }
 
                     if (inp != Vector2.Zero)
                     {

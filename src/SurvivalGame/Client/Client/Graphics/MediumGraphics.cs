@@ -18,7 +18,7 @@ namespace Mentula.Client
 {
     public class MediumGraphics : GraphicsDeviceManager, IGameComponent, IUpdateable, IDrawable
     {
-        internal float SCALE = 2f;
+        internal float SCALE = 1.15f;
         private float ROT = 0;
 
         public Camera Camera { get; private set; }
