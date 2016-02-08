@@ -1,5 +1,6 @@
 using Lidgren.Network;
 using Lidgren.Network.Xna;
+using Mentula.Content;
 using Mentula.Utilities;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
@@ -102,7 +103,7 @@ namespace Mentula.Client
                             case (NDT.ChunkRequest):
                                 prevMessage = gameTime.TotalGameTime;
                                 Chunk[] chunks = msg.ReadChunks();
-                                NPC[] npcs = new NPC[0];
+                                Creature[] npcs = new Creature[0];
                                 msg.ReadNPCs(ref npcs);
                                 game.UpdateChunks(chunks, npcs);
                                 break;
@@ -232,7 +233,7 @@ namespace Mentula.Client
             return result;
         }
 
-        public static ushort ReadNPCs(this NetBuffer msg, ref NPC[] npcs)
+        public static ushort ReadNPCs(this NetBuffer msg, ref Creature[] npcs)
         {
             ushort length = msg.ReadUInt16();
             if (length > npcs.Length) Array.Resize(ref npcs, length);
@@ -246,13 +247,19 @@ namespace Mentula.Client
                 string name = msg.ReadString();
                 int textId = msg.ReadInt32();
 
-                npcs[i] = new NPC(chunk, tile, rot, health, name) { TextureId = textId };
+                npcs[i] = new Creature(0, name, textId, false, new Stats(), new Item[0])
+                {
+                    ChunkPos = chunk,
+                    Pos = tile,
+                    Rotation = rot,
+                    Durability = health // TODO temp
+                };
             }
 
             return length;
         }
 
-        public static void ReadNPCUpdate(this NetBuffer msg, ref NPC[] npcs, int index)
+        public static void ReadNPCUpdate(this NetBuffer msg, ref Creature[] npcs, int index)
         {
             ushort length = msg.ReadUInt16();
 
@@ -267,7 +274,13 @@ namespace Mentula.Client
                 string name = msg.ReadString();
                 int textId = msg.ReadInt32();
 
-                npcs[i] = new NPC(chunkPos, tilePos, rot, healthPerc, name) { TextureId = textId };
+                npcs[i] = new Creature(0, name, textId, false, new Stats(), new Item[0])
+                {
+                    ChunkPos = chunkPos,
+                    Pos = tilePos,
+                    Rotation = rot,
+                    Durability = healthPerc //TODO temp
+                };
             }
         }
 

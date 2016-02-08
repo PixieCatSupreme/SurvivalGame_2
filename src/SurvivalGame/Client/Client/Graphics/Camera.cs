@@ -90,7 +90,7 @@ namespace Mentula.Client
             }
         }
 
-        public unsafe void Transform(ref NPC[] sourceArray, ref Vector2[] destinationArray)
+        public unsafe void Transform(ref Creature[] sourceArray, ref Vector2[] destinationArray)
         {
             int index = 0;
 

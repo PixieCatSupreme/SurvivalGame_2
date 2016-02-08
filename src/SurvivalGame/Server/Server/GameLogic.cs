@@ -50,6 +50,7 @@ namespace Mentula.Server
             if (Index < Players.Length)
             {
                 Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
+                Players[Index].Value.Pos = new Vector2(-1524, -2166);
                 Map.Generate(Players[Index].Value.ChunkPos, content);
                 Index++;
             }

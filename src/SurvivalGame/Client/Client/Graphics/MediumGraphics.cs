@@ -3,6 +3,7 @@
 
 #pragma warning disable 67
 
+using Mentula.Content;
 using Mentula.GuiItems.Core;
 using Mentula.GuiItems.Items;
 using Mentula.Utilities.Resources;
@@ -22,7 +23,7 @@ namespace Mentula.Client
         private float ROT = 0;
 
         public Camera Camera { get; private set; }
-        public bool Enabled { get { return true; } }
+        public bool Enabled { get; set; }
         public int UpdateOrder { get { return 0; } }
         public int DrawOrder { get { return 0; } }
         public bool Visible { get; set; }
@@ -123,10 +124,10 @@ namespace Mentula.Client
             for (int i = 0; i < game.npcs.Length; i++)
             {
                 Vector2 pos = actorBuffer[i];
-                NPC actor = game.npcs[i];
+                Creature actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                DrawString(nameFont, actor.Name + " | " + actor.HealthPrec, pos + nameOffset, Color.Red);
+                DrawString(nameFont, actor.Name + " | " + actor.GetHealth(), pos + nameOffset, Color.Red);
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
@@ -161,7 +162,7 @@ namespace Mentula.Client
             batch.End();
         }
 
-        public void UpdateChunks(ref Chunk[] chunks, ref NPC[] npcs)
+        public void UpdateChunks(ref Chunk[] chunks, ref Creature[] npcs)
         {
             int tileLength = chunks.Length * Res.ChunkTileLength;
             int destrLength = 0;
@@ -199,6 +200,18 @@ namespace Mentula.Client
                 return true;
             }
             catch (Exception) { return false; }
+        }
+
+        public void Hide()
+        {
+            Enabled = false;
+            Visible = false;
+        }
+
+        public void Show()
+        {
+            Enabled = true;
+            Visible = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
