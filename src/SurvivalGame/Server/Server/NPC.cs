@@ -1,6 +1,4 @@
-﻿//#define YOU_SPIN_ME_RIGHT_ROUND_BABY
-
-using Mentula.Utilities;
+﻿using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 using Resc = Mentula.Utilities.Resources.Res;
 using Mentula.Utilities.MathExtensions;

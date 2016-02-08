@@ -154,6 +154,7 @@ namespace Mentula.Content
         public float GetHealth()
         {
             float result = 0;
+
             if (Material != null)
             {
                 result = Durability * Material.Ultimate_Tensile_Strength * Volume;
