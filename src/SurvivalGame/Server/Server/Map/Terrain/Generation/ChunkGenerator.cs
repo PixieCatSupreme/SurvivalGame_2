@@ -60,7 +60,7 @@ namespace Mentula.Server
                 Rectangle rp = new Rectangle((int)p.X, (int)p.Y, 1, 1);
                 for (int j = 0; j < n.Count; j++)
                 {
-                    if (p == n[j].creature.Pos)
+                    if (p == n[j].Pos)
                     {
                         canplace = false;
                         break;
@@ -93,7 +93,7 @@ namespace Mentula.Server
                         crea.Rotation = (float)(r.NextDouble() * Math.PI * 2);
                         crea.Pos = p;
                         crea.ChunkPos = c.ChunkPos;
-                        n.Add(crea);
+                        n.Add(new NPC(crea));
                     }
 
                 }

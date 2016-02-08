@@ -23,7 +23,7 @@ namespace Mentula.Server
 
             for (int i = 0; i < defender.Count; i++)
             {
-                Vector2 defenderPos = defender[i].creature.Pos + defender[i].creature.ChunkPos * ChunkSize;
+                Vector2 defenderPos = defender[i].Pos + defender[i].ChunkPos * ChunkSize;
                 if (Vector2.Distance(attackerPos, defenderPos) < range)
                 {
                     Vector2 defenderAngle1 = defenderPos - attackerPos;
@@ -31,9 +31,8 @@ namespace Mentula.Server
                     float defenderDeg = MathEX.VectorToDegrees(defenderAngle1);
                     if (MathEX.DifferenceBetweenDegrees(defenderDeg,attackerRot)<arc)
                     {
-                        defender[i].creature.DealDamage(2000000);
-                        defender[i].creature.CalcSystemsWithDur();
-                        int o = 0;
+                        defender[i].DealDamage(2000000);
+                        defender[i].CalcSystemsWithDur();
                     }
 
                 }
