@@ -12,14 +12,13 @@ namespace Mentula.Server
 {
     public static class Combat
     {
-        public static void OnMelee(Creature attacker,ref List<NPC> defender,ref List<NPC> ded)
+        public static bool OnMelee(Creature attacker,ref List<NPC> defender,ref List<NPC> ded)
         {
+            bool killed = false;
             float range = 2;//todo generate range
             float arc = 30;
             Vector2 attackerPos = attacker.Pos + attacker.ChunkPos * ChunkSize;
             float attackerRot = attacker.Rotation / (float)Math.PI * 180;
-            Vector2 rot = MathEX.DegreesToVector(attackerRot);
-            rot /= 2;
 
             for (int i = 0; i < defender.Count; i++)
             {
@@ -37,10 +36,12 @@ namespace Mentula.Server
                         {
                             ded.Add(defender[i]);
                             defender.RemoveAt(i);
+                            killed = true;
                         }
                     }
                 }
             }
+            return killed;
         }
     }
 }
