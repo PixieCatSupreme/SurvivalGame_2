@@ -14,7 +14,6 @@ namespace Mentula.Server
         private List<Chunk> ChunkList;
         public List<NPC> LoadedNPCs;
         public List<NPC> LoadedDeadNPCs;
-        private List<NPC> NPCList;
         private List<MegaChunk> MegaChunks;
 
 
@@ -26,7 +25,6 @@ namespace Mentula.Server
             ChunkList = new List<Chunk>();
             LoadedNPCs = new List<NPC>();
             LoadedDeadNPCs = new List<NPC>();
-            NPCList = new List<NPC>();
             MegaChunks = new List<MegaChunk>();
             MegaChunks.Add(new MegaChunk(new IntVector2(0, 0)));
         }
@@ -61,7 +59,6 @@ namespace Mentula.Server
                         ChunkList.Add(c);
 
                         LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
-                        NPCList.InsertRange(NPCList.Count, n);
                         gen = true;
                     }
                 }
@@ -92,21 +89,7 @@ namespace Mentula.Server
                 }
             }
             List<NPC> n = new List<NPC>();
-            for (int i = 0; i < NPCList.Count; i++)
-            {
-                bool isloaded = false;
-                for (int p = 0; p < LoadedNPCs.Count; p++)
-                {
-                    if (NPCList[i] == LoadedNPCs[p])
-                    {
-                        isloaded = true;
-                    }
-                }
-                if (MathEX.GetMaxDiff(NPCList[i].ChunkPos, pos) <= Range_S && !isloaded)
-                {
-                    n.Add(NPCList[i]);
-                }
-            }
+
             LoadedNPCs.InsertRange(LoadedNPCs.Count, n);
         }
 
@@ -224,6 +207,7 @@ namespace Mentula.Server
             return n.ToArray();
         }
 
+
         public void UnloadChunks(IntVector2 pos)
         {
             for (int i = 0; i < LoadedChunks.Count;)
@@ -244,17 +228,6 @@ namespace Mentula.Server
                 }
 
                 if (!isnearplayer) LoadedChunks.RemoveAt(i);
-                else i++;
-            }
-            for (int i = 0; i < LoadedNPCs.Count;)
-            {
-                bool isnearplayer = false;
-                for (int p = 0; p < pos.Length; p++)
-                {
-                    if (Math.Abs(LoadedNPCs[i].ChunkPos.X - pos[p].X) <= Range_S && Math.Abs(LoadedNPCs[i].ChunkPos.Y - pos[p].Y) <= Range_S) isnearplayer = true;
-                }
-
-                if (!isnearplayer) LoadedNPCs.RemoveAt(i);
                 else i++;
             }
         }
