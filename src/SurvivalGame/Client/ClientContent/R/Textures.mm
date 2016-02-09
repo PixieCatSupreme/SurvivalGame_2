@@ -65,5 +65,7 @@
 	{
 		[Crosshair: 9998]
 		[DirectionArrow: 9999]
+		[MainBackground: 10000]
+		[PlayBackground: 10001]
 	}
 }

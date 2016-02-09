@@ -89,7 +89,7 @@ namespace Mentula.Server
                 {
                     if (c.Tiles[(int)p.X + (int)p.Y * ChunkSize].Tex != 4)
                     {
-                        Creature crea = content.GetCreature("Databases/Creatures", 1);
+                        Creature crea = content.GetCreature("Databases/Creatures", 2);
                         crea.Rotation = (float)(r.NextDouble() * Math.PI * 2);
                         crea.Pos = p;
                         crea.ChunkPos = c.ChunkPos;
