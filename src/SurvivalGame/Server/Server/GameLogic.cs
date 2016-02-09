@@ -17,7 +17,6 @@ namespace Mentula.Server
         private Resources content;
         private int NPCClock;
 
-
         public GameLogic(Server server)
         {
             Map = new Map();

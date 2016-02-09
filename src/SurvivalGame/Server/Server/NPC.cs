@@ -82,11 +82,12 @@ namespace Mentula.Server
                 List<Chunk> c = new List<Chunk>();
                 for (int i = 0; i < chunks.Count; i++)
                 {
-                    if (chunks[i].ChunkPos.X>=minX&& chunks[i].ChunkPos.X <= maxX&& chunks[i].ChunkPos.Y >= minY && chunks[i].ChunkPos.Y <= maxY)
+                    if (chunks[i].ChunkPos.X >= minX && chunks[i].ChunkPos.X <= maxX && chunks[i].ChunkPos.Y >= minY && chunks[i].ChunkPos.Y <= maxY)
                     {
                         c.Add(chunks[i]);
                     }
                 }
+
             }
         }
 
