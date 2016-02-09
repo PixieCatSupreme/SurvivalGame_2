@@ -10,6 +10,7 @@ namespace Mentula.Server
     {
         public Map Map;
         public KeyValuePair<long, Creature>[] Players;
+        public bool DeadUpdate;
 
         public int Index { get; private set; }
 
@@ -135,7 +136,7 @@ namespace Mentula.Server
                     index = i;
                 }
             }
-            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
+            DeadUpdate = Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
         }
     }
 }

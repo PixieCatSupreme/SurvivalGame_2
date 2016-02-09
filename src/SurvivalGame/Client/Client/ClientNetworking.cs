@@ -114,6 +114,9 @@ namespace Mentula.Client
                             case (NDT.Update):
                                 prevMessage = gameTime.TotalGameTime;
                                 msg.ReadNPCUpdate(ref game.npcs, playerLength = msg.ReadNPCs(ref game.npcs));
+                                deads = new Creature[0];
+                                msg.ReadDeads(ref deads);
+                                if (deads.Length > 0) game.UpdateChunks(game.chunks, game.npcs, deads);
 
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs, ref game.deads);
                                 break;

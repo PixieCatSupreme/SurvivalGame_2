@@ -224,6 +224,14 @@ namespace Mentula.Server
                     nom.Write((byte)NDT.Update);
                     nom.Write(ref logic.Players, logic.Index, cur.Key);
                     nom.Write(logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+
+                    if (logic.DeadUpdate)
+                    {
+                        logic.DeadUpdate = false;
+                        nom.WriteDead(logic.Map.GetDeadNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+                    }
+                    else nom.Write(0);
+
                     server.SendMessage(nom, conn, NetDeliveryMethod.ReliableOrdered);
                 }
 
