@@ -83,6 +83,24 @@ namespace Mentula.Server
             msg.Write(value.GetHealth());
         }
 
+        public static void WriteDead(this NetBuffer msg, Creature value)
+        {
+            msg.Write(value.ChunkPos);
+            msg.Write(value.Pos);
+            msg.WriteHalfPrecision(value.Rotation);
+            msg.Write(value.TextureId);
+            msg.Write((Item)value);
+        }
+
+        public static void WriteDead(this NetBuffer msg, Creature[] value)
+        {
+            msg.Write(value.Length);
+            for (int i = 0; i < value.Length; i++)
+            {
+                msg.WriteDead(value[i]);
+            }
+        }
+
         public static void Write(this NetBuffer msg, Chunk[] value)
         {
             msg.Write((ushort)value.Length);

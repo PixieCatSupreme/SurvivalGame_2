@@ -149,6 +149,7 @@ namespace Mentula.Server
                                 logic.Update(0);
                                 Chunk[] chunks = logic.Map.GetChunks(logic.GetPlayer(id).ChunkPos);
                                 NPC[] npcs = logic.Map.GetNPC(logic.GetPlayer(id).ChunkPos);
+                                NPC[] deads = logic.Map.GetDeadNPC(logic.GetPlayer(id).ChunkPos);
 
                                 nom = server.CreateMessage();
                                 nom.Write((byte)NDT.InitialChunkRequest);
@@ -160,6 +161,7 @@ namespace Mentula.Server
 
                                 nom.Write(chunks);
                                 nom.Write(npcs);
+                                nom.WriteDead(deads);
                                 server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                 break;
                             case (NetConnectionStatus.Disconnected):
@@ -186,10 +188,9 @@ namespace Mentula.Server
                                     {
                                         nom = server.CreateMessage();
                                         nom.Write((byte)NDT.ChunkRequest);
-                                        Chunk[] chunkArr = logic.Map.GetChunks(oldChunk, chunk);
-                                        NPC[] npcArr = logic.Map.GetNPC(oldChunk, chunk);
-                                        nom.Write(chunkArr);
-                                        nom.Write(npcArr);
+                                        nom.Write(logic.Map.GetChunks(oldChunk, chunk));
+                                        nom.Write(logic.Map.GetNPC(oldChunk, chunk));
+                                        nom.WriteDead(logic.Map.GetDeadNPC(oldChunk, chunk));
                                         server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
                                     }
 
