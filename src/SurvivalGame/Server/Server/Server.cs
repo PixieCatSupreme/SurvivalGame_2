@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
@@ -141,18 +140,23 @@ namespace Mentula.Server
 
                                 name = players_Queue[id];
                                 players_Queue.Remove(id);
-                                AddPlayer(msg.SenderEndPoint.Address, name);
-                                logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
 
+                                AddPlayer(msg.SenderEndPoint.Address, name);
+                                Creature player = logic.AddPlayer(id, name);
                                 logic.Update(0);
-                                Chunk[] chunks = logic.Map.GetChunks(logic.GetPlayer(id).ChunkPos);
-                                NPC[] npcs = logic.Map.GetNPC(logic.GetPlayer(id).ChunkPos);
 
                                 nom = server.CreateMessage();
                                 nom.Write((byte)NDT.InitialChunkRequest);
-                                nom.Write(chunks);
-                                nom.Write(npcs);
+
+                                Creature temp = logic.GetPlayer(id);
+                                temp.ChunkPos = -temp.ChunkPos;
+                                nom.Write(temp);
+                                temp.ChunkPos = -temp.ChunkPos;
+
+                                nom.Write(logic.Map.GetChunks(player.ChunkPos));
+                                nom.Write(logic.Map.GetNPC(player.ChunkPos));
+                                nom.WriteDead(logic.Map.GetDeadNPC(player.ChunkPos));
                                 server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                 break;
                             case (NetConnectionStatus.Disconnected):
@@ -179,10 +183,9 @@ namespace Mentula.Server
                                     {
                                         nom = server.CreateMessage();
                                         nom.Write((byte)NDT.ChunkRequest);
-                                        Chunk[] chunkArr = logic.Map.GetChunks(oldChunk, chunk);
-                                        NPC[] npcArr = logic.Map.GetNPC(oldChunk, chunk);
-                                        nom.Write(chunkArr);
-                                        nom.Write(npcArr);
+                                        nom.Write(logic.Map.GetChunks(oldChunk, chunk));
+                                        nom.Write(logic.Map.GetNPC(oldChunk, chunk));
+                                        nom.WriteDead(logic.Map.GetDeadNPC(oldChunk, chunk));
                                         server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableUnordered);
                                     }
 
@@ -221,6 +224,14 @@ namespace Mentula.Server
                     nom.Write((byte)NDT.Update);
                     nom.Write(ref logic.Players, logic.Index, cur.Key);
                     nom.Write(logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+
+                    if (logic.DeadUpdate)
+                    {
+                        logic.DeadUpdate = false;
+                        nom.WriteDead(logic.Map.GetDeadNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+                    }
+                    else nom.Write(0);
+
                     server.SendMessage(nom, conn, NetDeliveryMethod.ReliableOrdered);
                 }
 

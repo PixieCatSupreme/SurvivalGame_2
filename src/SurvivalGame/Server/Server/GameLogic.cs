@@ -10,6 +10,7 @@ namespace Mentula.Server
     {
         public Map Map;
         public KeyValuePair<long, Creature>[] Players;
+        public bool DeadUpdate;
 
         public int Index { get; private set; }
 
@@ -47,15 +48,19 @@ namespace Mentula.Server
             return null;
         }
 
-        public void AddPlayer(long id, string name)
+        public Creature AddPlayer(long id, string name)
         {
             if (Index < Players.Length)
             {
                 Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
-                Players[Index].Value.Pos = new Vector2(-1524, -2166);
+                Players[Index].Value.Pos = new Vector2(1523, 2166);
+                Players[Index].Value.FormatPos();
                 Map.Generate(Players[Index].Value.ChunkPos, content);
-                Index++;
+
+                return Players[Index++].Value;
             }
+
+            return null;
         }
 
         public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile, float rotation)
@@ -131,7 +136,7 @@ namespace Mentula.Server
                     index = i;
                 }
             }
-            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
+            DeadUpdate = Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
         }
     }
 }

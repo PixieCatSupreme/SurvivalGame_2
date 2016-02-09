@@ -1,15 +1,12 @@
 ﻿using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mentula.Client
 {
+    [DebuggerDisplay("{ChunkPos}")]
     public class Chunk
     {
         public Tile[] Tiles;

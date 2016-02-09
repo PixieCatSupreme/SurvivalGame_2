@@ -78,6 +78,8 @@ namespace Mentula.Content
 
         new public byte GetHealth()
         {
+            CalcSystemsWithDur();
+
             if (!CalcIsAlive())
             {
                 return 0;

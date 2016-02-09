@@ -24,6 +24,7 @@ namespace Mentula.Server
             LoadedChunks = new List<Chunk>();
             ChunkList = new List<Chunk>();
             LoadedNPCs = new List<NPC>();
+            LoadedDeadNPCs = new List<NPC>();
             MegaChunks = new List<MegaChunk>();
             MegaChunks.Add(new MegaChunk(new IntVector2(0, 0)));
         }
