@@ -53,7 +53,7 @@ namespace Mentula.Server
                     id,
                     mani.name,
                     material,
-                    MathEX.ApplyPercentage(mani.volume, volumeModifier),
+                    MathEX.ApplyPercentage((long)mani.volume, volumeModifier),
                     mani.tags.ToArray());
             }
             else
@@ -75,7 +75,7 @@ namespace Mentula.Server
                             for (int j = 0; j < database.Value.Length; j++)
                             {
                                 KeyValuePair<ulong, ulong> part = database.Value[j];
-                                parts[index++] = GetItem(db.Value, part.Key, MathEX.ApplyPercentage(part.Value, volumeModifier));
+                                parts[index++] = GetItem(db.Value, part.Key, MathEX.ApplyPercentage((long)part.Value, volumeModifier));
                             }
                         }
                     }

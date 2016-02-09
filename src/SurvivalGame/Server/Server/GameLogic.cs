@@ -10,11 +10,13 @@ namespace Mentula.Server
     {
         public Map Map;
         public KeyValuePair<long, Creature>[] Players;
+        public bool DeadUpdate;
 
         public int Index { get; private set; }
 
         private Server server;
         private Resources content;
+        private int NPCClock;
 
         public GameLogic(Server server)
         {
@@ -22,6 +24,7 @@ namespace Mentula.Server
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             content = new Resources();
             Index = 0;
+            NPCClock = 0;
             this.server = server;
         }
 
@@ -45,14 +48,19 @@ namespace Mentula.Server
             return null;
         }
 
-        public void AddPlayer(long id, string name)
+        public Creature AddPlayer(long id, string name)
         {
             if (Index < Players.Length)
             {
                 Players[Index] = new KeyValuePair<long, Creature>(id, content.GetCreature("Databases/Creatures", 0, name));
+                Players[Index].Value.Pos = new Vector2(1523, 2166);
+                Players[Index].Value.FormatPos();
                 Map.Generate(Players[Index].Value.ChunkPos, content);
-                Index++;
+
+                return Players[Index++].Value;
             }
+
+            return null;
         }
 
         public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile, float rotation)
@@ -97,6 +105,25 @@ namespace Mentula.Server
             }
 
             Map.UnloadChunks(posses);
+            if (NPCClock == 64)
+            {
+                NPCClock = 0;
+            }
+            else
+            {
+                NPCClock++;
+            }
+            if (Index > 0)
+            {
+                for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
+                {
+
+                }
+            }
+            for (int i = 0; i < Map.LoadedNPCs.Count; i++)
+            {
+                Map.LoadedNPCs[i].WalkPath(delta);
+            }
         }
 
         public void PlayerAttack(long id)
@@ -109,7 +136,7 @@ namespace Mentula.Server
                     index = i;
                 }
             }
-            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs);
+            DeadUpdate = Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
         }
     }
 }

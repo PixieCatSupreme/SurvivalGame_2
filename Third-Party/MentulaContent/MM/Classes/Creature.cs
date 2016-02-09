@@ -54,6 +54,9 @@ namespace Mentula.Content
             DefaultSystemsVal = CalcSystems();
             equipment = copy.equipment;
             inventory = copy.inventory;
+            Pos = copy.Pos;
+            ChunkPos = copy.ChunkPos;
+            Rotation = copy.Rotation;
         }
 
         public Tag[] CalcSystems()
@@ -75,6 +78,8 @@ namespace Mentula.Content
 
         new public byte GetHealth()
         {
+            CalcSystemsWithDur();
+
             if (!CalcIsAlive())
             {
                 return 0;

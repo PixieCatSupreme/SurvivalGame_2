@@ -3,8 +3,7 @@
 
 #pragma warning disable 67
 
-using Mentula.GuiItems.Core;
-using Mentula.GuiItems.Items;
+using Mentula.Content;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +21,7 @@ namespace Mentula.Client
         private float ROT = 0;
 
         public Camera Camera { get; private set; }
-        public bool Enabled { get { return true; } }
+        public bool Enabled { get; set; }
         public int UpdateOrder { get { return 0; } }
         public int DrawOrder { get { return 0; } }
         public bool Visible { get; set; }
@@ -40,6 +39,7 @@ namespace Mentula.Client
         private Vector2[] tileBuffer;
         private Vector2[] destrBuffer;
         private Vector2[] actorBuffer;
+        private Vector2[] corpseBuffer;
         private float heroR;
 
         public event EventHandler<EventArgs> EnabledChanged;
@@ -60,6 +60,7 @@ namespace Mentula.Client
             tileBuffer = new Vector2[0];
             destrBuffer = new Vector2[0];
             actorBuffer = new Vector2[0];
+            corpseBuffer = new Vector2[0];
 
             PreferredBackBufferHeight = 900;
             PreferredBackBufferWidth = 1600;
@@ -102,6 +103,7 @@ namespace Mentula.Client
             fpsCounter.Update(delta);
             Camera.Transform(ref game.chunks, ref tileBuffer, ref destrBuffer);
             Camera.Transform(ref game.npcs, ref actorBuffer);
+            Camera.Transform(ref game.deads, ref corpseBuffer);
 
             int tileIndex = 0, destrIndex = 0;
             SpriteFont nameFont = fonts["NameFont"];
@@ -123,14 +125,22 @@ namespace Mentula.Client
             for (int i = 0; i < game.npcs.Length; i++)
             {
                 Vector2 pos = actorBuffer[i];
-                NPC actor = game.npcs[i];
+                Creature actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                DrawString(nameFont, actor.Name + " | " + actor.HealthPrec, pos + nameOffset, Color.Red);
+                DrawString(nameFont, actor.Name + " | " + actor.Durability, pos + nameOffset, Color.Red);
+            }
+
+            for (int i = 0; i < game.deads.Length; i++)
+            {
+                Vector2 pos = corpseBuffer[i];
+                Creature corpse = game.deads[i];
+
+                DrawBatch(textures[502], pos, Rot(corpse.Rotation));
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
-            DrawBatch(textures[9997], heroPos, Rot(heroR));
+            DrawBatch(textures[game.hero.TextureId], heroPos, Rot(heroR));
 
             for (int i = 0; i < game.chunks.Length; i++)
             {
@@ -146,7 +156,7 @@ namespace Mentula.Client
 
 #if DEBUG
             batch.DrawString(fonts["ConsoleFont"], $"FPS: {fpsCounter.Avarage}", Vector2.Zero, Color.Red);
-            batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}" , new Vector2(0, 16), Color.Red);
+            batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}", new Vector2(0, 16), Color.Red);
 #endif
             batch.End();
         }
@@ -161,7 +171,7 @@ namespace Mentula.Client
             batch.End();
         }
 
-        public void UpdateChunks(ref Chunk[] chunks, ref NPC[] npcs)
+        public void UpdateChunks(ref Chunk[] chunks, ref Creature[] npcs, ref Creature[] deads)
         {
             int tileLength = chunks.Length * Res.ChunkTileLength;
             int destrLength = 0;
@@ -170,6 +180,7 @@ namespace Mentula.Client
             if (tileLength != tileBuffer.Length) tileBuffer = new Vector2[tileLength];
             if (destrLength != destrBuffer.Length) destrBuffer = new Vector2[destrLength];
             if (npcs.Length != actorBuffer.Length) actorBuffer = new Vector2[npcs.Length];
+            if (deads.Length != corpseBuffer.Length) corpseBuffer = new Vector2[deads.Length];
         }
 
         public static void ChangeWindowBorder(IntPtr handle, byte newType)
@@ -201,12 +212,24 @@ namespace Mentula.Client
             catch (Exception) { return false; }
         }
 
+        public void Hide()
+        {
+            Enabled = false;
+            Visible = false;
+        }
+
+        public void Show()
+        {
+            Enabled = true;
+            Visible = true;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private float Rot(float rot) 
+        private float Rot(float rot)
         { return ROT * Res.DEG2RAD + rot + 1.5707963f; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void DrawBatch(Texture2D tex, Vector2 pos, float rot) 
+        private void DrawBatch(Texture2D tex, Vector2 pos, float rot)
         { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -215,6 +238,6 @@ namespace Mentula.Client
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DrawString(SpriteFont font, string text, Vector2 pos, Color color)
-        { batch.DrawString(font, text, pos, color, ROT * Res.DEG2RAD, Vector2.Zero, SCALE * 0.5f, 0, 0); }
+        { batch.DrawString(font, text, pos, color, ROT * Res.DEG2RAD, Vector2.Zero, 1, 0, 0); }
     }
 }

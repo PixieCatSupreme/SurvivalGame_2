@@ -47,6 +47,7 @@
 			[Id: 501]
 			[Name: "Tree_Stump"]
 		}
+		[Stone: 502]
 	}
 
 	[Creatures]

@@ -1,4 +1,5 @@
-﻿using Mentula.GuiItems.Containers;
+﻿using Mentula.Content;
+using Mentula.GuiItems.Containers;
 using Mentula.GuiItems.Core;
 using Mentula.GuiItems.Items;
 using Mentula.Utilities.MathExtensions;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LABEL = System.Collections.Generic.KeyValuePair<string, Microsoft.Xna.Framework.Color?>;
 
 namespace Mentula.Client.Menus
 {
@@ -87,6 +89,8 @@ namespace Mentula.Client.Menus
             TextBox input = FindControl<TextBox>("Input");
             if (input.Focused) MGame.AllowInput = false;
             else MGame.AllowInput = true;
+
+
         }
 
         public override void Draw(GameTime gameTime)

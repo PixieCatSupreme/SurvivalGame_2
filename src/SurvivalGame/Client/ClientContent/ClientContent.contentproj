@@ -194,7 +194,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tiles\Stone.png">
+    <Compile Include="Destructable\Stone.png">
       <Name>Stone</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
