@@ -48,7 +48,7 @@ namespace Mentula.Server
             return null;
         }
 
-        public void AddPlayer(long id, string name)
+        public Creature AddPlayer(long id, string name)
         {
             if (Index < Players.Length)
             {
@@ -56,8 +56,11 @@ namespace Mentula.Server
                 Players[Index].Value.Pos = new Vector2(1523, 2166);
                 Players[Index].Value.FormatPos();
                 Map.Generate(Players[Index].Value.ChunkPos, content);
-                Index++;
+
+                return Players[Index++].Value;
             }
+
+            return null;
         }
 
         public unsafe bool UpdatePlayer(long id, IntVector2* chunk, Vector2* tile, float rotation)

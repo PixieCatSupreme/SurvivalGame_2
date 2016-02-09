@@ -5,7 +5,6 @@ using Mentula.Engine;
 using Mentula.Engine.Core;
 using Mentula.Server.GUI;
 using Mentula.Utilities;
-using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Mentula.Utilities.Udp;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
@@ -142,26 +140,23 @@ namespace Mentula.Server
 
                                 name = players_Queue[id];
                                 players_Queue.Remove(id);
-                                AddPlayer(msg.SenderEndPoint.Address, name);
-                                logic.AddPlayer(id, name);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
 
+                                AddPlayer(msg.SenderEndPoint.Address, name);
+                                Creature player = logic.AddPlayer(id, name);
                                 logic.Update(0);
-                                Chunk[] chunks = logic.Map.GetChunks(logic.GetPlayer(id).ChunkPos);
-                                NPC[] npcs = logic.Map.GetNPC(logic.GetPlayer(id).ChunkPos);
-                                NPC[] deads = logic.Map.GetDeadNPC(logic.GetPlayer(id).ChunkPos);
 
                                 nom = server.CreateMessage();
                                 nom.Write((byte)NDT.InitialChunkRequest);
 
-                                Creature t = logic.GetPlayer(id);
-                                t.ChunkPos = -t.ChunkPos;
-                                nom.Write(t);
-                                t.ChunkPos = -t.ChunkPos;
+                                Creature temp = logic.GetPlayer(id);
+                                temp.ChunkPos = -temp.ChunkPos;
+                                nom.Write(temp);
+                                temp.ChunkPos = -temp.ChunkPos;
 
-                                nom.Write(chunks);
-                                nom.Write(npcs);
-                                nom.WriteDead(deads);
+                                nom.Write(logic.Map.GetChunks(player.ChunkPos));
+                                nom.Write(logic.Map.GetNPC(player.ChunkPos));
+                                nom.WriteDead(logic.Map.GetDeadNPC(player.ChunkPos));
                                 server.SendMessage(nom, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                                 break;
                             case (NetConnectionStatus.Disconnected):

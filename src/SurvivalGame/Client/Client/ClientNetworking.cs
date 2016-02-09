@@ -314,15 +314,13 @@ namespace Mentula.Client
         {
             IntVector2 chunk = msg.ReadPoint();
             Vector2 tile = msg.ReadVector2();
-            float rot = msg.ReadHalfPrecisionSingle();
             int texId = msg.ReadInt32();
             Item bI = msg.ReadItem();
 
             return new Creature(bI.Id, bI.Name, texId, false, new Stats(), bI.Parts)
             {
                 ChunkPos = chunk,
-                Pos = tile,
-                Rotation = rot
+                Pos = tile
             };
         }
 

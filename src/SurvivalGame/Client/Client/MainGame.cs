@@ -262,6 +262,16 @@ namespace Mentula.Client
                 }
             }
 
+            if (index < newDeads.Length)
+            {
+                int i = deads.Length;
+                Array.Resize(ref deads, deads.Length + (newDeads.Length - index));
+                for (; index < newDeads.Length; i++)
+                {
+                    deads[i] = newDeads[index++];
+                }
+            }
+
             vGraphics.UpdateChunks(ref chunks, ref npcs, ref deads);
         }
 

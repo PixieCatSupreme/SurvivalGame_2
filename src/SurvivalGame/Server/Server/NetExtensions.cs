@@ -87,7 +87,6 @@ namespace Mentula.Server
         {
             msg.Write(value.ChunkPos);
             msg.Write(value.Pos);
-            msg.WriteHalfPrecision(value.Rotation);
             msg.Write(value.TextureId);
             msg.Write((Item)value);
         }
