@@ -12,7 +12,7 @@ namespace Mentula.Server
 {
     public static class Combat
     {
-        public static void OnMelee(Creature attacker,ref List<NPC> defender)
+        public static void OnMelee(Creature attacker,ref List<NPC> defender,ref List<NPC> ded)
         {
             float range = 2;//todo generate range
             float arc = 30;
@@ -33,8 +33,12 @@ namespace Mentula.Server
                     {
                         defender[i].DealDamage(2000000);
                         defender[i].CalcSystemsWithDur();
+                        if (!defender[i].CalcIsAlive())
+                        {
+                            ded.Add(defender[i]);
+                            defender.RemoveAt(i);
+                        }
                     }
-
                 }
             }
         }

@@ -13,6 +13,7 @@ namespace Mentula.Server
         public List<Chunk> LoadedChunks;
         private List<Chunk> ChunkList;
         public List<NPC> LoadedNPCs;
+        public List<NPC> LoadedDeadNPCs;
         private List<NPC> NPCList;
         private List<MegaChunk> MegaChunks;
 
@@ -66,7 +67,6 @@ namespace Mentula.Server
             }
             return gen;
         }
-
 
         public void LoadChunks(IntVector2 pos)
         {
@@ -188,6 +188,36 @@ namespace Mentula.Server
                 if (MathEX.GetMaxDiff(LoadedNPCs[i].ChunkPos, pos) <= Res.Range_C)
                 {
                     n.Add(LoadedNPCs[i]);
+                }
+            }
+            return n.ToArray();
+        }
+
+        public NPC[] GetDeadNPC(IntVector2 oldpos, IntVector2 newpos)
+        {
+            List<NPC> n = new List<NPC>();
+            for (int i = 0; i < LoadedDeadNPCs.Count; i++)
+            {
+                if (MathEX.GetMaxDiff(LoadedDeadNPCs[i].ChunkPos, oldpos) > Res.Range_C)
+                {
+                    if (MathEX.GetMaxDiff(LoadedDeadNPCs[i].ChunkPos, newpos) <= Res.Range_C)
+                    {
+                        n.Add(LoadedDeadNPCs[i]);
+                    }
+                }
+
+            }
+            return n.ToArray();
+        }
+
+        public NPC[] GetDeadNPC(IntVector2 pos)
+        {
+            List<NPC> n = new List<NPC>();
+            for (int i = 0; i < LoadedDeadNPCs.Count; i++)
+            {
+                if (MathEX.GetMaxDiff(LoadedDeadNPCs[i].ChunkPos, pos) <= Res.Range_C)
+                {
+                    n.Add(LoadedDeadNPCs[i]);
                 }
             }
             return n.ToArray();

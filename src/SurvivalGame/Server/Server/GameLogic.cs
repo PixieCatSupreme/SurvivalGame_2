@@ -109,16 +109,13 @@ namespace Mentula.Server
             {
                 NPCClock++;
             }
-            //if (Index>0)
-            //{
-            //    for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
-            //    {
-            //        if (Map.LoadedNPCs[i].ChunkPos==Players[0].Value.ChunkPos)
-            //        {
-            //            Map.LoadedNPCs[i].GeneratePath(Players[0].Value, Map.LoadedChunks);
-            //        }
-            //    }
-            //}
+            if (Index > 0)
+            {
+                for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
+                {
+
+                }
+            }
             for (int i = 0; i < Map.LoadedNPCs.Count; i++)
             {
                 Map.LoadedNPCs[i].WalkPath(delta);
@@ -135,7 +132,7 @@ namespace Mentula.Server
                     index = i;
                 }
             }
-            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs);
+            Combat.OnMelee(Players[index].Value, ref Map.LoadedNPCs, ref Map.LoadedDeadNPCs);
         }
     }
 }
