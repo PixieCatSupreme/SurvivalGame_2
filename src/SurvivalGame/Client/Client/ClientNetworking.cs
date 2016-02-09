@@ -295,13 +295,15 @@ namespace Mentula.Client
             float rot = msg.ReadHalfPrecisionSingle();
             int texId = msg.ReadInt32();
             Stats state = msg.ReadStats();
-            Item bI = msg.ReadItem();
+            string name = msg.ReadString();
+            byte health = msg.ReadByte();
 
-            return new Creature(bI.Id, bI.Name, texId, false, state, bI.Parts)
+            return new Creature(0, name, texId, false, state, new Item[0])
             {
                 ChunkPos = chunk,
                 Pos = tile,
-                Rotation = rot
+                Rotation = rot,
+                Durability = health
             };
         }
 

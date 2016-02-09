@@ -79,7 +79,8 @@ namespace Mentula.Server
             msg.WriteHalfPrecision(value.Rotation);
             msg.Write(value.TextureId);
             msg.Write(value.Stats);
-            msg.Write((Item)value);
+            msg.Write(value.Name);
+            msg.Write(value.GetHealth());
         }
 
         public static void Write(this NetBuffer msg, Chunk[] value)

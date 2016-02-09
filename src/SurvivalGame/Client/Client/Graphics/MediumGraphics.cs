@@ -127,11 +127,11 @@ namespace Mentula.Client
                 Creature actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                DrawString(nameFont, actor.Name + " | " + actor.GetHealth(), pos + nameOffset, Color.Red);
+                DrawString(nameFont, actor.Name + " | " + actor.Durability, pos + nameOffset, Color.Red);
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
-            DrawBatch(textures[9997], heroPos, Rot(heroR));
+            DrawBatch(textures[game.hero.TextureId], heroPos, Rot(heroR));
 
             for (int i = 0; i < game.chunks.Length; i++)
             {
@@ -147,7 +147,7 @@ namespace Mentula.Client
 
 #if DEBUG
             batch.DrawString(fonts["ConsoleFont"], $"FPS: {fpsCounter.Avarage}", Vector2.Zero, Color.Red);
-            batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}" , new Vector2(0, 16), Color.Red);
+            batch.DrawString(fonts["ConsoleFont"], $"Creature Count: {game.npcs.Length}", new Vector2(0, 16), Color.Red);
 #endif
             batch.End();
         }
@@ -215,11 +215,11 @@ namespace Mentula.Client
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private float Rot(float rot) 
+        private float Rot(float rot)
         { return ROT * Res.DEG2RAD + rot + 1.5707963f; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void DrawBatch(Texture2D tex, Vector2 pos, float rot) 
+        private void DrawBatch(Texture2D tex, Vector2 pos, float rot)
         { batch.Draw(tex, pos, null, Color.White, rot, midTexture, SCALE, 0, 0); }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
