@@ -2,6 +2,7 @@ using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Mentula.Content;
 using Mentula.Utilities;
+using Mentula.Utilities.MathExtensions;
 using Mentula.Utilities.Net;
 using Mentula.Utilities.Resources;
 using Mentula.Utilities.Udp;
@@ -302,7 +303,7 @@ namespace Mentula.Client
             int texId = msg.ReadInt32();
             Stats state = msg.ReadStats();
             string name = msg.ReadString();
-            byte health = msg.ReadByte();
+            byte health = MathEX.ApplyPercentage(msg.ReadByte(), byte.MaxValue);
 
             return new Creature(0, name, texId, false, state, new Item[0])
             {

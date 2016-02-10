@@ -3,7 +3,9 @@ using Mentula.GuiItems.Containers;
 using Mentula.GuiItems.Core;
 using Mentula.GuiItems.Items;
 using Mentula.Utilities.MathExtensions;
+using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace Mentula.Client.Menus
     public sealed class GuiMenu : Menu
     {
         private MainGame MGame { get { return (MainGame)Game; } }
+        private const string CORPSE_PREFIX = "dd_";
 
         public GuiMenu(MainGame game)
             : base(game)
@@ -90,13 +93,77 @@ namespace Mentula.Client.Menus
             if (input.Focused) MGame.AllowInput = false;
             else MGame.AllowInput = true;
 
+            MouseState state = Mouse.GetState();
+            bool down = state.RightButton == ButtonState.Pressed;
+            int halfTile = (Res.TileSize >> 1);
 
+            for (int i = 0, j = 0; i < controlls.Count && j < MGame.deads.Length; i++)
+            {
+                GuiItem cur = controlls[i];
+                if (cur.Name.StartsWith(CORPSE_PREFIX))
+                {
+                    IEntity corpse = MGame.deads[j++];
+                    cur.Position = MGame.vGraphics.Camera.Transform(ref corpse);
+
+                    if (down)
+                    {
+                        float min = cur.Position.X - halfTile;
+                        float max = cur.Position.X + halfTile;
+
+                        if (state.X >= min && state.X <= max)
+                        {
+                            min = cur.Position.Y - halfTile;
+                            max = cur.Position.Y + halfTile;
+
+                            if (state.Y >= min && state.Y <= max) cur.Show();
+                        }
+                    }
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
             MGame.vGraphics.DrawMouse();
+        }
+
+        public void CreateDeathDowns(Creature[] corpses)
+        {
+            for (int i = 0; i < controlls.Count; i++)
+            {
+                GuiItem cur = controlls[i];
+                if (cur.Name.StartsWith(CORPSE_PREFIX))
+                {
+                    controlls.Remove(cur);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < corpses.Length; i++)
+            {
+                Creature cur = corpses[i];
+
+                DropDown dd = AddDropDown(
+                    Name: $"{CORPSE_PREFIX}{i}",
+                    AutoSize: true,
+                    Enabled: false,
+                    Visible: false);
+
+                for (int j = 0; j < cur.Parts.Length; j++)
+                {
+                    Item part = cur.Parts[j];
+
+                    dd.AddOption("Loot", part.Name, $"({part.CalcVolume()})");
+                }
+
+                dd.IndexClick += (sender, index) =>
+                {
+                    sender.Hide();
+                };
+
+                dd.Refresh();
+            }
         }
     }
 }
