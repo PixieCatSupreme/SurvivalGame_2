@@ -3,6 +3,7 @@ using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Mentula.Server
 {
@@ -115,9 +116,13 @@ namespace Mentula.Server
             }
             if (Index > 0)
             {
-                for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
+                for (int i = NPCClock; i < Map.LoadedNPCs.Count; i += 64)
                 {
-
+                    int temp = i;
+                    new Thread(() =>
+                    {
+                        Map.LoadedNPCs[temp].GeneratePath(Players[0].Value, Map.LoadedChunks);
+                    }).Start();
                 }
             }
             for (int i = 0; i < Map.LoadedNPCs.Count; i++)
