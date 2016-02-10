@@ -258,7 +258,7 @@ namespace Mentula.Client
                 if (Math.Abs(cur.ChunkPos.X + hero.ChunkPos.X) > Res.Range_C ||
                     Math.Abs(cur.ChunkPos.Y + hero.ChunkPos.Y) > Res.Range_C)
                 {
-                    deads[i] = newNpcs[index++];
+                    deads[i] = newDeads[index++];
                 }
             }
 
