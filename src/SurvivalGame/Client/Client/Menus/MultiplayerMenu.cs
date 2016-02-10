@@ -28,32 +28,42 @@ namespace Mentula.Client.Menus
             int txtW = 150, txtH = 25;
             int txtWM = txtW >> 1, txtHM = txtH >> 1;
 
+            AddGuiItem(
+                Name: "Background",
+                BackgroundImage: MGame.vGraphics.textures[10001],
+                Enabled: false,
+                BackColor: MainMenu.ButtonBackColor);
+
             TextBox txtName = AddTextBox(
                 Position: new Vector2(ScreenWidthMiddle - txtWM, ScreenHeightMiddle - txtHM),
                 Width: txtW,
                 Height: txtH,
                 Text: "UserName",
                 Multiline: true,
-                Name: TXTNAME);
+                Name: TXTNAME,
+                BackColor: MainMenu.ButtonBackColor);
 
             AddTextBox(
                 Position: new Vector2(ScreenWidthMiddle - txtWM, ScreenHeightMiddle + txtHM * 8),
                 Width: txtW,
                 Height: txtH,
                 Text: Ips.Frank.ToString(),
-                Name: TXTHOST);
+                Name: TXTHOST,
+                BackColor: MainMenu.ButtonBackColor);
 
             Button btnConnect = AddButton(
                 Position: new Vector2(ScreenWidthMiddle - txtWM, ScreenHeightMiddle + txtHM * 16),
                 Width: txtW,
                 Height: txtH,
-                Text: "Connect");
+                Text: "Connect",
+                BackColor: MainMenu.ButtonBackColor);
 
             Button btnBack = AddButton(
                 Position: new Vector2(0, ScreenHeightMiddle + txtHM * 16),
                 Width: txtW,
                 Height: txtH,
-                Text: "Back");
+                Text: "Back",
+                BackColor: MainMenu.ButtonBackColor);
 
             AddLabel(
                 Position: new Vector2(ScreenWidthMiddle - txtWM, ScreenHeightMiddle + txtHM),
