@@ -114,19 +114,16 @@ namespace Mentula.Server
             for (int i = 0; i < value.Length; i++) msg.Write(value[i]);
         }
 
-        public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, int length, long id)
+        public static unsafe void Write(this NetBuffer msg, ref KeyValuePair<long, Creature>[] players, long id)
         {
-            msg.Write((ushort)(length - 1));
+            msg.Write((ushort)(players.Length - 1));
 
-            if (length > 0)
+            for (int i = 0; i < players.Length; i++)
             {
-                for (int i = 0; i < length; i++)
-                {
-                    KeyValuePair<long, Creature> cur = players[i];
-                    if (cur.Key == id) continue;
+                KeyValuePair<long, Creature> cur = players[i];
+                if (cur.Key == id) continue;
 
-                    msg.Write(cur.Value);
-                }
+                msg.Write(cur.Value);
             }
         }
     }

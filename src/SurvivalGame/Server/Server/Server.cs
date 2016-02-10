@@ -222,8 +222,10 @@ namespace Mentula.Server
                     NOM nom = server.CreateMessage();
 
                     nom.Write((byte)NDT.Update);
-                    nom.Write(ref logic.Players, logic.Index, cur.Key);
-                    nom.Write(logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+
+                    NPC[] npcs = logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos);
+                    KeyValuePair<long, Creature>[] creatures = logic.Players.Where(p => p.Value != null).Concat(npcs.Select(n => new KeyValuePair<long, Creature>(0, n))).ToArray();
+                    nom.Write(ref creatures, cur.Key);
 
                     if (logic.DeadUpdate)
                     {

@@ -114,7 +114,7 @@ namespace Mentula.Client
                                 break;
                             case (NDT.Update):
                                 prevMessage = gameTime.TotalGameTime;
-                                msg.ReadNPCUpdate(ref game.npcs, playerLength = msg.ReadNPCs(ref game.npcs));
+                                msg.ReadNPCUpdate(ref game.npcs);
                                 deads = new Creature[0];
                                 msg.ReadDeads(ref deads);
                                 if (deads.Length > 0) game.UpdateChunks(game.chunks, game.npcs, deads);
@@ -341,13 +341,13 @@ namespace Mentula.Client
             return length;
         }
 
-        public static void ReadNPCUpdate(this NetBuffer msg, ref Creature[] npcs, int index)
+        public static void ReadNPCUpdate(this NetBuffer msg, ref Creature[] npcs)
         {
             ushort length = msg.ReadUInt16();
 
-            if (index + length != npcs.Length) Array.Resize(ref npcs, length);
+            if (length != npcs.Length) Array.Resize(ref npcs, length);
 
-            for (int i = index; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 npcs[i] = msg.ReadCreature();
             }
