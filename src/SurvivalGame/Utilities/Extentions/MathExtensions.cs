@@ -101,14 +101,13 @@ namespace Mentula.Utilities.MathExtensions
             return (int)(math.Ceiling((float)N / Base) * Base);
         }
 
-        public static ulong ApplyPercentage(ulong value, ulong percentage)
+        public static byte ApplyPercentage(long value, ulong percentage)
         {
-            long lV = (long)value;
             float mltp = percentage / 100f;
-            long result = (long)(lV * mltp);
+            long result = (long)(value / mltp);
 
             if (result < 0) return 0;
-            return (ulong)result;
+            return (byte)result;
         }
 
         public static int ToPercentage(int value, int max)
@@ -180,6 +179,11 @@ namespace Mentula.Utilities.MathExtensions
             {
                 collection[i] = temp[i];
             }
+        }
+
+        public static Color ApplyAlpha(this Color c, byte a)
+        {
+            return new Color(c.R, c.G, c.B, a);
         }
     }
 }

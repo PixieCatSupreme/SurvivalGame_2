@@ -47,6 +47,7 @@
 			[Id: 501]
 			[Name: "Tree_Stump"]
 		}
+		[Stone: 502]
 	}
 
 	[Creatures]
@@ -64,5 +65,7 @@
 	{
 		[Crosshair: 9998]
 		[DirectionArrow: 9999]
+		[MainBackground: 10000]
+		[PlayBackground: 10001]
 	}
 }

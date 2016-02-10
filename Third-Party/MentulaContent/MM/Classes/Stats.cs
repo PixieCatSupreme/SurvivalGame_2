@@ -18,7 +18,7 @@
             Perception = n;
         }
 
-        internal Stats(short strength, short intelect, short endurance, short agility, short perception)
+        public Stats(short strength, short intelect, short endurance, short agility, short perception)
         {
             Strength = strength;
             Intelect = intelect;

@@ -60,6 +60,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Engine">
@@ -89,14 +90,12 @@
     <Compile Include="Chunk.cs" />
     <Compile Include="ClientNetworking.cs" />
     <Compile Include="Destructable.cs" />
-    <Compile Include="Graphics\FastGraphics.cs" />
     <Compile Include="Graphics\FPS.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Menus\GuiMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\MultiplayerMenu.cs" />
     <Compile Include="Menus\SingleplayerMenu.cs" />
-    <Compile Include="NPC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainGame.cs" />

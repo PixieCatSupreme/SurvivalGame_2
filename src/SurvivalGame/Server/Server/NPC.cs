@@ -1,5 +1,4 @@
-﻿//#define YOU_SPIN_ME_RIGHT_ROUND_BABY
-
+﻿//#define ZILTOID
 using Mentula.Utilities;
 using Microsoft.Xna.Framework;
 using Resc = Mentula.Utilities.Resources.Res;
@@ -8,123 +7,89 @@ using Mentula.Engine.Core;
 using System;
 using System.Collections.Generic;
 using Mentula.Content;
+using static Mentula.Utilities.Resources.Res;
 
 namespace Mentula.Server
 {
-    public class NPC
+    public class NPC : Creature
     {
-        public Creature creature;
         private IntVector2[] path;
+        private int moveI;
+
+        public NPC(Creature c)
+            : base(c)
+        {
+            moveI = 0;
+#if ZILTOID
+            path = new IntVector2[4];
+            path[0] = new IntVector2(-10, -10);
+            path[1] = new IntVector2(0, -10);
+            path[2] = new IntVector2(-10, 0);
+            path[3] = new IntVector2(0, 0);
+#endif
+        }
 
         public void WalkPath(float deltaTime)
         {
-            Vector2 pos = creature.Pos + creature.ChunkPos * Resc.ChunkSize;
-            float movedist = 1 * deltaTime;
-
-            while (movedist > 0)
+            if (path != null)
             {
-                float dist = 0;
-                IntVector2 target = new IntVector2();
-                bool foundpath = false;
-
-                for (int i = 0; i < path.Length - 1; i++)
+                float speed = deltaTime * 10;
+                while (speed > 0 && moveI < path.Length)
                 {
-                    dist = Vector2.Distance(pos, path[i + 1]);
-                    float dist2 = Vector2.Distance(path[i], path[i + 1]);
-                    if (dist <= dist2)
+                    Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
+                    float dist = Vector2.Distance(pos, path[moveI]);
+                    Vector2 rot = path[moveI] - pos;
+                    Rotation = MathEX.VectorToRadians(rot);
+                    if (dist < speed)
                     {
-                        target = path[i + 1];
-                        foundpath = true;
-                        break;
+                        Pos += rot;
+                        speed -= dist;
+                        moveI++;
                     }
-                }
-
-                if (foundpath)
-                {
-                    if (dist > movedist)
-                    {
-                        Vector2 mpos = target - pos;
-                        mpos.Normalize();
-                        mpos *= movedist;
-                        creature.Pos += mpos;
-                        movedist = 0;
-                    }
-
                     else
                     {
-                        Vector2 mpos = target - pos;
-                        float mdist = mpos.Length();
-                        creature.Pos += mpos;
-                        movedist -= mdist;
+                        Pos += (rot / dist * speed);
+                        speed = 0;
                     }
                 }
-
-                else
-                {
-                    break;
-                }
+                FormatPos();
             }
         }
 
         public void GeneratePath(Creature target, List<Chunk> chunks)
         {
-            int csize = Resc.ChunkSize;
-            int cRange = 1;
-            int tRange = 5;
-
-            List<Chunk> c = new List<Chunk>();
-            int xmin = Math.Min(target.ChunkPos.X, creature.ChunkPos.X) - cRange;
-            int xmax = Math.Max(target.ChunkPos.X, creature.ChunkPos.X) + cRange;
-            int ymin = Math.Min(target.ChunkPos.Y, creature.ChunkPos.Y) - cRange;
-            int ymax = Math.Max(target.ChunkPos.Y, creature.ChunkPos.Y) + cRange;
-
-            for (int i = 0; i < chunks.Count; i++)
+            Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
+            Vector2 targetPos = new Vector2(target.Pos.X + target.ChunkPos.X * ChunkSize, target.Pos.Y + target.ChunkPos.Y * ChunkSize);
+            bool inRange = true;
+            bool diff = true;
+            if (Vector2.Distance(pos, targetPos) > 64)
             {
-                if (chunks[i].ChunkPos.X <= xmax && chunks[i].ChunkPos.X >= xmin && chunks[i].ChunkPos.Y <= ymax && chunks[i].ChunkPos.Y >= ymin)
+                inRange = false;
+            }
+            if (path != null)
+            {
+                if (Vector2.Distance(path[path.Length - 1], targetPos) < 1)
                 {
-                    c.Add(chunks[i]);
+                    diff = false;
                 }
             }
-
-            IntVector2 startpos = new IntVector2(creature.Pos.X, creature.Pos.Y);
-            IntVector2 endpos = new IntVector2(target.Pos.X, target.Pos.Y);
-            AStar.Map m = new AStar.Map(startpos, endpos);
-
-            xmin = xmin * csize - tRange;
-            xmax = xmax * csize + tRange;
-            ymin = ymin * csize - tRange;
-            ymax = ymax * csize + tRange;
-
-            for (int i = 0; i < c.Count; i++)
+            if (inRange && diff)
             {
-                for (int j = 0; j < c[i].Tiles.Length; j++)
+                int minX = Math.Min(ChunkPos.X, target.ChunkPos.X) - 1;
+                int maxX = Math.Max(ChunkPos.X, target.ChunkPos.X) + 1;
+                int minY = Math.Min(ChunkPos.Y, target.ChunkPos.Y) - 1;
+                int maxY = Math.Max(ChunkPos.Y, target.ChunkPos.Y) + 1;
+                List<Chunk> c = new List<Chunk>();
+                for (int i = 0; i < chunks.Count; i++)
                 {
-                    int xt = c[i].ChunkPos.X * csize + c[i].Tiles[j].Pos.X;
-                    int yt = c[i].ChunkPos.Y * csize + c[i].Tiles[j].Pos.Y;
-                    if (xt > xmin && xt < xmax && yt > ymin && yt < ymax)
+                    if (chunks[i].ChunkPos.X >= minX && chunks[i].ChunkPos.X <= maxX && chunks[i].ChunkPos.Y >= minY && chunks[i].ChunkPos.Y <= maxY)
                     {
-                        IntVector2 n = new IntVector2(xt, yt);
-                        bool ispatheable = true;
-                        for (int k = 0; k < c[i].Destructibles.Count; k++)
-                        {
-                            int xd = (int)c[i].Destructibles[k].Pos.X + c[i].Destructibles[k].ChunkPos.X * csize;
-                            int yd = (int)c[i].Destructibles[k].Pos.Y + c[i].Destructibles[k].ChunkPos.Y * csize;
-                            if (xt == xd && yt == yd)
-                            {
-                                ispatheable = false;
-                            }
-                        }
-                        m.AddNode(n, 10, ispatheable);
+                        c.Add(chunks[i]);
                     }
                 }
+
             }
-            path = AStar.Route4(ref m);
         }
 
-
-        public static implicit operator NPC(Creature c)
-        {
-            return new NPC() { creature = c };
-        }
     }
 }

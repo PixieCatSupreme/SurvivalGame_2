@@ -2,10 +2,8 @@
 using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System.Linq;
 using System.Collections.Generic;
-using System;
-using Mentula.Utilities.MathExtensions;
+using System.Linq;
 
 namespace Mentula.Content
 {
@@ -56,6 +54,9 @@ namespace Mentula.Content
             DefaultSystemsVal = CalcSystems();
             equipment = copy.equipment;
             inventory = copy.inventory;
+            Pos = copy.Pos;
+            ChunkPos = copy.ChunkPos;
+            Rotation = copy.Rotation;
         }
 
         public Tag[] CalcSystems()
@@ -75,8 +76,10 @@ namespace Mentula.Content
             return IsBio ? Systems.FirstIsFalse(v => v > 0, 0, 6, 7, 8, 9) : Systems.FirstIsFalse(0, v => v > 0);
         }
 
-        public byte GetHealth()
+        new public byte GetHealth()
         {
+            CalcSystemsWithDur();
+
             if (!CalcIsAlive())
             {
                 return 0;
@@ -88,7 +91,7 @@ namespace Mentula.Content
             }
             for (int i = 0; i < Systems.Length; i++)
             {
-                float h = (float)Systems[i].Value / (float)DefaultSystemsVal[i].Value;
+                float h = Systems[i].Value / (float)DefaultSystemsVal[i].Value;
                 health *= h;
             }
             return (byte)health;
