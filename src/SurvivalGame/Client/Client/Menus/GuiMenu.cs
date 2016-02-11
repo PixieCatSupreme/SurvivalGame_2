@@ -19,6 +19,7 @@ namespace Mentula.Client.Menus
     {
         private MainGame MGame { get { return (MainGame)Game; } }
         private const string CORPSE_PREFIX = "dd_";
+        private bool chatResized;
 
         public GuiMenu(MainGame game)
             : base(game)
@@ -65,20 +66,61 @@ namespace Mentula.Client.Menus
                 Multiline: true,
                 BackColor: Color.WhiteSmoke.ApplyAlpha(A));
 
-            Label chat = AddLabel(
+            Label lblChat = AddLabel(
                 Name: "Chat",
                 Position: new Vector2(health.Position.X + health.Width, y),
                 Width: ScreenWidth - (int)(health.Position.X + health.Width),
                 Height: guiH - 25,
                 BackColor: Color.Thistle.ApplyAlpha(A));
 
+            Slider sldChat = AddSlider(
+                Name: "Slider",
+                Position: new Vector2(lblChat.Position.X + lblChat.Width, y),
+                Width: lblChat.Height,
+                Rotation: 1.57f,
+                Enabled: false,
+                Visible: false);
+
             input.TextChanged += (sender, args) =>
             {
                 if (args.Length > 0 && args[args.Length - 1] == '\n')
                 {
-                    if (args.Length > 1) chat.Text += input.Text;
+                    if (args.Length > 1) lblChat.Text += input.Text;
                     input.Text = string.Empty;
                     input.Focused = false;
+                }
+            };
+
+            int chatMaxLines = (int)(lblChat.Height / font.MeasureString("a").Y);
+            lblChat.TextChanged += (sender, args) =>
+            {
+                int lines = lblChat.GetLineCount() - 1;
+                if (lines > chatMaxLines)
+                {
+                    if (!chatResized)
+                    {
+                        chatResized = true;
+                        lblChat.Width -= sldChat.Height;
+                        sldChat.Show();
+                    }
+
+                    int newSelect = lines - chatMaxLines;
+                    sldChat.MaximumValue = newSelect;
+                    if (lblChat.LineStart == newSelect - 1) sldChat.Value = newSelect;
+                }
+            };
+
+            sldChat.ValueChanged += (sender, args) =>
+            {
+                lblChat.LineStart = args;
+                if (args == sldChat.MaximumValue)
+                {
+                    sldChat.SlidBarDimentions = new Rectangle(
+                        sldChat.Width - sldChat.SlidBarDimentions.Width,
+                        sldChat.SlidBarDimentions.Y,
+                        sldChat.SlidBarDimentions.Width,
+                        sldChat.SlidBarDimentions.Height);
+                    sldChat.Refresh();
                 }
             };
 

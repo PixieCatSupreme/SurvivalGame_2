@@ -109,7 +109,7 @@ namespace Mentula.Client
             SpriteFont nameFont = fonts["NameFont"];
 
             GraphicsDevice.Clear(Color.LimeGreen);
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
             for (int i = 0; i < game.chunks.Length; i++)
             {

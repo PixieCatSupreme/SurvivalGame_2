@@ -218,7 +218,7 @@ namespace Mentula.Server
                 for (int i = 0; i < server.Connections.Count; i++)
                 {
                     NetConnection conn = server.Connections[i];
-                    KeyValuePair<long, Creature> cur = logic.Players.First(p => p.Key == conn.RemoteUniqueIdentifier);
+                    KeyValuePair<long, Creature> cur = logic.Players.FirstOrDefault(p => p.Key == conn.RemoteUniqueIdentifier);
                     NOM nom = server.CreateMessage();
 
                     nom.Write((byte)NDT.Update);
@@ -229,7 +229,6 @@ namespace Mentula.Server
 
                     if (logic.DeadUpdate)
                     {
-                        logic.DeadUpdate = false;
                         nom.WriteDead(logic.Map.GetDeadNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
                     }
                     else nom.Write(0);
@@ -237,6 +236,7 @@ namespace Mentula.Server
                     server.SendMessage(nom, conn, NetDeliveryMethod.ReliableOrdered);
                 }
 
+                if (logic.DeadUpdate) logic.DeadUpdate = false;
                 timeDiff = 0;
             }
 
