@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AStar.cs" />
+    <Compile Include="ChatServer.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="Content\Resources_Actors.cs" />
     <Compile Include="Content\Resources_Materials.cs" />

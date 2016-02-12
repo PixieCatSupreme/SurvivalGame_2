@@ -9,12 +9,10 @@ using Mentula.Utilities.Udp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using System.Net;
 using NIM = Lidgren.Network.NetIncomingMessage;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
-using NPConfig = Lidgren.Network.NetPeerConfiguration;
 
 namespace Mentula.Client
 {
@@ -22,9 +20,9 @@ namespace Mentula.Client
     {
         public NetPeerStatus Status { get { return client.Status; } }
         public NetConnectionStatus NetStatus { get { return client.ConnectionStatus; } }
+        public IPEndPoint EndPnt { get { return client.ServerConnection.RemoteEndPoint; } }
 
         private float timeDiff;
-        private ushort playerLength;
         private TimeSpan prevAttack;
         private TimeSpan prevMessage;
         private MainGame game;
@@ -45,7 +43,7 @@ namespace Mentula.Client
         {
             this.game = game;
 
-            NPConfig config = new NPConfig(Res.AppName);
+            NetPeerConfiguration config = new NetPeerConfiguration(Res.AppName);
             config.EnableMessageType(NIMT.DiscoveryResponse);
             client = new NetClient(config);
         }
@@ -83,6 +81,7 @@ namespace Mentula.Client
                             if (singleplayer) game.SetState(GameState.SingleplayerMenu);
                             else game.SetState(GameState.MultiplayerMenu);
                         }
+                        game.gui.AddChatLine("Local", Res.AppName, status.ToString() + '\n');
                         break;
                     case (NIMT.Data):
                         NDT type = (NDT)msg.ReadByte();
@@ -121,6 +120,12 @@ namespace Mentula.Client
 
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs, ref game.deads);
                                 break;
+                            case (NDT.Chat):
+                                string zone = msg.ReadString();
+                                string name = msg.ReadString();
+                                string text = msg.ReadString();
+                                game.gui.AddChatLine(zone, name, text);
+                                break;
                         }
                         break;
                 }
@@ -153,11 +158,20 @@ namespace Mentula.Client
             base.Update(gameTime);
         }
 
+        public void SendMsg(string zone, string msg)
+        {
+            NOM nom = client.CreateMessage();
+            nom.Write((byte)NDT.Chat);
+            nom.Write(zone);
+            nom.Write(msg);
+            client.SendMessage(nom, NetDeliveryMethod.Unreliable);
+        }
+
         public void LocalConnect()
         {
             if ((state & 0x1) == 0)
             {
-                client.DiscoverKnownPeer("localhost", Ips.PORT);
+                client.DiscoverKnownPeer("localhost", Ips.GAMEPORT);
                 state |= 0x1;
                 singleplayer = true;
             }
@@ -167,7 +181,7 @@ namespace Mentula.Client
         {
             if ((state & 0x1) == 0)
             {
-                IPEndPoint end = new IPEndPoint(address, Ips.PORT);
+                IPEndPoint end = new IPEndPoint(address, Ips.GAMEPORT);
                 client.DiscoverKnownPeer(end);
                 state |= 0x1;
                 singleplayer = false;

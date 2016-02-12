@@ -7,11 +7,6 @@ using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LABEL = System.Collections.Generic.KeyValuePair<string, Microsoft.Xna.Framework.Color?>;
 
 namespace Mentula.Client.Menus
 {
@@ -64,14 +59,17 @@ namespace Mentula.Client.Menus
                 Width: ScreenWidth - (int)(health.Position.X + health.Width),
                 Height: 25,
                 Multiline: true,
-                BackColor: Color.WhiteSmoke.ApplyAlpha(A));
+                BackColor: Color.Cornsilk.ApplyAlpha(A),
+                ForeColor: Color.Crimson,
+                BorderStyle: BorderStyle.FixedSingle);
 
             Label lblChat = AddLabel(
                 Name: "Chat",
                 Position: new Vector2(health.Position.X + health.Width, y),
                 Width: ScreenWidth - (int)(health.Position.X + health.Width),
                 Height: guiH - 25,
-                BackColor: Color.Thistle.ApplyAlpha(A));
+                BackColor: Color.Cornsilk.ApplyAlpha(A),
+                ForeColor: Color.Crimson);
 
             Slider sldChat = AddSlider(
                 Name: "Slider",
@@ -85,11 +83,17 @@ namespace Mentula.Client.Menus
             {
                 if (args.Length > 0 && args[args.Length - 1] == '\n')
                 {
-                    if (args.Length > 1) lblChat.Text += input.Text;
+                    if (args.Length > 1)
+                    {
+                        AddChatLine("Local", MGame.hero.Name, input.Text);
+                        MGame.networking.SendMsg("Local", input.Text);
+                    }
                     input.Text = string.Empty;
                     input.Focused = false;
                 }
             };
+
+            input.Refresh();
 
             int chatMaxLines = (int)(lblChat.Height / font.MeasureString("a").Y);
             lblChat.TextChanged += (sender, args) =>
@@ -168,6 +172,31 @@ namespace Mentula.Client.Menus
         {
             base.Draw(gameTime);
             MGame.vGraphics.DrawMouse();
+        }
+
+        public void AddChatLine(string zone, string sender, string msg)
+        {
+            string idStr = $"[{zone}][{sender}]: ";
+            string fullMsg = $"{idStr}{msg}";
+            int width = (int)font.MeasureString(fullMsg).X;
+
+            Label chat = FindControl<Label>("Chat");
+            if (width > chat.Width)
+            {
+                int idStrLen = (int)font.MeasureString(idStr).X;
+                float charLen = font.MeasureString("a").X;
+                int charCount = (int)((chat.Width - idStrLen) / charLen);
+
+                int lines = (int)Math.Ceiling(msg.Length / (float)charCount);
+                for (int i = 0; i < lines; i++)
+                {
+                    string line = idStr;
+                    line += msg.Substring(i * charCount, i != lines - 1 ? charCount : msg.Length - i * charCount) + '\n';
+
+                    chat.Text += line;
+                }
+            }
+            else chat.Text += fullMsg;
         }
 
         public void CreateDeathDowns(Creature[] corpses)

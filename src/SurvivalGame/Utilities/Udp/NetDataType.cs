@@ -6,6 +6,7 @@
         InitialChunkRequest,
         ChunkRequest,
         Update,
-        Attack
+        Attack,
+        Chat
     }
 }
