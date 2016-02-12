@@ -1,39 +1,111 @@
-﻿//#define ZILTOID
-using Mentula.Utilities;
+﻿using Mentula.Utilities;
 using Microsoft.Xna.Framework;
-using Resc = Mentula.Utilities.Resources.Res;
 using Mentula.Utilities.MathExtensions;
 using Mentula.Engine.Core;
 using System;
 using System.Collections.Generic;
 using Mentula.Content;
 using static Mentula.Utilities.Resources.Res;
+using System.Threading;
 
 namespace Mentula.Server
 {
     public class NPC : Creature
     {
+        public Queue<KeyValuePair<NPCTasks, object[]>> Tasks;
+
+        private const int ClockCap = 32;
+        private int NPCClock;
         private IntVector2[] path;
         private int moveI;
+        private Thread thread;
+        private static List<Chunk> chunks = new List<Chunk>();
+        private Creature target;
+        private bool runThread;
+
+        public static void SetChunkRef(ref List<Chunk> cl)
+        {
+            chunks = cl;
+        }
 
         public NPC(Creature c)
             : base(c)
         {
+            Tasks = new Queue<KeyValuePair<NPCTasks, object[]>>();
+            NPCClock = RNG.Next(ClockCap);
             moveI = 0;
-#if ZILTOID
-            path = new IntVector2[4];
-            path[0] = new IntVector2(-10, -10);
-            path[1] = new IntVector2(0, -10);
-            path[2] = new IntVector2(-10, 0);
-            path[3] = new IntVector2(0, 0);
-#endif
+            InitThread();
+            Load();
         }
 
-        public void WalkPath(float deltaTime)
+        public void Load()
+        {
+            if (thread.ThreadState == ThreadState.Running) throw new InvalidOperationException();
+            if (thread.ThreadState != ThreadState.Unstarted) InitThread();
+            runThread = true;
+            thread.Start();
+        }
+
+        public void UnLoad()
+        {
+            runThread = false;
+        }
+
+        public void Update(float Delta, Creature t)
+        {
+            if (NPCClock >= ClockCap)
+            {
+                NPCClock = 0;
+                target = t;
+                Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.CalcPath, new object[0]));
+            }
+            else
+            {
+                NPCClock++;
+            }
+
+            Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.Walk, new object[1] { Delta }));
+        }
+
+        private void InitThread()
+        {
+            thread = new Thread(RunThread);
+        }
+
+        private void RunThread()
+        {
+            while (runThread)
+            {
+                if (Tasks.Count > 0)
+                {
+                    TickThread();
+                }
+                else
+                {
+                    Thread.Sleep(100);
+                }
+            }
+        }
+
+        private void TickThread()
+        {
+            KeyValuePair<NPCTasks, object[]> a = Tasks.Dequeue();
+            switch (a.Key)
+            {
+                case NPCTasks.Walk:
+                    WalkPath(a.Value);
+                    break;
+                case NPCTasks.CalcPath:
+                    GeneratePath();
+                    break;
+            }
+        }
+
+        private void WalkPath(object[] deltaTime)
         {
             if (path != null)
             {
-                float speed = deltaTime * 10;
+                float speed = Convert.ToSingle(deltaTime[0]) * 10;
                 while (speed > 0 && moveI < path.Length)
                 {
                     Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
@@ -56,7 +128,7 @@ namespace Mentula.Server
             }
         }
 
-        public void GeneratePath(Creature target, List<Chunk> chunks)
+        private void GeneratePath()
         {
             IntVector2 pos = new IntVector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
             IntVector2 targetPos = new IntVector2(target.Pos.X + target.ChunkPos.X * ChunkSize, target.Pos.Y + target.ChunkPos.Y * ChunkSize);
@@ -68,7 +140,7 @@ namespace Mentula.Server
             }
             if (path != null)
             {
-                if (path[path.Length - 1]== targetPos )
+                if (path[path.Length - 1] == targetPos)
                 {
                     diff = false;
                 }
@@ -99,24 +171,17 @@ namespace Mentula.Server
                     int dy = c[i].ChunkPos.Y * ChunkSize;
                     for (int j = 0; j < c[i].Destructibles.Count; j++)
                     {
-                        int dex= (int)c[i].Destructibles[j].Pos.X+dx;
-                        int dey  = (int)c[i].Destructibles[j].Pos.Y+dy;
-                        if (dx >= minTX && dx <= maxTY && dy >= minTY && dy <= maxTY)
-                        {
-                            pathing.AddNode(new IntVector2(dex, dey), 800000, false);
-                        }
+                        int dex = (int)c[i].Destructibles[j].Pos.X + dx;
+                        int dey = (int)c[i].Destructibles[j].Pos.Y + dy;
+                        pathing.AddNode(new IntVector2(dex, dey), 800000, false);
                     }
                 }
-                int xdiff = Math.Abs( minTX- maxTX );
-                int ydiff = Math.Abs(minTY- maxTY);
+                int xdiff = Math.Abs(minTX - maxTX);
+                int ydiff = Math.Abs(minTY - maxTY);
                 for (int i = 0; i < xdiff; i++)
                 {
                     for (int j = 0; j < ydiff; j++)
                     {
-                        if (minTX + i == 0&& minTY + j==0)
-                        {
-                            int o = 0;
-                        }
                         pathing.AddNode(new IntVector2(minTX + i, minTY + j));
                     }
                 }
@@ -129,5 +194,11 @@ namespace Mentula.Server
             }
         }
 
+    }
+
+    public enum NPCTasks
+    {
+        Walk,
+        CalcPath
     }
 }
