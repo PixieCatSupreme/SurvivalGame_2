@@ -18,7 +18,6 @@ using System.Windows.Forms;
 using Color = System.Drawing.Color;
 using NIMT = Lidgren.Network.NetIncomingMessageType;
 using NOM = Lidgren.Network.NetOutgoingMessage;
-using NPConf = Lidgren.Network.NetPeerConfiguration;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
 
@@ -32,6 +31,7 @@ namespace Mentula.Server
 
         private CPUUsage cpu;
         private NetServer server;
+        private ChatServer chat;
         private GameLogic logic;
         private float timeDiff;
 
@@ -72,13 +72,14 @@ namespace Mentula.Server
             players_Queue = new Dictionary<long, string>();
             cpu = new CPUUsage();
 
-            NPConf config = new NPConf(Res.AppName) { Port = Ips.PORT, EnableUPnP = true };
+            NetPeerConfiguration config = new NetPeerConfiguration(Res.AppName) { Port = Ips.GAMEPORT, EnableUPnP = true };
             config.EnableMessageType(NIMT.WarningMessage);
             config.EnableMessageType(NIMT.Error);
             config.EnableMessageType(NIMT.ErrorMessage);
             config.EnableMessageType(NIMT.DiscoveryRequest);
             config.EnableMessageType(NIMT.ConnectionApproval);
             server = new NetServer(config);
+            chat = new ChatServer(logic);
         }
 
         private unsafe void Server_Update(GameTime time)
@@ -201,6 +202,9 @@ namespace Mentula.Server
                                 case (NDT.Attack):
                                     logic.PlayerAttack(id);
                                     break;
+                                case (NDT.Chat):
+                                    chat.HandleMsg(msg);
+                                    break;
                             }
                         }
                         catch (Exception e)
@@ -211,6 +215,7 @@ namespace Mentula.Server
                 }
             }
 
+            chat.Tick(server);
             logic.Update(time.DeltaTime);
 
             if (timeDiff >= Res.FPS30 && logic.Index > 0)
@@ -218,16 +223,17 @@ namespace Mentula.Server
                 for (int i = 0; i < server.Connections.Count; i++)
                 {
                     NetConnection conn = server.Connections[i];
-                    KeyValuePair<long, Creature> cur = logic.Players.First(p => p.Key == conn.RemoteUniqueIdentifier);
+                    KeyValuePair<long, Creature> cur = logic.Players.FirstOrDefault(p => p.Key == conn.RemoteUniqueIdentifier);
                     NOM nom = server.CreateMessage();
 
                     nom.Write((byte)NDT.Update);
-                    nom.Write(ref logic.Players, logic.Index, cur.Key);
-                    nom.Write(logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
+
+                    NPC[] npcs = logic.Map.GetNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos);
+                    KeyValuePair<long, Creature>[] creatures = logic.Players.Where(p => p.Value != null).Concat(npcs.Select(n => new KeyValuePair<long, Creature>(0, n))).ToArray();
+                    nom.Write(ref creatures, cur.Key);
 
                     if (logic.DeadUpdate)
                     {
-                        logic.DeadUpdate = false;
                         nom.WriteDead(logic.Map.GetDeadNPC(logic.GetPlayer(conn.RemoteUniqueIdentifier).ChunkPos));
                     }
                     else nom.Write(0);
@@ -235,6 +241,7 @@ namespace Mentula.Server
                     server.SendMessage(nom, conn, NetDeliveryMethod.ReliableOrdered);
                 }
 
+                if (logic.DeadUpdate) logic.DeadUpdate = false;
                 timeDiff = 0;
             }
 

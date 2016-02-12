@@ -28,8 +28,7 @@ namespace Mentula.Client.Menus
             AddGuiItem(
                 Name: "Background",
                 BackgroundImage: MGame.vGraphics.textures[10001],
-                Enabled: false,
-                BackColor: MainMenu.ButtonBackColor);
+                Enabled: false);
 
             TextBox txtName = AddTextBox(
                 Position: new Vector2(ScreenWidthMiddle - txtWM, ScreenHeightMiddle - txtHM),

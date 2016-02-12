@@ -90,20 +90,23 @@ namespace Mentula.Client
             }
         }
 
-        public unsafe void Transform(ref Creature[] sourceArray, ref Vector2[] destinationArray)
+        public void Transform(ref Creature[] sourceArray, ref Vector2[] destinationArray)
         {
             int index = 0;
 
             for (int i = 0; i < sourceArray.Length; i++)
             {
                 IEntity actor = sourceArray[i];
-                Vector2 curr = Chunk.GetTotalPos(actor.ChunkPos, actor.Pos);
-
-                float x = (curr.X * _mv.A) + (curr.Y * _mv.B) + _mv.C;
-                float y = (curr.X * _mv.D) + (curr.Y * _mv.E) + _mv.F;
-
-                destinationArray[index++] = new Vector2(x, y);
+                destinationArray[index++] = Transform(ref actor);
             }
+        }
+
+        public Vector2 Transform(ref IEntity creature)
+        {
+            Vector2 cur = Chunk.GetTotalPos(creature.ChunkPos, creature.Pos);
+            float x = (cur.X * _mv.A) + (cur.Y * _mv.B) + _mv.C;
+            float y = (cur.X * _mv.D) + (cur.Y * _mv.E) + _mv.F;
+            return new Vector2(x, y);
         }
 
         private void UpdateMM()

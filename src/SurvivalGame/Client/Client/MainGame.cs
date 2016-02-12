@@ -250,6 +250,7 @@ namespace Mentula.Client
             }
 
             index = 0;
+            bool refreshDd = false;
 
             for (int i = 0; i < deads.Length && index < newDeads.Length; i++)
             {
@@ -258,7 +259,8 @@ namespace Mentula.Client
                 if (Math.Abs(cur.ChunkPos.X + hero.ChunkPos.X) > Res.Range_C ||
                     Math.Abs(cur.ChunkPos.Y + hero.ChunkPos.Y) > Res.Range_C)
                 {
-                    deads[i] = newNpcs[index++];
+                    deads[i] = newDeads[index++];
+                    refreshDd = true;
                 }
             }
 
@@ -269,9 +271,11 @@ namespace Mentula.Client
                 for (; index < newDeads.Length; i++)
                 {
                     deads[i] = newDeads[index++];
+                    refreshDd = true;
                 }
             }
 
+            if (refreshDd) gui.CreateDeathDowns(deads);
             vGraphics.UpdateChunks(ref chunks, ref npcs, ref deads);
         }
 

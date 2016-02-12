@@ -4,7 +4,8 @@ namespace Mentula.Utilities.Resources
 {
     public static class Ips
     {
-        public const int PORT = 7777;
+        public const int GAMEPORT = 7777;
+        public const int CHATPORT = 7778;
 
         public static IPAddress Nico;
         public static IPAddress Joëll;

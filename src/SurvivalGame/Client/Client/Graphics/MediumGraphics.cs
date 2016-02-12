@@ -109,7 +109,7 @@ namespace Mentula.Client
             SpriteFont nameFont = fonts["NameFont"];
 
             GraphicsDevice.Clear(Color.LimeGreen);
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
             for (int i = 0; i < game.chunks.Length; i++)
             {
@@ -128,7 +128,7 @@ namespace Mentula.Client
                 Creature actor = game.npcs[i];
 
                 DrawBatch(textures[actor.TextureId], pos, Rot(actor.Rotation));
-                DrawString(nameFont, actor.Name + " | " + actor.Durability, pos + nameOffset, Color.Red);
+                DrawString(nameFont, $"{actor.Name} ({actor.Durability}%)", pos + nameOffset, Color.Red);
             }
 
             for (int i = 0; i < game.deads.Length; i++)
@@ -137,6 +137,7 @@ namespace Mentula.Client
                 Creature corpse = game.deads[i];
 
                 DrawBatch(textures[502], pos, Rot(corpse.Rotation));
+                DrawString(nameFont, $"{corpse.Name} (Corpse)", pos + nameOffset, Color.Red);
             }
 
             Vector2 heroPos = new Vector2(Camera.Offset.X, Camera.Offset.Y);
