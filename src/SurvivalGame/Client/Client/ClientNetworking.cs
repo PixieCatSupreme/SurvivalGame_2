@@ -81,7 +81,6 @@ namespace Mentula.Client
                             if (singleplayer) game.SetState(GameState.SingleplayerMenu);
                             else game.SetState(GameState.MultiplayerMenu);
                         }
-                        game.gui.AddChatLine("Local", Res.AppName, status.ToString() + '\n');
                         break;
                     case (NIMT.Data):
                         NDT type = (NDT)msg.ReadByte();
