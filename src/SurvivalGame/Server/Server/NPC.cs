@@ -184,6 +184,14 @@ namespace Mentula.Server
                 int minTY = Math.Min(pos.Y, targetPos.Y) - ExtraTileRange;
                 int maxTY = Math.Max(pos.Y, targetPos.Y) + ExtraTileRange;
 
+                if (Evade)
+                {
+                    minTX -= ExtraTileRange;
+                    maxTX += ExtraTileRange;
+                    minTY -= ExtraTileRange;
+                    maxTY += ExtraTileRange;
+                }
+
                 List<Chunk> c = new List<Chunk>();
                 for (int i = 0; i < map.LoadedChunks.Count; i++)
                 {
