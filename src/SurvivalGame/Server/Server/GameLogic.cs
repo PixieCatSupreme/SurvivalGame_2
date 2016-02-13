@@ -21,7 +21,7 @@ namespace Mentula.Server
         public GameLogic(Server server)
         {
             Map = new Map();
-            NPC.SetChunkRef(ref Map.LoadedChunks);
+            NPC.SetChunkRef(ref Map);
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             content = new Resources();
             Index = 0;

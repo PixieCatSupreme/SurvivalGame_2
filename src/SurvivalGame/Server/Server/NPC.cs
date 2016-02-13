@@ -19,13 +19,13 @@ namespace Mentula.Server
         private IntVector2[] path;
         private int moveI;
         private Thread thread;
-        private static List<Chunk> chunks = new List<Chunk>();
+        private static Map map;
         private Creature target;
         private bool runThread;
 
-        public static void SetChunkRef(ref List<Chunk> cl)
+        public static void SetChunkRef(ref Map m)
         {
-            chunks = cl;
+            map = m;
         }
 
         public NPC(Creature c)
@@ -63,8 +63,7 @@ namespace Mentula.Server
             {
                 NPCClock++;
             }
-
-            Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.Walk, new object[1] { Delta }));
+            WalkPath(Delta);
         }
 
         private void InitThread()
@@ -92,20 +91,17 @@ namespace Mentula.Server
             KeyValuePair<NPCTasks, object[]> a = Tasks.Dequeue();
             switch (a.Key)
             {
-                case NPCTasks.Walk:
-                    WalkPath(a.Value);
-                    break;
                 case NPCTasks.CalcPath:
                     GeneratePath();
                     break;
             }
         }
 
-        private void WalkPath(object[] deltaTime)
+        private void WalkPath(float deltaTime)
         {
             if (path != null)
             {
-                float speed = Convert.ToSingle(deltaTime[0]) * 10;
+                float speed = deltaTime * 10;
                 while (speed > 0 && moveI < path.Length)
                 {
                     Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
@@ -157,11 +153,16 @@ namespace Mentula.Server
                 int maxTY = Math.Max(pos.Y, targetPos.Y) + 5;
 
                 List<Chunk> c = new List<Chunk>();
-                for (int i = 0; i < chunks.Count; i++)
+                for (int i = 0; i < map.LoadedChunks.Count; i++)
                 {
-                    if (chunks[i].ChunkPos.X >= minX && chunks[i].ChunkPos.X <= maxX && chunks[i].ChunkPos.Y >= minY && chunks[i].ChunkPos.Y <= maxY)
+                    if (
+                        map.LoadedChunks[i].ChunkPos.X >= minX &&
+                        map.LoadedChunks[i].ChunkPos.X <= maxX &&
+                        map.LoadedChunks[i].ChunkPos.Y >= minY &&
+                        map.LoadedChunks[i].ChunkPos.Y <= maxY
+                        )
                     {
-                        c.Add(chunks[i]);
+                        c.Add(map.LoadedChunks[i]);
                     }
                 }
                 AStar.Map pathing = new AStar.Map(pos, targetPos);
@@ -176,6 +177,15 @@ namespace Mentula.Server
                         pathing.AddNode(new IntVector2(dex, dey), 800000, false);
                     }
                 }
+                //for (int i = 0; i < map.LoadedNPCs.Count; i++)
+                //{
+                //    NPC n = map.LoadedNPCs[i];
+                //    IntVector2 posn = new IntVector2(n.Pos.X + n.ChunkPos.X * ChunkSize, n.Pos.Y + n.ChunkPos.Y * ChunkSize);
+                //    if (posn!=pos)
+                //    {
+                //        pathing.AddNode(posn, 800000, false);
+                //    }
+                //}
                 int xdiff = Math.Abs(minTX - maxTX);
                 int ydiff = Math.Abs(minTY - maxTY);
                 for (int i = 0; i < xdiff; i++)
@@ -198,7 +208,6 @@ namespace Mentula.Server
 
     public enum NPCTasks
     {
-        Walk,
         CalcPath
     }
 }
