@@ -3,6 +3,7 @@ using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Mentula.Server
 {
@@ -16,15 +17,14 @@ namespace Mentula.Server
 
         private Server server;
         private Resources content;
-        private int NPCClock;
 
         public GameLogic(Server server)
         {
             Map = new Map();
+            NPC.SetChunkRef(ref Map);
             Players = new KeyValuePair<long, Creature>[Res.MaxPlayers];
             content = new Resources();
             Index = 0;
-            NPCClock = 0;
             this.server = server;
         }
 
@@ -106,24 +106,12 @@ namespace Mentula.Server
             }
 
             Map.UnloadChunks(posses);
-            if (NPCClock == 64)
-            {
-                NPCClock = 0;
-            }
-            else
-            {
-                NPCClock++;
-            }
             if (Index > 0)
             {
-                for (int i = 0; i < Map.LoadedNPCs.Count; i += 64)
+                for (int i = 0; i < Map.LoadedNPCs.Count; i++)
                 {
-
+                    Map.LoadedNPCs[i].Update(delta, Players[0].Value);
                 }
-            }
-            for (int i = 0; i < Map.LoadedNPCs.Count; i++)
-            {
-                Map.LoadedNPCs[i].WalkPath(delta);
             }
         }
 

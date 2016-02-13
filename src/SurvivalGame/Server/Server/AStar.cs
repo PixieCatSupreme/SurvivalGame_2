@@ -33,7 +33,7 @@ namespace Mentula.Server
                     if (ajNodes[i].Key == map.Start)
                     {
                         endFound = true;
-                        break;
+                        goto END;
                     }
                 }
 
@@ -51,6 +51,7 @@ namespace Mentula.Server
                 toCheck = GetLowestF(ref open, ref map);
             }
 
+        END:
             if (!endFound) return map.Start;
             return toCheck;
         }
@@ -77,7 +78,7 @@ namespace Mentula.Server
                     if (ajNodes[i].Key == map.Start)
                     {
                         endFound = true;
-                        break;
+                        goto END;
                     }
                 }
 
@@ -96,6 +97,7 @@ namespace Mentula.Server
                 toCheck = GetLowestF(ref open, ref map);
             }
 
+        END:
             if (!endFound) return map.Start;
             return toCheck;
         }
@@ -103,11 +105,11 @@ namespace Mentula.Server
         public static IntVector2[] Route4(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
-            if (!map.Distanced) map.SetHeuristic();
+            if (!map.Distanced) map.SetHeuristic(true);
 
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
-            IntVector2 toCheck = map.Start;
+            IntVector2 toCheck = map.End;
             open.Add(toCheck);
 
             bool endFound = false;
@@ -122,7 +124,7 @@ namespace Mentula.Server
                     if (ajNodes[i].Key == map.Start)
                     {
                         endFound = true;
-                        break;
+                        goto END;
                     }
                 }
 
@@ -140,20 +142,21 @@ namespace Mentula.Server
                 toCheck = GetLowestF(ref open, ref map);
             }
 
+        END:
             if (!endFound) return new IntVector2[0];
 
-            map.GetNode(map.End).SetParent(toCheck, 1);
+            map.GetNode(map.Start).SetParent(toCheck, 1);
             return Recall(ref map);
         }
 
         public static IntVector2[] Route8(ref Map map)
         {
             if (!map.Fitted) map.FitLength();
-            if (!map.Distanced) map.SetHeuristic();
+            if (!map.Distanced) map.SetHeuristic(true);
 
             List<IntVector2> open = new List<IntVector2>();
             List<IntVector2> closed = new List<IntVector2>();
-            IntVector2 toCheck = map.Start;
+            IntVector2 toCheck = map.End;
             open.Add(toCheck);
 
             bool endFound = false;
@@ -162,13 +165,13 @@ namespace Mentula.Server
                 if (open.Contains(toCheck)) open.Remove(toCheck);
                 closed.Add(toCheck);
 
-                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes4(toCheck, ref map, ref closed);
+                KeyValuePair<IntVector2, Node>[] ajNodes = GetAjasonNodes8(toCheck, ref map, ref closed);
                 for (int i = 0; i < ajNodes.Length; i++)
                 {
                     if (ajNodes[i].Key == map.Start)
                     {
                         endFound = true;
-                        break;
+                        goto END;
                     }
                 }
 
@@ -187,25 +190,27 @@ namespace Mentula.Server
                 toCheck = GetLowestF(ref open, ref map);
             }
 
+        END:
             if (!endFound) return new IntVector2[0];
 
-            map.GetNode(map.End).SetParent(toCheck, GetMovement(map.End, toCheck));
+            map.GetNode(map.Start).SetParent(toCheck, GetMovement(map.Start, toCheck));
             return Recall(ref map);
         }
 
         private static IntVector2[] Recall(ref Map map)
         {
             List<IntVector2> result = new List<IntVector2>();
-            IntVector2 curKey = map.End;
+            IntVector2 curKey = map.Start;
             Node curNode = map.GetNode(curKey);
 
-            while (curNode.Parent != map.Start)
+            while (curNode.Parent != map.End)
             {
-                result.Add(curKey);
                 curKey = curNode.Parent;
+                result.Add(curKey);
                 curNode = map.GetNode(curKey);
             }
 
+            result.Add(curNode.Parent);
             return result.ToArray();
         }
 
@@ -427,7 +432,7 @@ namespace Mentula.Server
                 {
                     KeyValuePair<IntVector2, Node> cur = _Nodes[i];
 
-                    if (cur.Key == pos) return true;
+                    if (cur.Key == pos && cur.Value != null) return true;
                 }
 
                 return false;
