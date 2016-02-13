@@ -14,14 +14,21 @@ namespace Mentula.Server
     {
         public Queue<KeyValuePair<NPCTasks, object[]>> Tasks;
 
-        private const int ClockCap = 32;
+
+        private const int MaxDist = 24;
+        private const int ExtraTileRange = 5;
+        private const int ClockCap = 16;
+
         private int NPCClock;
         private IntVector2[] path;
         private int moveI;
         private Thread thread;
         private static Map map;
-        private Creature target;
         private bool runThread;
+        private IntVector2 spawnLoc;
+        private IntVector2 spawnLocT;
+        private IntVector2 spawnLocC;
+        private bool Evade;
 
         public static void SetChunkRef(ref Map m)
         {
@@ -34,6 +41,11 @@ namespace Mentula.Server
             Tasks = new Queue<KeyValuePair<NPCTasks, object[]>>();
             NPCClock = RNG.Next(ClockCap);
             moveI = 0;
+            spawnLoc = new IntVector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
+            spawnLocT = new IntVector2(Pos.X, Pos.Y);
+            spawnLocC = new IntVector2(ChunkPos.X, ChunkPos.Y);
+
+            Evade = false;
             InitThread();
             Load();
         }
@@ -53,11 +65,20 @@ namespace Mentula.Server
 
         public void Update(float Delta, Creature t)
         {
-            if (NPCClock >= ClockCap)
+            if (!Evade)
+            {
+                Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
+                if (Vector2.Distance(pos, spawnLoc) > MaxDist + ExtraTileRange)
+                {
+                    Evade = true;
+                    Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.CalcPath, new object[4] { spawnLocT.X, spawnLocC.X, spawnLocT.Y, spawnLocC.Y }));
+                }
+            }
+
+            if (NPCClock >= ClockCap && !Evade)
             {
                 NPCClock = 0;
-                target = t;
-                Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.CalcPath, new object[0]));
+                Tasks.Enqueue(new KeyValuePair<NPCTasks, object[]>(NPCTasks.CalcPath, new object[4] { t.Pos.X, t.ChunkPos.X, t.Pos.Y, t.ChunkPos.Y }));
             }
             else
             {
@@ -92,7 +113,7 @@ namespace Mentula.Server
             switch (a.Key)
             {
                 case NPCTasks.CalcPath:
-                    GeneratePath();
+                    GeneratePath(a.Value);
                     break;
             }
         }
@@ -101,7 +122,7 @@ namespace Mentula.Server
         {
             if (path != null)
             {
-                float speed = deltaTime * 10;
+                float speed = deltaTime * 8;
                 while (speed > 0 && moveI < path.Length)
                 {
                     Vector2 pos = new Vector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
@@ -121,36 +142,47 @@ namespace Mentula.Server
                     }
                 }
                 FormatPos();
+                if (moveI >= path.Length)
+                {
+                    Evade = false;
+                }
             }
         }
 
-        private void GeneratePath()
+        private void GeneratePath(object[] target)
         {
             IntVector2 pos = new IntVector2(Pos.X + ChunkPos.X * ChunkSize, Pos.Y + ChunkPos.Y * ChunkSize);
-            IntVector2 targetPos = new IntVector2(target.Pos.X + target.ChunkPos.X * ChunkSize, target.Pos.Y + target.ChunkPos.Y * ChunkSize);
+            IntVector2 targetPosc = new IntVector2(Convert.ToInt32(target[1]), Convert.ToInt32(target[3]));
+            IntVector2 targetPos = new IntVector2(Convert.ToInt32(target[0]) + targetPosc.X * ChunkSize, Convert.ToInt32(target[2]) + targetPosc.Y * ChunkSize);
             bool inRange = true;
             bool diff = true;
-            if (Vector2.Distance(pos, targetPos) > 32)
+            if (Vector2.Distance(pos, targetPos) > MaxDist)
             {
-                inRange = false;
+                if (!Evade)
+                {
+                    inRange = false;
+                }
             }
             if (path != null)
             {
-                if (path[path.Length - 1] == targetPos)
+                if (path.Length > 0)
                 {
-                    diff = false;
+                    if (path[path.Length - 1] == targetPos)
+                    {
+                        diff = false;
+                    }
                 }
             }
             if (inRange && diff)
             {
-                int minX = Math.Min(ChunkPos.X, target.ChunkPos.X) - 1;
-                int maxX = Math.Max(ChunkPos.X, target.ChunkPos.X) + 1;
-                int minY = Math.Min(ChunkPos.Y, target.ChunkPos.Y) - 1;
-                int maxY = Math.Max(ChunkPos.Y, target.ChunkPos.Y) + 1;
-                int minTX = Math.Min(pos.X, targetPos.X) - 5;
-                int maxTX = Math.Max(pos.X, targetPos.X) + 5;
-                int minTY = Math.Min(pos.Y, targetPos.Y) - 5;
-                int maxTY = Math.Max(pos.Y, targetPos.Y) + 5;
+                int minX = Math.Min(ChunkPos.X, targetPosc.X) - 1;
+                int maxX = Math.Max(ChunkPos.X, targetPosc.X) + 1;
+                int minY = Math.Min(ChunkPos.Y, targetPosc.Y) - 1;
+                int maxY = Math.Max(ChunkPos.Y, targetPosc.Y) + 1;
+                int minTX = Math.Min(pos.X, targetPos.X) - ExtraTileRange;
+                int maxTX = Math.Max(pos.X, targetPos.X) + ExtraTileRange;
+                int minTY = Math.Min(pos.Y, targetPos.Y) - ExtraTileRange;
+                int maxTY = Math.Max(pos.Y, targetPos.Y) + ExtraTileRange;
 
                 List<Chunk> c = new List<Chunk>();
                 for (int i = 0; i < map.LoadedChunks.Count; i++)
@@ -177,15 +209,6 @@ namespace Mentula.Server
                         pathing.AddNode(new IntVector2(dex, dey), 800000, false);
                     }
                 }
-                //for (int i = 0; i < map.LoadedNPCs.Count; i++)
-                //{
-                //    NPC n = map.LoadedNPCs[i];
-                //    IntVector2 posn = new IntVector2(n.Pos.X + n.ChunkPos.X * ChunkSize, n.Pos.Y + n.ChunkPos.Y * ChunkSize);
-                //    if (posn!=pos)
-                //    {
-                //        pathing.AddNode(posn, 800000, false);
-                //    }
-                //}
                 int xdiff = Math.Abs(minTX - maxTX);
                 int ydiff = Math.Abs(minTY - maxTY);
                 for (int i = 0; i < xdiff; i++)
@@ -196,11 +219,8 @@ namespace Mentula.Server
                     }
                 }
                 IntVector2[] p = AStar.Route8(ref pathing);
-                if (p.Length > 0)
-                {
-                    moveI = 0;
-                    path = p;
-                }
+                moveI = 0;
+                path = p;
             }
         }
 
