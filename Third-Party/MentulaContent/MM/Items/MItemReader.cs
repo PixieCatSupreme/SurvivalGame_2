@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Mentula.Content.MM
@@ -22,7 +23,7 @@ namespace Mentula.Content.MM
 
                 if (id == toFind)
                 {
-                    input.ReadUInt64();                     // Read byte count, only used for retro loading.
+                    input.BaseStream.Seek(sizeof(ulong), SeekOrigin.Current);
                     string name = input.ReadCString();
                     ulong volume = input.ReadUInt64();
 
@@ -76,7 +77,7 @@ namespace Mentula.Content.MM
                 else
                 {
                     ulong byteLength = input.ReadUInt64();
-                    input.BaseStream.Position += (long)byteLength;
+                    input.BaseStream.Seek((long)byteLength, SeekOrigin.Current);
                 }
             }
 

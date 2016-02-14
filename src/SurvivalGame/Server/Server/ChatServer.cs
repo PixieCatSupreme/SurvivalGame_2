@@ -19,6 +19,7 @@ namespace Mentula.Server
 
         public void AddMessage(string msg)
         {
+            if (msg[msg.Length - 1] != '\n') msg += '\n';
             newMessages.Enqueue(new MESSAGE(new ID("Global", 0), msg));
         }
 
