@@ -133,7 +133,7 @@ namespace Mentula.Content.MM
 
         public ulong GetByteCount()
         {
-            ulong result = (ulong)Encoding.ASCII.GetBytes(name).LongLength;          // Name Byte count
+            ulong result = (ulong)Encoding.ASCII.GetBytes(name).LongLength;         // Name Byte count
             result += sizeof(int);                                                  // Name Length specifier
 
             result += sizeof(byte);                                                 // Tag length (octet)       

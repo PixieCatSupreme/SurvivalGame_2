@@ -81,7 +81,6 @@ namespace Mentula.Client
                             if (singleplayer) game.SetState(GameState.SingleplayerMenu);
                             else game.SetState(GameState.MultiplayerMenu);
                         }
-                        game.gui.AddChatLine("Local", Res.AppName, status.ToString() + '\n');
                         break;
                     case (NIMT.Data):
                         NDT type = (NDT)msg.ReadByte();
@@ -97,25 +96,22 @@ namespace Mentula.Client
                                 prevMessage = gameTime.TotalGameTime;
                                 game.hero = msg.ReadCreature();
                                 game.chunks = msg.ReadChunks();
-                                msg.ReadNPCs(ref game.npcs);
-                                msg.ReadDeads(ref game.deads);
+                                game.npcs = msg.ReadNPCs();
+                                game.deads = msg.ReadDeads();
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs, ref game.deads);
                                 game.SetState(GameState.Game);
                                 break;
                             case (NDT.ChunkRequest):
                                 prevMessage = gameTime.TotalGameTime;
                                 Chunk[] chunks = msg.ReadChunks();
-                                Creature[] npcs = new Creature[0];
-                                msg.ReadNPCs(ref npcs);
-                                Creature[] deads = new Creature[0];
-                                msg.ReadDeads(ref deads);
+                                Creature[] npcs = msg.ReadNPCs();
+                                Creature[] deads = msg.ReadDeads();
                                 game.UpdateChunks(chunks, npcs, deads);
                                 break;
                             case (NDT.Update):
                                 prevMessage = gameTime.TotalGameTime;
                                 msg.ReadNPCUpdate(ref game.npcs);
-                                deads = new Creature[0];
-                                msg.ReadDeads(ref deads);
+                                deads = msg.ReadDeads();
                                 if (deads.Length > 0) game.UpdateChunks(game.chunks, game.npcs, deads);
 
                                 game.vGraphics.UpdateChunks(ref game.chunks, ref game.npcs, ref game.deads);
@@ -342,17 +338,17 @@ namespace Mentula.Client
             };
         }
 
-        public static ushort ReadNPCs(this NetBuffer msg, ref Creature[] npcs)
+        public static Creature[] ReadNPCs(this NetBuffer msg)
         {
             ushort length = msg.ReadUInt16();
-            if (length > npcs.Length) Array.Resize(ref npcs, length);
+            Creature[] result = new Creature[length];
 
             for (int i = 0; i < length; i++)
             {
-                npcs[i] = msg.ReadCreature();
+                result[i] = msg.ReadCreature();
             }
 
-            return length;
+            return result;
         }
 
         public static void ReadNPCUpdate(this NetBuffer msg, ref Creature[] npcs)
@@ -367,15 +363,17 @@ namespace Mentula.Client
             }
         }
 
-        public static void ReadDeads(this NetBuffer msg, ref Creature[] deads)
+        public static Creature[] ReadDeads(this NetBuffer msg)
         {
             int length = msg.ReadInt32();
-            if (length > deads.Length) Array.Resize(ref deads, length);
+            Creature[] result = new Creature[length];
 
             for (int i = 0; i < length; i++)
             {
-                deads[i] = msg.ReadDeadCreature();
+                result[i] = msg.ReadDeadCreature();
             }
+
+            return result;
         }
 
         private static Tile[] ReadTiles(this NetBuffer msg)

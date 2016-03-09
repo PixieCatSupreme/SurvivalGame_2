@@ -17,6 +17,12 @@ namespace Mentula.Server
             newMessages = new Queue<MESSAGE>();
         }
 
+        public void AddMessage(string msg)
+        {
+            if (msg[msg.Length - 1] != '\n') msg += '\n';
+            newMessages.Enqueue(new MESSAGE(new ID("Global", 0), msg));
+        }
+
         public void HandleMsg(NetIncomingMessage msg)
         {
             long id = msg.SenderConnection != null ? msg.SenderConnection.RemoteUniqueIdentifier : -1;
@@ -31,7 +37,7 @@ namespace Mentula.Server
             while (newMessages.Count > 0)
             {
                 MESSAGE message = newMessages.Dequeue();
-                string name = gl.GetPlayer(message.Key.Value).Name;
+                string name = message.Key.Value != 0 ? gl.GetPlayer(message.Key.Value).Name : "Server";
 
                 for (int i = 0; i < server.Connections.Count; i++)
                 {

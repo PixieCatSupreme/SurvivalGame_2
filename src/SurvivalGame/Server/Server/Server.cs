@@ -142,6 +142,7 @@ namespace Mentula.Server
                                 name = players_Queue[id];
                                 players_Queue.Remove(id);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) connected!", NetUtility.ToHexString(id), name);
+                                chat.AddMessage($"{name} connected!");
 
                                 AddPlayer(msg.SenderEndPoint.Address, name);
                                 Creature player = logic.AddPlayer(id, name);
@@ -165,6 +166,7 @@ namespace Mentula.Server
                                 logic.RemovePlayer(id);
                                 RemovePlayer(msg.SenderEndPoint.Address);
                                 WriteLine(NIMT.StatusChanged, "{0}({1}) disconnected!", NetUtility.ToHexString(id), name);
+                                chat.AddMessage($"{name} disconnected!");
                                 break;
                         }
                         break;

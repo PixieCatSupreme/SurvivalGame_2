@@ -1,9 +1,7 @@
 ﻿using Mentula.Content;
 using Mentula.Engine.Core;
-using Mentula.Utilities;
 using Mentula.Utilities.Resources;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Mentula.Client
 {
