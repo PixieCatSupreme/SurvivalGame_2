@@ -78,7 +78,11 @@ namespace Mentula.Client
                         if (kState.IsKeyDown(Keys.S)) inp.Y += 1;
                         if (kState.IsKeyDown(Keys.D)) inp.X += 1;
                         if (kState.IsKeyDown(Keys.E)) networking.Disconect();
-                        if (kState.IsKeyDown(Keys.PrintScreen)) vGraphics.TakeScreenshot();
+                        if (kState.IsKeyDown(Keys.PrintScreen))
+                        {
+                            bool succeeded = vGraphics.TakeScreenshot();
+                            gui.AddChatLine("Global", "Client", succeeded ? "Saved screenshot" : "Failed to save screenshot");
+                        }
                     }
 
                     if (inp != Vector2.Zero)
