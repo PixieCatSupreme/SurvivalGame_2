@@ -137,6 +137,7 @@ namespace Mentula.Server
                                 }
                             }
                         }
+                        List<Rectangle> midCrossRoads = new List<Rectangle>();
                         for (int j = 0; j < crossRoads.Count; j++)
                         {
                             bool up = false;
@@ -179,32 +180,24 @@ namespace Mentula.Server
                                     }
                                 }
                             }
-                            for (int k = 0; k < crossRoads.Count; k++)
+                            for (int k = j + 1; k < crossRoads.Count; k++)
                             {
-                                Rectangle intersection = Rectangle.Intersect(crossRoads[j], crossRoads[k]);
+                                Rectangle r1 = crossRoads[j];
+                                Rectangle r2 = crossRoads[k];
+                                r1.Inflate(3, 3);
+                                r2.Inflate(3, 3);
+                                Rectangle intersection = Rectangle.Intersect(r1, r2);
                                 if (intersection != Rectangle.Empty)
                                 {
-                                    if (intersection.X > crossRoads[j].X)
-                                    {
-                                        right = false;
-                                    }
-                                    if (intersection.Y > crossRoads[j].Y)
-                                    {
-                                        down = false;
-                                    }
-                                    if (intersection.X < crossRoads[j].X)
-                                    {
-                                        left = false;
-                                    }
-                                    if (intersection.Y < crossRoads[j].Y)
-                                    {
-                                        up = false;
-                                    }
+                                    midCrossRoads.Add(new Rectangle((crossRoads[j].X + crossRoads[k].X) / 2, (crossRoads[j].Y + crossRoads[k].Y) / 2, 9, 9));
                                 }
                             }
                             GenerateCrossRoad(up, right, down, left, new IntVector2(crossRoads[j].X, crossRoads[j].Y));
                         }
-
+                        for (int j = 0; j < midCrossRoads.Count; j++)
+                        {
+                            GenerateCrossRoad(false, false, false, false, new IntVector2(midCrossRoads[j].X, midCrossRoads[j].Y));
+                        }
                         break;
                     }
                 }
